@@ -34,8 +34,8 @@ export default class GameStore extends React.Component {
       factories: [],
       assemblers: [],
 
-      buildFactory: () => this.buildBuilding(Factory, { credits: 100 }),
-      buildAssembler: () => this.buildBuilding(Assembler, { credits: 50, fabric: 10 }),
+      buildFactory: () => this.buildBuilding(Factory),
+      buildAssembler: () => this.buildBuilding(Assembler),
     },
 
     units: {
@@ -43,13 +43,6 @@ export default class GameStore extends React.Component {
 
     battlefield: {
     },
-
-    addTrust: () => this.setState((prevState, _) => ({
-      resources: {
-        ...prevState.resources,
-        credits: prevState.resources.credits + 10
-      }
-    }))
   }
 
   canAfford = cost => Object.keys(cost).reduce((acc, curr) => acc && this.state.resources[curr] > cost[curr], true)
@@ -65,9 +58,9 @@ export default class GameStore extends React.Component {
     reject('insufficient resources');
   })
 
-  buildBuilding = async (type, cost) => {
+  buildBuilding = async type => {
     try {
-      await this.spend(cost);
+      await this.spend(type.defaultCost());
       this.setState((prevState, _) => {
         const pluralType = this.state.buildings.plurals[type];
         return {
