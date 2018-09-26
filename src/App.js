@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import Game from './game/game';
-import GameStore from './game/gameContext';
+import Game from './game/Game';
+import GameStore, { GameContext } from './game/gameContext';
 import './App.css';
 
 class App extends Component {
@@ -9,7 +9,9 @@ class App extends Component {
     return (
       <div className="App">
         <GameStore>
-          <Game />
+          <GameContext.Consumer>
+            {gameState => <Game gameState={gameState} />}
+          </GameContext.Consumer>
         </GameStore>
       </div>
     );
