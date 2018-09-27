@@ -51,22 +51,22 @@ export default class GameStore extends React.Component {
     if (this.canAfford(cost)) {
       this.setState((prevState, _) => {
         const resources = { ...prevState.resources };
-        Object.keys(cost).forEach(resource => { resources[resource] = resources[resource] - cost[resource]; });
+        Object.keys(cost).forEach(rsrc => { resources[rsrc] = resources[rsrc] - cost[rsrc]; });
         return { resources };
       }, resolve('success'));
     }
     reject('insufficient resources');
   })
 
-  buildBuilding = async type => {
+  buildBuilding = async buildingType => {
     try {
-      await this.spend(type.defaultCost());
+      await this.spend(buildingType.defaultCost());
       this.setState((prevState, _) => {
-        const pluralType = this.state.buildings.plurals[type];
+        const pluralType = this.state.buildings.plurals[buildingType];
         return {
           buildings: {
             ...prevState.buildings,
-            [pluralType]: prevState.buildings[pluralType].concat(new type())
+            [pluralType]: prevState.buildings[pluralType].concat(new buildingType())
           }
         };
       });
