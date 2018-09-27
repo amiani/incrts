@@ -14,15 +14,23 @@ export default class GameStore extends React.Component {
       fabricPerTick: 5,
       energy: 0,
       energyPerTick: 5,
+      drain: 0,
+      productivity: 1,
 
-      update: () => this.setState((prevState, _) => ({
-        resources: {
-          ...prevState.resources,
-          credits: prevState.resources.credits + prevState.resources.creditsPerTick,
-          fabric: prevState.resources.fabric + prevState.resources.fabricPerTick,
-          energy: prevState.resources.energy + prevState.resources.energyPerTick,
-        }
-      })),
+      update: () => this.setState((prevState, _) => {
+        const prevRsrcs = prevState.resources;
+        let energy = prevRsrcs.energy + prevRsrcs.energyPerTick - prevRsrcs.drain;
+        energy = energy >= 0 ? energy : 0;
+        return ({
+          resources: {
+            ...prevState.resources,
+            credits: prevRsrcs.credits + prevRsrcs.creditsPerTick,
+            fabric: prevRsrcs.fabric + prevRsrcs.fabricPerTick,
+            energy,
+            productivity: energy > prevRsrcs.drain ? 1 : prevRsrcs.energyPerTick / prevRsrcs.drain,
+          }
+        });
+      }),
     },
 
     buildings:{
@@ -36,6 +44,18 @@ export default class GameStore extends React.Component {
 
       buildFactory: () => this.buildBuilding(Factory),
       buildAssembler: () => this.buildBuilding(Assembler),
+
+      getBuildingsDrain: () => {
+        const factoryDrain = this.sumPieceArrDrain(this.state.buildings.factories);
+        const assemblerDrain = this.sumPieceArrDrain(this.state.buildings.assemblers);
+        return factoryDrain + assemblerDrain;
+      },
+
+      update: () => {
+        let drain = this.state.buildings.factories.reduce((acc, curr) => acc + curr.update(), 0)
+        drain += this.state.buildings.assemblers.reduce((acc, curr) => acc + curr.update(), 0)
+        this.setState((prevState, _) => ({ resources: { ...prevState.resources, drain } }));
+      },
     },
 
     units: {
@@ -75,6 +95,8 @@ export default class GameStore extends React.Component {
       console.log(error);
     }
   }
+
+  sumPieceArrDrain = pieces => pieces.reduce((acc, curr) => acc + curr.drain, 0)
 
   render() {
     return (

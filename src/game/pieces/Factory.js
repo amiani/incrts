@@ -22,7 +22,10 @@ export default class Factory {
 
   static defaultCost = () => ({ credits: 100 })
 
+  drain = 1;
+
   update = () => {
+    return this.drain;
   }
 
   toString = () => 'factory'

@@ -20,6 +20,8 @@ export default class Sidebar extends React.Component {
           <p>Credits: {this.props.gameState.resources.credits.toFixed(0)}</p>
           <p>Fabric: {this.props.gameState.resources.fabric.toFixed(0)}</p>
           <p>Energy: {this.props.gameState.resources.energy.toFixed(1)}</p>
+          <p>Drain: {this.props.gameState.buildings.getBuildingsDrain()}</p>
+          <p>Productivity: {this.props.gameState.resources.productivity.toFixed(2)}</p>
         </div>
         <button onClick={this.props.gameState.buildings.buildFactory}>Build Factory</button>
         <button onClick={this.props.gameState.buildings.buildAssembler}>Build Assembler</button>

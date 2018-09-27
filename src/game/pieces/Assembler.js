@@ -22,9 +22,11 @@ export default class Assembler {
   static defaultCost = () => ({ credits: 50, fabric: 50 })
 
   counter = 0;
+  drain = 1;
 
   update = () => {
     this.counter++;
+    return this.drain;
   }
 
   toString = () => 'assembler'
@@ -36,18 +38,11 @@ export default class Assembler {
     />
   )
 
-  Component = class extends React.Component {
-    componentWillUnmount() {
-      console.log('assembler unmounting');
-    }
-
-    render() {
-      return (
-        <Container>
-          <p>Assembler</p>
-          <p>{this.props.counter}</p>
-        </Container>
-      );
-    }
-  }
+  Component = props => (
+    <Container>
+      <p>Assembler</p>
+      <p>{props.counter}</p>
+      <button onClick={''}>Test</button>
+    </Container>
+  )
 }

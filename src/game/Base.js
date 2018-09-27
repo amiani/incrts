@@ -24,7 +24,6 @@ export default class Base extends React.Component {
   render() {
     return (
       <Container>
-        {this.props.gameState.buildings.assemblers[0] && <button onClick={this.props.gameState.buildings.assemblers[0].update}>Update Assembler 1</button>}
         <FactoryRow>
           {this.props.gameState.buildings.factories.map(f=>f.getComponent())}
         </FactoryRow>

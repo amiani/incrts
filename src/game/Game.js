@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { GameContext } from './gameContext'
+//import { GameContext } from './gameContext'
 import Sidebar from './Sidebar'
 import Base from './Base'
 import Battlefield from './Battlefield'
@@ -18,7 +18,6 @@ const GameGrid = styled.div`
 export default class Game extends React.Component {
   constructor() {
     super();
-    //this.initialize();
     setInterval(this.tickUpdate, TICKRATE);
   }
 
@@ -27,6 +26,7 @@ export default class Game extends React.Component {
 
   tickUpdate = () => {
     this.props.gameState.resources.update();
+    this.props.gameState.buildings.update();
   }
 
   render() {
