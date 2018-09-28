@@ -30,7 +30,7 @@ export default class Assembler extends Building {
       {store => (
         <this.Container>
           <this.buildQueue.Component />
-          <button onClick={()=>store.buildings.makeProgress()}>Assemble</button>
+          <button onClick={''/*()=>store.buildings.makeProgress()*/}>Assemble</button>
         </this.Container>
       )}
     </GameContext.Consumer>

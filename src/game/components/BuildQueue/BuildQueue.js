@@ -25,6 +25,10 @@ const QueueItem = styled.div`
 `;
 
 export default class BuildQueue {
+  constructor() {
+    console.log('new BuildQueue');
+  }
+
   queue = [];
   progress = 0;
 

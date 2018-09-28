@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 export default class Building {
   constructor(width, height) {
-    this.key = uuidv4();
+    this.id = uuidv4();
     this.Container = styled.div`
       width: ${width}px;
       height: ${height}px;
@@ -20,7 +20,7 @@ export default class Building {
 
   getComponent = () => (
     <this.Component
-      key={this.key}
+      key={this.id}
     />
   )
 }

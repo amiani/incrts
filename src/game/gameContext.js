@@ -59,6 +59,15 @@ export default class GameStore extends React.Component {
       buildAssembler: () => this.buildBuilding(Assembler),
       buildGenerator: () => this.buildBuilding(Generator),
 
+      makeProgress: id => this.setState((prevState, _) => {
+        return ({
+          buildings: {
+            ...prevState.buildings,
+            assemblers: prevState.buildings.assemblers[0]
+          }
+        });
+      }),
+          
       getBuildingsDrain: () => {
         const factoryDrain = this.sumPieceArrDrain(this.state.buildings.factories);
         const assemblerDrain = this.sumPieceArrDrain(this.state.buildings.assemblers);
