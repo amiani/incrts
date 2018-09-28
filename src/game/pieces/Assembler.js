@@ -3,6 +3,7 @@ import React from 'react';
 
 import { GameContext } from '../gameContext';
 import Building from './Building';
+import BuildQueue from '../components/BuildQueue';
 
 export const assemblerSize = {
   width: 200,
@@ -18,6 +19,7 @@ export default class Assembler extends Building {
 
   name = 'assembler';
   drain = 1;
+  buildQueue = new BuildQueue();
 
   update = () => {
     return this.drain;
@@ -27,8 +29,8 @@ export default class Assembler extends Building {
     <GameContext.Consumer>
       {store => (
         <this.Container>
-          <p>Assembler</p>
-          <button onClick={''}>Assemble</button>
+          <this.buildQueue.Component />
+          <button onClick={()=>store.buildings.makeProgress()}>Assemble</button>
         </this.Container>
       )}
     </GameContext.Consumer>

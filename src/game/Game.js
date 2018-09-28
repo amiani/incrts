@@ -16,12 +16,14 @@ const GameGrid = styled.div`
 `;
 
 export default class Game extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.initialize();
     setInterval(this.tickUpdate, TICKRATE);
   }
 
   initialize = () => {
+    this.props.store.buildings.buildGenerator();
   }
 
   tickUpdate = () => {

@@ -53,7 +53,7 @@ export default class GameStore extends React.Component {
       
       factories: [],
       assemblers: [],
-      generators: [new Generator()],
+      generators: [],
 
       buildFactory: () => this.buildBuilding(Factory),
       buildAssembler: () => this.buildBuilding(Assembler),
@@ -89,7 +89,7 @@ export default class GameStore extends React.Component {
     },
   }
 
-  canAfford = cost => Object.keys(cost).reduce((acc, curr) => acc && this.state.resources[curr] > cost[curr], true)
+  canAfford = cost => Object.keys(cost).reduce((acc, curr) => acc && this.state.resources[curr] >= cost[curr], true)
 
   spend = cost => new Promise((resolve, reject) => {
     if (this.canAfford(cost)) {
