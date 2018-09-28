@@ -25,16 +25,16 @@ export default class Game extends React.Component {
   }
 
   tickUpdate = () => {
-    this.props.gameState.resources.update();
-    this.props.gameState.buildings.update();
+    this.props.store.resources.update();
+    this.props.store.buildings.update();
   }
 
   render() {
     return (
       <GameGrid>
-        <Sidebar gameState={this.props.gameState} />
-        <Base gameState={this.props.gameState} />
-        <Battlefield gameState={this.props.gameState} />
+        <Sidebar store={this.props.store} />
+        <Base store={this.props.store} />
+        <Battlefield store={this.props.store} />
       </GameGrid>
     );
   }

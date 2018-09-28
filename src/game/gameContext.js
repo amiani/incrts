@@ -2,6 +2,7 @@ import React from 'react';
 
 import Factory from './pieces/Factory'
 import Assembler from './pieces/Assembler'
+import Generator from './pieces/Generator'
 
 export const GameContext = React.createContext();
 
@@ -9,25 +10,35 @@ export default class GameStore extends React.Component {
   state = {
     resources: {
       credits: 100,
-      creditsPerTick: 5,
-      fabric: 0,
-      fabricPerTick: 5,
+      creditIncome: 0,
+      fabric: 100,
+      fabricIncome: 0,
+      hardware: 0,
+      hardwareIncome: 0,
       energy: 0,
-      energyPerTick: 5,
+      energyIncome: 0,
       drain: 0,
       productivity: 1,
 
+      addEnergy: amount => this.setState((prevState, _) => ({
+        resources: { ...prevState.resources, energy: prevState.resources.energy + amount }
+      })),
+
       update: () => this.setState((prevState, _) => {
         const prevRsrcs = prevState.resources;
-        let energy = prevRsrcs.energy + prevRsrcs.energyPerTick - prevRsrcs.drain;
-        energy = energy >= 0 ? energy : 0;
+        let energy = prevRsrcs.energy + prevRsrcs.energyIncome - prevRsrcs.drain;
+        energy = energy > 0 ? energy : 0;
+        const productivity = energy > prevRsrcs.drain || !prevRsrcs.drain
+          ? 1
+          : prevRsrcs.energyIncome / prevRsrcs.drain;
+
         return ({
           resources: {
             ...prevState.resources,
-            credits: prevRsrcs.credits + prevRsrcs.creditsPerTick,
-            fabric: prevRsrcs.fabric + prevRsrcs.fabricPerTick,
+            credits: prevRsrcs.credits + prevRsrcs.creditIncome,
+            fabric: prevRsrcs.fabric + prevRsrcs.fabricIncome,
             energy,
-            productivity: energy > prevRsrcs.drain ? 1 : prevRsrcs.energyPerTick / prevRsrcs.drain,
+            productivity,
           }
         });
       }),
@@ -37,13 +48,16 @@ export default class GameStore extends React.Component {
       plurals: {
         [Factory]: 'factories',
         [Assembler]: 'assemblers',
+        [Generator]: 'generators',
       },
       
       factories: [],
       assemblers: [],
+      generators: [new Generator()],
 
       buildFactory: () => this.buildBuilding(Factory),
       buildAssembler: () => this.buildBuilding(Assembler),
+      buildGenerator: () => this.buildBuilding(Generator),
 
       getBuildingsDrain: () => {
         const factoryDrain = this.sumPieceArrDrain(this.state.buildings.factories);
@@ -52,9 +66,19 @@ export default class GameStore extends React.Component {
       },
 
       update: () => {
-        let drain = this.state.buildings.factories.reduce((acc, curr) => acc + curr.update(), 0)
-        drain += this.state.buildings.assemblers.reduce((acc, curr) => acc + curr.update(), 0)
-        this.setState((prevState, _) => ({ resources: { ...prevState.resources, drain } }));
+        //let drain = this.state.buildings.factories.reduce((acc, curr) => acc + curr.update(), 0);
+        //drain += this.state.buildings.assemblers.reduce((acc, curr) => acc + curr.update(), 0);
+        const drain = this.state.buildings.getBuildingsDrain();
+
+        const energyIncome = this.state.buildings.generators.reduce((acc, curr) => acc + curr.update(), 0);
+
+        this.setState((prevState, _) => ({
+          resources: {
+            ...prevState.resources,
+            drain,
+            energyIncome,
+          }
+        }));
       },
     },
 

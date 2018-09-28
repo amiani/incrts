@@ -3,32 +3,33 @@ import React from 'react';
 
 import { GameContext } from '../gameContext';
 import Building from './Building';
+import UnselectableP from '../UnselectableP';
 
-export const assemblerSize = {
+export const generatorSize = {
   width: 200,
-  height: 250,
+  height: 200,
 };
 
-export default class Assembler extends Building {
+export default class Generator extends Building {
   constructor() {
-    super(assemblerSize.width, assemblerSize.height);
+    super(generatorSize.width, generatorSize.height);
   }
 
   static defaultCost = () => ({ credits: 50, fabric: 50 });
 
-  name = 'assembler';
-  drain = 1;
+  income = 0;
 
   update = () => {
-    return this.drain;
+    return this.income;
   }
+
+  name = 'generator';
 
   Component = props => (
     <GameContext.Consumer>
       {store => (
         <this.Container>
-          <p>Assembler</p>
-          <button onClick={''}>Assemble</button>
+          <button onClick={() => store.resources.addEnergy(10)}>Generate 10</button>
         </this.Container>
       )}
     </GameContext.Consumer>

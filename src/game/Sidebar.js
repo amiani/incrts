@@ -6,6 +6,13 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
+const ResourceInfo = styled.p`
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+`;
+
 export default class Sidebar extends React.Component {
   /*
   shouldComponentUpdate(nextProps, nextState) {
@@ -14,17 +21,20 @@ export default class Sidebar extends React.Component {
   }*/
 
   render() {
+    const resources = this.props.store.resources;
     return (
       <Container>
         <div>
-          <p>Credits: {this.props.gameState.resources.credits.toFixed(0)}</p>
-          <p>Fabric: {this.props.gameState.resources.fabric.toFixed(0)}</p>
-          <p>Energy: {this.props.gameState.resources.energy.toFixed(1)}</p>
-          <p>Drain: {this.props.gameState.buildings.getBuildingsDrain()}</p>
-          <p>Productivity: {this.props.gameState.resources.productivity.toFixed(2)}</p>
+          <ResourceInfo>Credits: {resources.credits.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Fabric: {resources.fabric.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Hardware: {resources.hardware.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Energy: {resources.energy.toFixed(1)}</ResourceInfo>
+          <ResourceInfo>Drain: {this.props.store.buildings.getBuildingsDrain()}</ResourceInfo>
+          <ResourceInfo>Productivity: {(resources.productivity * 100).toFixed(0)}%</ResourceInfo>
         </div>
-        <button onClick={this.props.gameState.buildings.buildFactory}>Build Factory</button>
-        <button onClick={this.props.gameState.buildings.buildAssembler}>Build Assembler</button>
+        <button onClick={this.props.store.buildings.buildFactory}>Build Factory</button>
+        <button onClick={this.props.store.buildings.buildAssembler}>Build Assembler</button>
+        <button onClick={this.props.store.buildings.buildGenerator}>Build Generator</button>
       </Container>
     );
   }

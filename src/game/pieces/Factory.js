@@ -1,23 +1,15 @@
 import React from 'react';
-import styled from 'styled-components';
-import uuidv4 from 'uuid/v4';
+//import styled from 'styled-components';
 
+import Building from './Building';
 export const factorySize = {
-  width: '200px',
-  height: '300px'
+  width: 200,
+  height: 300,
 };
 
-const Container = styled.div`
-  width: ${factorySize.width};
-  height: ${factorySize.height};
-  border: solid black 1px;
-  margin: 0 5px 0 5px;
-`;
-
-
-export default class Factory {
+export default class Factory extends Building {
   constructor() {
-    this.key = uuidv4();
+    super(factorySize.width, factorySize.width);
   }
 
   static defaultCost = () => ({ credits: 100 })
@@ -28,20 +20,12 @@ export default class Factory {
     return this.drain;
   }
 
-  toString = () => 'factory'
-  
-  getComponent = () => <this.Component key={this.key} />
-
   Component = class extends React.Component {
-    state = {
-      drain: 1
-    }
-
     render() {
       return (
-        <Container>
+        <this.Container>
           <p>Factory</p>
-        </Container>
+        </this.Container>
       );
     }
   }

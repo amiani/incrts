@@ -10,7 +10,7 @@ class App extends Component {
       <div className="App">
         <GameStore>
           <GameContext.Consumer>
-            {gameState => <Game gameState={gameState} />}
+            {store => <Game store={store} />}
           </GameContext.Consumer>
         </GameStore>
       </div>
