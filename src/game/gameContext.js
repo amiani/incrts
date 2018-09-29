@@ -48,7 +48,15 @@ export default class GameStore extends React.Component {
 
     buildFactory: () => this.buildBuilding({ ...factoryData, id: uuidv4() }),
     buildAssembler: () => this.buildBuilding({ ...assemblerData, id: uuidv4() }),
-    buildGenerator: () => this.buildBuilding({ ...generatorData, id: uuidv4() }),
+    buildGenerator: async () => {
+      try {
+        await this.buildBuilding({ ...generatorData, id: uuidv4() });
+        this.makeBuildQueue();
+      }
+      catch(error) {
+        console.log(error);
+      }
+    },
 
     makeProgress: id => this.setState((prevState, _) => ({
       assemblers: prevState.assemblers,
@@ -85,15 +93,22 @@ export default class GameStore extends React.Component {
     reject('insufficient resources');
   })
 
-  buildBuilding = async data => {
+  buildBuilding = data => new Promise(async (resolve, reject) => {
     try {
       await this.spend(data.cost);
-      this.setState((prevState, _) => ({ [data.type]: { ...prevState[data.type], [data.id]: data } }));
+      this.setState((prevState, _) => ({
+        [data.type]: { ...prevState[data.type], [data.id]: data }
+      }), resolve(`Built ${data.name}`));
     }
     catch(error) {
       console.log(error);
+      reject(error);
     }
-  }
+  })
+
+  makeBuildQueue = buildingId => new Promise((resolve, reject) => {
+    resolve('hello');
+  })
 
   sumPieceArrDrain = pieces => pieces.reduce((acc, curr) => acc + curr.drain, 0)
 
