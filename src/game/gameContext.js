@@ -39,13 +39,10 @@ export default class GameStore extends React.Component {
         : prevState.energyIncome / prevState.drain;
 
       return ({
-        resources: {
-          ...prevState.resources,
-          credits: prevState.credits + prevState.creditIncome,
-          fabric: prevState.fabric + prevState.fabricIncome,
-          energy,
-          productivity,
-        }
+        credits: prevState.credits + prevState.creditIncome,
+        fabric: prevState.fabric + prevState.fabricIncome,
+        energy,
+        productivity,
       });
     }),
 
@@ -53,14 +50,9 @@ export default class GameStore extends React.Component {
     buildAssembler: () => this.buildBuilding({ ...assemblerData, id: uuidv4() }),
     buildGenerator: () => this.buildBuilding({ ...generatorData, id: uuidv4() }),
 
-    makeProgress: id => this.setState((prevState, _) => {
-      return ({
-        buildings: {
-          ...prevState.buildings,
-          assemblers: prevState.buildings.assemblers[0]
-        }
-      });
-    }),
+    makeProgress: id => this.setState((prevState, _) => ({
+      assemblers: prevState.assemblers,
+    })),
         
     getBuildingsDrain: () => {
       const factoryDrain = this.sumPieceArrDrain(Object.values(this.state.factories));
@@ -76,13 +68,7 @@ export default class GameStore extends React.Component {
       const energyIncome = Object.values(this.state.generators)
         .reduce((acc, curr) => acc + curr.output, 0);
 
-      this.setState((prevState, _) => ({
-        resources: {
-          ...prevState.resources,
-          drain,
-          energyIncome,
-        }
-      }));
+      this.setState((prevState, _) => ({ drain, energyIncome }));
     },
   }
 
