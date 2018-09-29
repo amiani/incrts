@@ -1,104 +1,92 @@
 import React from 'react';
+import uuidv4 from 'uuid/v4';
 
-import Factory from './pieces/Factory'
-import Assembler from './pieces/Assembler'
-import Generator from './pieces/Generator'
+import { factoryData } from './pieces/Factory';
+import { assemblerData } from './pieces/Assembler';
+import { generatorData } from './pieces/Generator';
 
 export const GameContext = React.createContext();
 
 export default class GameStore extends React.Component {
   state = {
-    resources: {
-      credits: 100,
-      creditIncome: 0,
-      fabric: 100,
-      fabricIncome: 0,
-      hardware: 0,
-      hardwareIncome: 0,
-      energy: 0,
-      energyIncome: 0,
-      drain: 0,
-      productivity: 1,
+    //resources
+    credits: 100,
+    creditIncome: 0,
+    fabric: 100,
+    fabricIncome: 0,
+    hardware: 0,
+    hardwareIncome: 0,
+    energy: 0,
+    energyIncome: 0,
+    drain: 0,
+    productivity: 1,
 
-      addEnergy: amount => this.setState((prevState, _) => ({
-        resources: { ...prevState.resources, energy: prevState.resources.energy + amount }
-      })),
+    //buildings
+    factories: {},
+    assemblers: {},
+    generators: {},
+    
+    //buildQueues
+    buildQueues: {},
 
-      update: () => this.setState((prevState, _) => {
-        const prevRsrcs = prevState.resources;
-        let energy = prevRsrcs.energy + prevRsrcs.energyIncome - prevRsrcs.drain;
-        energy = energy > 0 ? energy : 0;
-        const productivity = energy > prevRsrcs.drain || !prevRsrcs.drain
-          ? 1
-          : prevRsrcs.energyIncome / prevRsrcs.drain;
+    addEnergy: amount => this.setState((prevState, _) => ({ energy: prevState.energy + amount })),
 
-        return ({
-          resources: {
-            ...prevState.resources,
-            credits: prevRsrcs.credits + prevRsrcs.creditIncome,
-            fabric: prevRsrcs.fabric + prevRsrcs.fabricIncome,
-            energy,
-            productivity,
-          }
-        });
-      }),
+    updateResources: () => this.setState((prevState, _) => {
+      let energy = prevState.energy + prevState.energyIncome - prevState.drain;
+      energy = energy > 0 ? energy : 0;
+      const productivity = energy > prevState.drain || !prevState.drain
+        ? 1
+        : prevState.energyIncome / prevState.drain;
+
+      return ({
+        resources: {
+          ...prevState.resources,
+          credits: prevState.credits + prevState.creditIncome,
+          fabric: prevState.fabric + prevState.fabricIncome,
+          energy,
+          productivity,
+        }
+      });
+    }),
+
+    buildFactory: () => this.buildBuilding({ ...factoryData, id: uuidv4() }),
+    buildAssembler: () => this.buildBuilding({ ...assemblerData, id: uuidv4() }),
+    buildGenerator: () => this.buildBuilding({ ...generatorData, id: uuidv4() }),
+
+    makeProgress: id => this.setState((prevState, _) => {
+      return ({
+        buildings: {
+          ...prevState.buildings,
+          assemblers: prevState.buildings.assemblers[0]
+        }
+      });
+    }),
+        
+    getBuildingsDrain: () => {
+      const factoryDrain = this.sumPieceArrDrain(Object.values(this.state.factories));
+      const assemblerDrain = this.sumPieceArrDrain(Object.values(this.state.assemblers));
+      return factoryDrain + assemblerDrain;
     },
 
-    buildings:{
-      plurals: {
-        [Factory]: 'factories',
-        [Assembler]: 'assemblers',
-        [Generator]: 'generators',
-      },
-      
-      factories: [],
-      assemblers: [],
-      generators: [],
+    updateBuildings: () => {
+      //let drain = this.state.buildings.factories.reduce((acc, curr) => acc + curr.update(), 0);
+      //drain += this.state.buildings.assemblers.reduce((acc, curr) => acc + curr.update(), 0);
+      const drain = this.state.getBuildingsDrain();
 
-      buildFactory: () => this.buildBuilding(Factory),
-      buildAssembler: () => this.buildBuilding(Assembler),
-      buildGenerator: () => this.buildBuilding(Generator),
+      const energyIncome = Object.values(this.state.generators)
+        .reduce((acc, curr) => acc + curr.output, 0);
 
-      makeProgress: id => this.setState((prevState, _) => {
-        return ({
-          buildings: {
-            ...prevState.buildings,
-            assemblers: prevState.buildings.assemblers[0]
-          }
-        });
-      }),
-          
-      getBuildingsDrain: () => {
-        const factoryDrain = this.sumPieceArrDrain(this.state.buildings.factories);
-        const assemblerDrain = this.sumPieceArrDrain(this.state.buildings.assemblers);
-        return factoryDrain + assemblerDrain;
-      },
-
-      update: () => {
-        //let drain = this.state.buildings.factories.reduce((acc, curr) => acc + curr.update(), 0);
-        //drain += this.state.buildings.assemblers.reduce((acc, curr) => acc + curr.update(), 0);
-        const drain = this.state.buildings.getBuildingsDrain();
-
-        const energyIncome = this.state.buildings.generators.reduce((acc, curr) => acc + curr.update(), 0);
-
-        this.setState((prevState, _) => ({
-          resources: {
-            ...prevState.resources,
-            drain,
-            energyIncome,
-          }
-        }));
-      },
-    },
-
-    units: {
-    },
-
-    battlefield: {
+      this.setState((prevState, _) => ({
+        resources: {
+          ...prevState.resources,
+          drain,
+          energyIncome,
+        }
+      }));
     },
   }
 
-  canAfford = cost => Object.keys(cost).reduce((acc, curr) => acc && this.state.resources[curr] >= cost[curr], true)
+  canAfford = cost => Object.keys(cost).reduce((acc, curr) => acc && this.state[curr] >= cost[curr], true)
 
   spend = cost => new Promise((resolve, reject) => {
     if (this.canAfford(cost)) {
@@ -111,18 +99,10 @@ export default class GameStore extends React.Component {
     reject('insufficient resources');
   })
 
-  buildBuilding = async buildingType => {
+  buildBuilding = async data => {
     try {
-      await this.spend(buildingType.defaultCost());
-      this.setState((prevState, _) => {
-        const pluralType = this.state.buildings.plurals[buildingType];
-        return {
-          buildings: {
-            ...prevState.buildings,
-            [pluralType]: prevState.buildings[pluralType].concat(new buildingType())
-          }
-        };
-      });
+      await this.spend(data.cost);
+      this.setState((prevState, _) => ({ [data.type]: { ...prevState[data.type], [data.id]: data } }));
     }
     catch(error) {
       console.log(error);

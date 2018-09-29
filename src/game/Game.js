@@ -23,12 +23,12 @@ export default class Game extends React.Component {
   }
 
   initialize = () => {
-    this.props.store.buildings.buildGenerator();
+    this.props.store.buildGenerator();
   }
 
   tickUpdate = () => {
-    this.props.store.resources.update();
-    this.props.store.buildings.update();
+    this.props.store.updateResources();
+    this.props.store.updateBuildings();
   }
 
   render() {

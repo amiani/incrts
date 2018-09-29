@@ -21,20 +21,20 @@ export default class Sidebar extends React.Component {
   }*/
 
   render() {
-    const resources = this.props.store.resources;
+    const store = this.props.store;
     return (
       <Container>
         <div>
-          <ResourceInfo>Credits: {resources.credits.toFixed(0)}</ResourceInfo>
-          <ResourceInfo>Fabric: {resources.fabric.toFixed(0)}</ResourceInfo>
-          <ResourceInfo>Hardware: {resources.hardware.toFixed(0)}</ResourceInfo>
-          <ResourceInfo>Energy: {resources.energy.toFixed(1)}</ResourceInfo>
-          <ResourceInfo>Drain: {this.props.store.buildings.getBuildingsDrain()}</ResourceInfo>
-          <ResourceInfo>Productivity: {(resources.productivity * 100).toFixed(0)}%</ResourceInfo>
+          <ResourceInfo>Credits: {store.credits.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Fabric: {store.fabric.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Hardware: {store.hardware.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Energy: {store.energy.toFixed(1)}</ResourceInfo>
+          <ResourceInfo>Drain: {store.getBuildingsDrain()}</ResourceInfo>
+          <ResourceInfo>Productivity: {(store.productivity * 100).toFixed(0)}%</ResourceInfo>
         </div>
-        <button onClick={this.props.store.buildings.buildFactory}>Build Factory</button>
-        <button onClick={this.props.store.buildings.buildAssembler}>Build Assembler</button>
-        <button onClick={this.props.store.buildings.buildGenerator}>Build Generator</button>
+        <button onClick={store.buildFactory}>Build Factory</button>
+        <button onClick={store.buildAssembler}>Build Assembler</button>
+        <button onClick={store.buildGenerator}>Build Generator</button>
       </Container>
     );
   }

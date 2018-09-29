@@ -24,28 +24,18 @@ const QueueItem = styled.div`
   background-color: green;
 `;
 
-export default class BuildQueue {
-  constructor() {
-    console.log('new BuildQueue');
-  }
-
+export default class BuildQueue extends React.Component {
   queue = [];
   progress = 0;
 
-  update = () => {
-  };
-
-  makeProgress = amount => {
-    this.progress += amount;
-    console.log('makeProgress');
+  render() {
+    return (
+      <Container>
+        <QueueBox>
+          <QueueItem />
+        </QueueBox>
+        <ProgressBar progress={this.progress} />
+      </Container>
+    );
   }
-
-  Component = props => (
-    <Container>
-      <QueueBox>
-        <QueueItem />
-      </QueueBox>
-      <ProgressBar progress={this.progress} />
-    </Container>
-  );
 }

@@ -1,9 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { assemblerSize } from './pieces/Assembler';
-import { factorySize } from './pieces/Factory';
-import { generatorSize } from './pieces/Generator';
+import { assemblerData } from './pieces/Assembler';
+import { factoryData } from './pieces/Factory';
+import { generatorData } from './pieces/Generator';
+
+import Factory from './pieces/Factory';
+import Assembler from './pieces/Assembler';
+import Generator from './pieces/Generator';
 
 const Container = styled.div`
   display: flex;
@@ -31,14 +35,20 @@ const BuildingRow = styled.div`
 
 export default props => (
   <Container>
-    <BuildingRow height={factorySize.height+12}>
-      {props.store.buildings.factories.map(f=>f.getComponent())}
+    <BuildingRow height={factoryData.height+12}>
+      {Object.values(props.store.factories).map(b => (
+        <Factory key={b.id} data={b} store={props.store} />
+      ))}
     </BuildingRow>
-    <BuildingRow height={assemblerSize.height+12}>
-      {props.store.buildings.assemblers.map(f=>f.getComponent())}
+    <BuildingRow height={assemblerData.height+12}>
+      {Object.values(props.store.assemblers).map(b => (
+        <Assembler key={b.id} data={b} store={props.store} />
+      ))}
     </BuildingRow>
-    <BuildingRow height={generatorSize.height+12}>
-      {props.store.buildings.generators.map(g=>g.getComponent())}
+    <BuildingRow height={generatorData.height+12}>
+      {Object.values(props.store.generators).map(b => (
+        <Generator key={b.id} data={b} store={props.store} />
+      ))}
     </BuildingRow>
   </Container>
 );
