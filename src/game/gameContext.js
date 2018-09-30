@@ -84,10 +84,10 @@ export default class GameStore extends React.Component {
 
   spend = cost => new Promise((resolve, reject) => {
     if (this.canAfford(cost)) {
+      const resources = {};
       this.setState((prevState, _) => {
-        const resources = { ...prevState.resources };
-        Object.keys(cost).forEach(rsrc => { resources[rsrc] = resources[rsrc] - cost[rsrc]; });
-        return { resources };
+        Object.keys(cost).forEach(rsrc => { resources[rsrc] = prevState[rsrc] - cost[rsrc]; });
+        return resources;
       }, resolve('success'));
     }
     reject('insufficient resources');
