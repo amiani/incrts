@@ -17,7 +17,10 @@ export const assemblerData = {
 
 export default props => (
   <Building width={assemblerData.width} height={assemblerData.height}>
-    <BuildQueue />
-    <button onClick={()=>props.store.makeProgress()}>Assemble</button>
+    <BuildQueue
+      queue={props.buildQueue.queue}
+      progress={props.buildQueue.progress}
+    />
+    <button onClick={()=>props.makeProgress(10)}>Assemble</button>
   </Building>
 );

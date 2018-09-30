@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { GameContext } from './gameContext';
 import { assemblerData } from './pieces/Assembler';
 import { factoryData } from './pieces/Factory';
 import { generatorData } from './pieces/Generator';
@@ -34,21 +35,32 @@ const BuildingRow = styled.div`
 `;
 
 export default props => (
-  <Container>
-    <BuildingRow height={factoryData.height+12}>
-      {Object.values(props.store.factories).map(b => (
-        <Factory key={b.id} data={b} store={props.store} />
-      ))}
-    </BuildingRow>
-    <BuildingRow height={assemblerData.height+12}>
-      {Object.values(props.store.assemblers).map(b => (
-        <Assembler key={b.id} data={b} store={props.store} />
-      ))}
-    </BuildingRow>
-    <BuildingRow height={generatorData.height+12}>
-      {Object.values(props.store.generators).map(b => (
-        <Generator key={b.id} data={b} store={props.store} />
-      ))}
-    </BuildingRow>
-  </Container>
+  <GameContext.Consumer>{store => (
+    <Container>
+      <BuildingRow height={factoryData.height+12}>
+        {Object.values(props.store.factories).map(b => (
+        <Factory
+          key={b.id}
+          data={b}
+          buildQueue={store.buildQueues.get(b.id)}
+        />
+        ))}
+      </BuildingRow>
+      <BuildingRow height={assemblerData.height+12}>
+        {Object.values(props.store.assemblers).map(b => (
+          <Assembler
+            key={b.id}
+            data={b}
+            buildQueue={store.buildQueues.get(b.id)}
+            makeProgress={p => store.makeProgress(p)}
+          />
+        ))}
+      </BuildingRow>
+      <BuildingRow height={generatorData.height+12}>
+        {Object.values(props.store.generators).map(b => (
+          <Generator key={b.id} data={b} store={props.store} />
+        ))}
+      </BuildingRow>
+    </Container>
+  )}</GameContext.Consumer>
 );

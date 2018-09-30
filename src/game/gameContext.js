@@ -27,7 +27,7 @@ export default class GameStore extends React.Component {
     generators: {},
     
     //buildQueues
-    buildQueues: {},
+    buildQueues: new Map(),
 
     addEnergy: amount => this.setState((prevState, _) => ({ energy: prevState.energy + amount })),
 
@@ -47,11 +47,21 @@ export default class GameStore extends React.Component {
     }),
 
     buildFactory: () => this.buildBuilding({ ...factoryData, id: uuidv4() }),
-    buildAssembler: () => this.buildBuilding({ ...assemblerData, id: uuidv4() }),
+    buildAssembler: async () => {
+      try {
+        const id = uuidv4();
+        await Promise.all([
+          this.buildBuilding({ ...assemblerData, id }),
+          this.makeBuildQueue(id),
+        ]);
+      }
+      catch(error) {
+        console.log(error);
+      }
+    },
     buildGenerator: async () => {
       try {
         await this.buildBuilding({ ...generatorData, id: uuidv4() });
-        this.makeBuildQueue();
       }
       catch(error) {
         console.log(error);
@@ -101,14 +111,33 @@ export default class GameStore extends React.Component {
       }), resolve(`Built ${data.name}`));
     }
     catch(error) {
-      console.log(error);
       reject(error);
     }
   })
 
   makeBuildQueue = buildingId => new Promise((resolve, reject) => {
-    resolve('hello');
+    this.setState((prevState, _) => {
+      const buildQueues = this.copyBuildQueues(prevState.buildQueues);
+      buildQueues.set(buildingId, {
+        id: uuidv4(),
+        buildingId,
+        progress: 0,
+        queue: [],
+      });
+      return { buildQueues };
+    }, resolve(`made BuildQueue for ${buildingId}`));
   })
+
+  copyBuildQueues = buildQueues => {
+    const nextBuildQueues = new Map();
+    buildQueues.forEach((buildQueue, buildingId) => {
+      nextBuildQueues.set(buildingId, {
+        ...buildQueue,
+        queue: [...buildQueue.queue],
+      });
+    });
+    return nextBuildQueues;
+  }
 
   sumPieceArrDrain = pieces => pieces.reduce((acc, curr) => acc + curr.drain, 0)
 
