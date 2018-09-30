@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   height: 10px;
+  border: 2px blue;
+  border-style: none none groove groove;
 `;
 
 const Progress = styled.div`

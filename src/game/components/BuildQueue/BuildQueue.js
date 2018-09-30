@@ -8,7 +8,6 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 40px;
-  border: solid black 1px;
   margin: 5px 0 5px 0;
 `;
 

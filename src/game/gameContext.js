@@ -10,9 +10,9 @@ export const GameContext = React.createContext();
 export default class GameStore extends React.Component {
   state = {
     //resources
-    credits: 100,
+    credits: 200,
     creditIncome: 0,
-    fabric: 100,
+    fabric: 200,
     fabricIncome: 0,
     hardware: 0,
     hardwareIncome: 0,
