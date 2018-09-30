@@ -68,9 +68,11 @@ export default class GameStore extends React.Component {
       }
     },
 
-    makeProgress: id => this.setState((prevState, _) => ({
-      assemblers: prevState.assemblers,
-    })),
+    makeProgress: (id, amount) => this.setState((prevState, _) => {
+      const buildQueues = this.copyBuildQueues(prevState.buildQueues);
+      buildQueues.get(id).progress += amount;
+      return { buildQueues };
+    }),
         
     getBuildingsDrain: () => {
       const factoryDrain = this.sumPieceArrDrain(Object.values(this.state.factories));
@@ -129,14 +131,14 @@ export default class GameStore extends React.Component {
   })
 
   copyBuildQueues = buildQueues => {
-    const nextBuildQueues = new Map();
+    const copy = new Map();
     buildQueues.forEach((buildQueue, buildingId) => {
-      nextBuildQueues.set(buildingId, {
+      copy.set(buildingId, {
         ...buildQueue,
         queue: [...buildQueue.queue],
       });
     });
-    return nextBuildQueues;
+    return copy;
   }
 
   sumPieceArrDrain = pieces => pieces.reduce((acc, curr) => acc + curr.drain, 0)

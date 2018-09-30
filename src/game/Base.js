@@ -52,7 +52,7 @@ export default props => (
             key={b.id}
             data={b}
             buildQueue={store.buildQueues.get(b.id)}
-            makeProgress={p => store.makeProgress(p)}
+            makeProgress={store.makeProgress}
           />
         ))}
       </BuildingRow>

@@ -21,6 +21,6 @@ export default props => (
       queue={props.buildQueue.queue}
       progress={props.buildQueue.progress}
     />
-    <button onClick={()=>props.makeProgress(10)}>Assemble</button>
+    <button onClick={()=>props.makeProgress(props.data.id, 10)}>Assemble</button>
   </Building>
 );
