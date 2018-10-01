@@ -20,13 +20,13 @@ const QueueBox = styled.div`
 const QueueItem = styled.div`
   height: 30px;
   width: 30px;
-  background-color: green;
+  background-image: url(images/${p => p.icon});
 `;
 
 export default props => (
   <Container>
     <QueueBox>
-      {props.items.map(q => <QueueItem />)}
+      {props.items.map(q => <QueueItem key={q.id} icon={q.icon} />)}
     </QueueBox>
     <ProgressBar progress={props.progress} />
   </Container>

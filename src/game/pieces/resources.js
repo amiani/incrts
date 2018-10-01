@@ -1,6 +1,9 @@
-export const hardwareData = {
-  name: 'hardware',
-  cost: { fabric: 5 },
-  output: { hardware: 1 },
-  icon: 'hardware.png',
+import uuidv4 from 'uuid/v4';
+
+export function hardwareData() {
+  this.id = uuidv4();
+  this.name = 'hardware';
+  this.cost = { fabric: 5 };
+  this.output = { hardware: 1 };
+  this.icon = 'hardware.png';
 };

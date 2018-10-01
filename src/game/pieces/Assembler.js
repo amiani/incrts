@@ -25,7 +25,7 @@ export default class Assembler extends React.Component {
 
   enqueueHardware = async () => {
     try {
-      await this.props.store.enqueue(this.id, hardwareData);
+      await this.props.store.enqueue(this.id, new hardwareData());
     }
     catch(error) {
       console.log(error);
