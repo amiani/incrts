@@ -18,7 +18,7 @@ export default props => (
     height={factoryData.height}
     front={
       <BuildQueue
-        queue={props.buildQueue.queue}
+        items={props.buildQueue.items}
         progress={props.buildQueue.progress}
       />
     }

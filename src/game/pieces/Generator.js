@@ -1,10 +1,7 @@
 import React from 'react';
 //import styled from 'styled-components';
 
-import { GameContext } from '../gameContext';
 import Building from './Building';
-import BuildQueue from '../components/BuildQueue';
-import UnselectableP from '../UnselectableP';
 
 export const generatorData = {
   type: 'generators',

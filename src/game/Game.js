@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Lazy from 'lazy.js';
 
 //import { GameContext } from './gameContext'
 import Sidebar from './Sidebar'

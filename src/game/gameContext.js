@@ -59,7 +59,6 @@ export default class GameStore extends React.Component {
         console.log(error);
       }
     },
-
     buildAssembler: async () => {
       try {
         const id = uuidv4();
@@ -73,37 +72,52 @@ export default class GameStore extends React.Component {
       }
     },
     buildGenerator: async () => {
-      try {
-        await this.buildBuilding({ ...generatorData, id: uuidv4() });
-      }
+      try { await this.buildBuilding({ ...generatorData, id: uuidv4() }); }
       catch(error) {
         console.log(error);
       }
     },
 
     addProgress: (id, amount) => new Promise((resolve, reject) => {
-      if (this.state.buildQueues[id].queue.length > 0) {
+      if (this.state.buildQueues[id].items.length > 0) {
         this.setState((prevState, _) => {
           const buildQueues = this.copyBuildQueues(prevState.buildQueues);
-          buildQueues[id].progress += amount;
+          const actual = buildQueues[id];
+          if (actual.progress >= 100) {
+            this.earn(actual.items[0].output)
+            actual.items.shift();
+            actual.progress = 0;
+          } else {
+            actual.progress += amount;
+          }
           return { buildQueues };
         }, resolve('success'));
       }
       reject('nothing queued');
     }),
+
+    //TODO: find way of using prevState for prevActual
+    enqueue: (id, item) => new Promise((resolve, reject) => {
+      const prevActual = this.state.buildQueues[id];
+      if (prevActual.items.length >= prevActual.maxLength) {
+        return reject('queue full');
+      }
+      this.setState((prevState, _) => {
+        const buildQueues = this.copyBuildQueues(prevState.buildQueues);
+        buildQueues[id].items.push(item);
+        return { buildQueues };
+      }, resolve('success'));
+    }),
         
     getBuildingsDrain: () => {
-      const factoryDrain = this.sumPieceArrDrain(this.state.factories);
-      const assemblerDrain = this.sumPieceArrDrain(this.state.assemblers);
+      const factoryDrain = this.reducePieceDrain(this.state.factories);
+      const assemblerDrain = this.reducePieceDrain(this.state.assemblers);
       return factoryDrain + assemblerDrain;
     },
 
     updateBuildings: () => {
-      //let drain = this.state.buildings.factories.reduce((acc, curr) => acc + curr.update(), 0);
-      //drain += this.state.buildings.assemblers.reduce((acc, curr) => acc + curr.update(), 0);
       const drain = this.state.getBuildingsDrain();
 
-      //console.log(this.state.generators);
       const energyIncome = Lazy(this.state.generators)
         .pluck('output')
         .reduce((acc, curr) => acc + curr, 0);
@@ -125,6 +139,10 @@ export default class GameStore extends React.Component {
     reject('insufficient resources');
   })
 
+  earn = cost => this.setState((prevState, _) => (
+    Lazy(cost).map((amt, name) => [name, prevState[name] + amt]).toObject()
+  ))
+
   buildBuilding = data => new Promise(async (resolve, reject) => {
     try {
       await this.spend(data.cost);
@@ -144,7 +162,8 @@ export default class GameStore extends React.Component {
         id: uuidv4(),
         buildingId,
         progress: 0,
-        queue: [],
+        maxLength: 2,
+        items: [],
       };
       return { buildQueues };
     }, resolve(`made BuildQueue for ${buildingId}`));
@@ -155,13 +174,13 @@ export default class GameStore extends React.Component {
       [buildingId],
       {
         ...buildQueue,
-        queue: [...buildQueue.queue],
+        items: [...buildQueue.items],
       }
     ]))
     .toObject();
   }
 
-  sumPieceArrDrain = pieces => Lazy(pieces).pluck('drain').reduce((acc, curr) => acc + curr, 0)
+  reducePieceDrain = pieces => Lazy(pieces).pluck('drain').reduce((acc, curr) => acc + curr, 0)
 
   render() {
     return (

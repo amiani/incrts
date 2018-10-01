@@ -1,10 +1,8 @@
 import React from 'react';
-import uuidv4 from 'uuid/v4';
-//import styled from 'styled-components';
 
-import { GameContext } from '../gameContext';
 import Building from './Building';
 import BuildQueue from '../components/BuildQueue';
+import { hardwareData } from './resources';
 
 export const assemblerData = {
   type: 'assemblers',
@@ -16,8 +14,22 @@ export const assemblerData = {
 };
 
 export default class Assembler extends React.Component {
+  constructor(props) {
+    super();
+    this.id = props.data.id;
+  }
+
   addProgress = () => {
-    this.props.store.addProgress(this.props.data.id, 50*this.props.store.productivity)
+    this.props.store.addProgress(this.id, 50*this.props.store.productivity)
+  }
+
+  enqueueHardware = async () => {
+    try {
+      await this.props.store.enqueue(this.id, hardwareData);
+    }
+    catch(error) {
+      console.log(error);
+    }
   }
 
   render() {
@@ -28,10 +40,11 @@ export default class Assembler extends React.Component {
         front={
           <div>
             <BuildQueue
-              queue={this.props.buildQueue.queue}
+              items={this.props.buildQueue.items}
               progress={this.props.buildQueue.progress}
             />
             <button onClick={this.addProgress}>Assemble</button>
+            <button onClick={this.enqueueHardware}>Hardware</button>
           </div>
         }
       />

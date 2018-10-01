@@ -26,7 +26,7 @@ const QueueItem = styled.div`
 export default props => (
   <Container>
     <QueueBox>
-      {props.queue.map(q => <QueueItem />)}
+      {props.items.map(q => <QueueItem />)}
     </QueueBox>
     <ProgressBar progress={props.progress} />
   </Container>
