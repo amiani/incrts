@@ -81,15 +81,15 @@ export default class GameStore extends React.Component {
       }
     },
 
-    makeProgress: (id, amount) => this.setState((prevState, _) => {
+    addProgress: (id, amount) => this.setState((prevState, _) => {
       const buildQueues = this.copyBuildQueues(prevState.buildQueues);
       buildQueues[id].progress += amount;
       return { buildQueues };
     }),
         
     getBuildingsDrain: () => {
-      const factoryDrain = this.sumPieceArrDrain(Object.values(this.state.factories));
-      const assemblerDrain = this.sumPieceArrDrain(Object.values(this.state.assemblers));
+      const factoryDrain = this.sumPieceArrDrain(this.state.factories);
+      const assemblerDrain = this.sumPieceArrDrain(this.state.assemblers);
       return factoryDrain + assemblerDrain;
     },
 
@@ -107,13 +107,13 @@ export default class GameStore extends React.Component {
     },
   }
 
-  canAfford = cost => Object.keys(cost).reduce((acc, curr) => acc && this.state[curr] >= cost[curr], true)
+  canAfford = cost => Lazy(cost).keys().reduce((acc, curr) => acc && this.state[curr] >= cost[curr], true)
 
   spend = cost => new Promise((resolve, reject) => {
     if (this.canAfford(cost)) {
       const resources = {};
       this.setState((prevState, _) => {
-        Object.keys(cost).forEach(rsrc => { resources[rsrc] = prevState[rsrc] - cost[rsrc]; });
+        Lazy(cost).keys().each(rsrc => { resources[rsrc] = prevState[rsrc] - cost[rsrc]; });
         return resources;
       }, resolve('success'));
     }
@@ -156,7 +156,7 @@ export default class GameStore extends React.Component {
     .toObject();
   }
 
-  sumPieceArrDrain = pieces => pieces.reduce((acc, curr) => acc + curr.drain, 0)
+  sumPieceArrDrain = pieces => Lazy(pieces).pluck('drain').reduce((acc, curr) => acc + curr, 0)
 
   render() {
     return (

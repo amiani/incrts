@@ -36,7 +36,7 @@ export default class Game extends React.Component {
     return (
       <GameGrid>
         <Sidebar store={this.props.store} />
-        <Base store={this.props.store} />
+        <Base />
         <Battlefield store={this.props.store} />
       </GameGrid>
     );

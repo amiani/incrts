@@ -16,7 +16,11 @@ export const generatorData = {
 };
 
 export default props => (
-  <Building width={generatorData.width} height={generatorData.height}>
-    <button onClick={()=>props.store.addEnergy(10)}>Generate 10</button>
-  </Building>
+  <Building
+    width={generatorData.width}
+    height={generatorData.height}
+    front={
+      <button onClick={()=>props.store.addEnergy(10)}>Generate 10</button>
+    }
+  />
 );

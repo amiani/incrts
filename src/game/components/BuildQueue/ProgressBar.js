@@ -10,7 +10,7 @@ const Container = styled.div`
 const Progress = styled.div`
   background-color: blue;
   width: ${p => p.progress > 100 ? 100 : p.progress}%;
-  transition: width 150ms;
+  transition: width 250ms;
   height: 10px;
 `;
 

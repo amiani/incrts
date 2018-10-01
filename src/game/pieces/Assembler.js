@@ -15,12 +15,27 @@ export const assemblerData = {
   height: 250,
 };
 
-export default props => (
-  <Building width={assemblerData.width} height={assemblerData.height}>
-    <BuildQueue
-      queue={props.buildQueue.queue}
-      progress={props.buildQueue.progress}
-    />
-    <button onClick={()=>props.makeProgress(props.data.id, 10)}>Assemble</button>
-  </Building>
-);
+export default class Assembler extends React.Component {
+  addProgress = () => {
+    console.log('addProgress');
+    this.props.store.addProgress(this.props.data.id, 50*this.props.store.productivity)
+  }
+
+  render() {
+    return (
+      <Building 
+        width={assemblerData.width}
+        height={assemblerData.height}
+        front={
+          <div>
+            <BuildQueue
+              queue={this.props.buildQueue.queue}
+              progress={this.props.buildQueue.progress}
+            />
+            <button onClick={this.addProgress}>Assemble</button>
+          </div>
+        }
+      />
+    );
+  }
+}

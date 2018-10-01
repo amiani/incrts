@@ -13,10 +13,14 @@ export const factoryData = {
 };
 
 export default props => (
-  <Building width={factoryData.width} height={factoryData.height}>
-    <BuildQueue
-      queue={props.buildQueue.queue}
-      progress={props.buildQueue.progress}
-    />
-  </Building>
+  <Building
+    width={factoryData.width}
+    height={factoryData.height}
+    front={
+      <BuildQueue
+        queue={props.buildQueue.queue}
+        progress={props.buildQueue.progress}
+      />
+    }
+  />
 );

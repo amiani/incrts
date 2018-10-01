@@ -35,9 +35,7 @@ const BuildingRow = styled.div`
   margin-bottom: 10px;
 `;
 
-export default props => {
-  //console.log(props.store.buildQueues);
-  return (
+export default props => (
   <GameContext.Consumer>{store => (
     <Container>
       <BuildingRow height={factoryData.height+12}>
@@ -46,6 +44,7 @@ export default props => {
             key={b.id}
             data={b}
             buildQueue={store.buildQueues[b.id]}
+            store={store}
           />
         )).toArray()}
       </BuildingRow>
@@ -55,16 +54,19 @@ export default props => {
             key={b.id}
             data={b}
             buildQueue={store.buildQueues[b.id]}
-            makeProgress={store.makeProgress}
+            store={store}
           />
         )).toArray()}
       </BuildingRow>
       <BuildingRow height={generatorData.height+12}>
         {Lazy(store.generators).map(b => (
-          <Generator key={b.id} data={b} store={props.store} />
+          <Generator
+            key={b.id}
+            data={b}
+            store={store}
+          />
         )).toArray()}
       </BuildingRow>
     </Container>
   )}</GameContext.Consumer>
 );
-}
