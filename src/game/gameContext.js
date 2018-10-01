@@ -81,16 +81,17 @@ export default class GameStore extends React.Component {
     addProgress: (id, amount) => new Promise((resolve, reject) => {
       if (this.state.buildQueues[id].items.length > 0) {
         this.setState((prevState, _) => {
-          const buildQueues = this.copyBuildQueues(prevState.buildQueues);
-          const actual = buildQueues[id];
+          let nextState = {
+            buildQueues: this.copyBuildQueues(prevState.buildQueues)
+          };
+          const actual = nextState.buildQueues[id];
           if (actual.progress >= 100) {
-            this.earn(actual.items[0].output)
-            actual.items.shift();
-            actual.progress = 0;
+            this.addOutput(prevState, nextState, actual.items[0].output);
+            this.completeBuild(actual);
           } else {
             actual.progress += amount;
           }
-          return { buildQueues };
+          return nextState;
         }, resolve('success'));
       }
       reject('nothing queued');
@@ -124,6 +125,25 @@ export default class GameStore extends React.Component {
 
       this.setState((prevState, _) => ({ drain, energyIncome }));
     },
+
+    updateBuildQueues: () => this.setState((prevState, _) => {
+      const nextState = {};
+      nextState.buildQueues = Lazy(prevState.buildQueues)
+        .map((buildQueue, buildingId) => {
+          const nextBuildQueue = {
+            ...buildQueue,
+            items: [...buildQueue.items]
+          };
+          if (nextBuildQueue.progress >= 100) {
+            this.addOutput(prevState, nextState, nextBuildQueue.items[0].output)
+            this.completeBuild(nextBuildQueue);
+          }
+          return [buildingId, nextBuildQueue];
+        })
+        .toObject();
+      //console.log(nextState);
+      return nextState;
+    }),
   }
 
   canAfford = cost => Lazy(cost).keys().reduce((acc, curr) => acc && this.state[curr] >= cost[curr], true)
@@ -139,9 +159,11 @@ export default class GameStore extends React.Component {
     reject('insufficient resources');
   })
 
-  earn = cost => this.setState((prevState, _) => (
-    Lazy(cost).map((amt, name) => [name, prevState[name] + amt]).toObject()
-  ))
+  addOutput = (prevState, nextState, output) => {
+    Lazy(output).each((amt, name) => {
+      nextState[name] = (nextState[name] ? nextState[name] : prevState[name]) + amt;
+    });
+  }
 
   buildBuilding = data => new Promise(async (resolve, reject) => {
     try {
@@ -171,7 +193,7 @@ export default class GameStore extends React.Component {
 
   copyBuildQueues = buildQueues => {
     return Lazy(buildQueues).map((buildQueue, buildingId) => ([
-      [buildingId],
+      buildingId,
       {
         ...buildQueue,
         items: [...buildQueue.items],
@@ -179,6 +201,12 @@ export default class GameStore extends React.Component {
     ]))
     .toObject();
   }
+
+  completeBuild = buildQueue => {
+    buildQueue.progress = 0;
+    buildQueue.items.shift();
+  }
+
 
   reducePieceDrain = pieces => Lazy(pieces).pluck('drain').reduce((acc, curr) => acc + curr, 0)
 

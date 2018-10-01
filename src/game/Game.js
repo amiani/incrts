@@ -29,6 +29,7 @@ export default class Game extends React.Component {
   tickUpdate = () => {
     this.props.store.updateResources();
     this.props.store.updateBuildings();
+    this.props.store.updateBuildQueues();
   }
 
   render() {
