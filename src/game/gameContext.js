@@ -1,5 +1,6 @@
 import React from 'react';
 import uuidv4 from 'uuid/v4';
+import Lazy from 'lazy.js';
 
 import { factoryData } from './pieces/Factory';
 import { assemblerData } from './pieces/Assembler';
@@ -27,7 +28,7 @@ export default class GameStore extends React.Component {
     generators: {},
     
     //buildQueues
-    buildQueues: new Map(),
+    buildQueues: {},
 
     addEnergy: amount => this.setState((prevState, _) => ({ energy: prevState.energy + amount })),
 
@@ -46,7 +47,19 @@ export default class GameStore extends React.Component {
       });
     }),
 
-    buildFactory: () => this.buildBuilding({ ...factoryData, id: uuidv4() }),
+    buildFactory: async () => {
+      try {
+        const id = uuidv4();
+        await Promise.all([
+          this.buildBuilding({ ...factoryData, id }),
+          this.makeBuildQueue(id),
+        ])
+      }
+      catch(error) {
+        console.log(error);
+      }
+    },
+
     buildAssembler: async () => {
       try {
         const id = uuidv4();
@@ -70,7 +83,7 @@ export default class GameStore extends React.Component {
 
     makeProgress: (id, amount) => this.setState((prevState, _) => {
       const buildQueues = this.copyBuildQueues(prevState.buildQueues);
-      buildQueues.get(id).progress += amount;
+      buildQueues[id].progress += amount;
       return { buildQueues };
     }),
         
@@ -85,8 +98,10 @@ export default class GameStore extends React.Component {
       //drain += this.state.buildings.assemblers.reduce((acc, curr) => acc + curr.update(), 0);
       const drain = this.state.getBuildingsDrain();
 
-      const energyIncome = Object.values(this.state.generators)
-        .reduce((acc, curr) => acc + curr.output, 0);
+      //console.log(this.state.generators);
+      const energyIncome = Lazy(this.state.generators)
+        .pluck('output')
+        .reduce((acc, curr) => acc + curr, 0);
 
       this.setState((prevState, _) => ({ drain, energyIncome }));
     },
@@ -120,25 +135,25 @@ export default class GameStore extends React.Component {
   makeBuildQueue = buildingId => new Promise((resolve, reject) => {
     this.setState((prevState, _) => {
       const buildQueues = this.copyBuildQueues(prevState.buildQueues);
-      buildQueues.set(buildingId, {
+      buildQueues[buildingId] = {
         id: uuidv4(),
         buildingId,
         progress: 0,
         queue: [],
-      });
+      };
       return { buildQueues };
     }, resolve(`made BuildQueue for ${buildingId}`));
   })
 
   copyBuildQueues = buildQueues => {
-    const copy = new Map();
-    buildQueues.forEach((buildQueue, buildingId) => {
-      copy.set(buildingId, {
+    return Lazy(buildQueues).map((buildQueue, buildingId) => ([
+      [buildingId],
+      {
         ...buildQueue,
         queue: [...buildQueue.queue],
-      });
-    });
-    return copy;
+      }
+    ]))
+    .toObject();
   }
 
   sumPieceArrDrain = pieces => pieces.reduce((acc, curr) => acc + curr.drain, 0)

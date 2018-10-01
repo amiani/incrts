@@ -4777,6 +4777,11 @@ lazy-cache@^1.0.3:
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
   integrity sha1-odePw6UEdMuAhF07O24dpJpEbo4=
 
+lazy.js@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/lazy.js/-/lazy.js-0.5.1.tgz#9f05c27f42c66ae7f41814c9674d105efcbc432f"
+  integrity sha512-p9v24vaKrzS2mEx3yuzva/3M6I3+HwvXd0pB1Xf/IvsFIMdhQgmym7JBO0e7c0OZmKTo07sCuiCIm6jazSWFNw==
+
 lcid@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lcid/-/lcid-1.0.0.tgz#308accafa0bc483a3867b4b6f2b9506251d1b835"
@@ -8179,6 +8184,11 @@ write@^0.2.1:
   integrity sha1-X8A4KOJkzqP+kUVUdvejxWbLB1c=
   dependencies:
     mkdirp "^0.5.1"
+
+wu@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/wu/-/wu-2.1.0.tgz#7e72e3fba23e0ff669ddd537e1c857d3d4b1614f"
+  integrity sha1-fnLj+6I+D/Zp3dU34chX09SxYU8=
 
 xdg-basedir@^3.0.0:
   version "3.0.0"

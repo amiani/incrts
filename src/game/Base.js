@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Lazy from 'lazy.js';
 
 import { GameContext } from './gameContext';
 import { assemblerData } from './pieces/Assembler';
@@ -34,33 +35,36 @@ const BuildingRow = styled.div`
   margin-bottom: 10px;
 `;
 
-export default props => (
+export default props => {
+  //console.log(props.store.buildQueues);
+  return (
   <GameContext.Consumer>{store => (
     <Container>
       <BuildingRow height={factoryData.height+12}>
-        {Object.values(props.store.factories).map(b => (
-        <Factory
-          key={b.id}
-          data={b}
-          buildQueue={store.buildQueues.get(b.id)}
-        />
-        ))}
+        {Lazy(store.factories).map(b => (
+          <Factory
+            key={b.id}
+            data={b}
+            buildQueue={store.buildQueues[b.id]}
+          />
+        )).toArray()}
       </BuildingRow>
       <BuildingRow height={assemblerData.height+12}>
-        {Object.values(props.store.assemblers).map(b => (
+        {Lazy(store.assemblers).map(b => (
           <Assembler
             key={b.id}
             data={b}
-            buildQueue={store.buildQueues.get(b.id)}
+            buildQueue={store.buildQueues[b.id]}
             makeProgress={store.makeProgress}
           />
-        ))}
+        )).toArray()}
       </BuildingRow>
       <BuildingRow height={generatorData.height+12}>
-        {Object.values(props.store.generators).map(b => (
+        {Lazy(store.generators).map(b => (
           <Generator key={b.id} data={b} store={props.store} />
-        ))}
+        )).toArray()}
       </BuildingRow>
     </Container>
   )}</GameContext.Consumer>
 );
+}
