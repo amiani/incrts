@@ -17,7 +17,6 @@ export const assemblerData = {
 
 export default class Assembler extends React.Component {
   addProgress = () => {
-    console.log('addProgress');
     this.props.store.addProgress(this.props.data.id, 50*this.props.store.productivity)
   }
 

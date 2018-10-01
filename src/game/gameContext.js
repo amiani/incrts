@@ -81,10 +81,15 @@ export default class GameStore extends React.Component {
       }
     },
 
-    addProgress: (id, amount) => this.setState((prevState, _) => {
-      const buildQueues = this.copyBuildQueues(prevState.buildQueues);
-      buildQueues[id].progress += amount;
-      return { buildQueues };
+    addProgress: (id, amount) => new Promise((resolve, reject) => {
+      if (this.state.buildQueues[id].queue.length > 0) {
+        this.setState((prevState, _) => {
+          const buildQueues = this.copyBuildQueues(prevState.buildQueues);
+          buildQueues[id].progress += amount;
+          return { buildQueues };
+        }, resolve('success'));
+      }
+      reject('nothing queued');
     }),
         
     getBuildingsDrain: () => {
