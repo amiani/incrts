@@ -10,8 +10,10 @@ import { TICKRATE } from './constants'
 const GameGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 4fr 2fr;
-  height: 100vh;
-  width: 100vw;
+  --pad: 5px;
+  padding: var(--pad);
+  height: calc(100vh - 2*var(--pad));
+  width: calc(100vw - 2*var(--pad));
 `;
 
 export default class Game extends React.Component {

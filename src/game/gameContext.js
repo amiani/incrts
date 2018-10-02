@@ -5,6 +5,7 @@ import Lazy from 'lazy.js';
 import { factoryData } from './pieces/Factory';
 import { assemblerData } from './pieces/Assembler';
 import { generatorData } from './pieces/Generator';
+import { hangarData } from './pieces/hangar';
 
 export const GameContext = React.createContext();
 
@@ -33,7 +34,7 @@ export default class GameStore extends React.Component {
     units: {},
 
     //storage
-    storage: {},
+    hangars: {},
 
     addEnergy: amount => this.setState((prevState, _) => ({ energy: prevState.energy + amount })),
 
@@ -57,6 +58,7 @@ export default class GameStore extends React.Component {
         const id = uuidv4();
         await Promise.all([
           this.buildBuilding({ ...factoryData, id }),
+          this.makeHangar(id, true),
           this.makeBuildQueue(id),
         ])
       }
@@ -157,6 +159,13 @@ export default class GameStore extends React.Component {
         .toObject();
       return nextState;
     }),
+
+    /*
+    updateHangars: () => {
+      this.setState((prevState, _) => {
+        Lazy(prevState.hangars).groupBy('source').
+    },
+    */
   }
 
   canAfford = cost => Lazy(cost).keys().reduce((acc, curr) => acc && this.state[curr] >= cost[curr], true)
@@ -220,6 +229,21 @@ export default class GameStore extends React.Component {
     buildQueue.items.shift();
   }
 
+  makeHangar = (buildingId, isSource) => new Promise((resolve, reject) => {
+    this.setState((prevState, _) => {
+      const hangars = Lazy(prevState.hangars)
+        .map((hangar, buildingId) => ([
+          buildingId,
+          {
+            ...hangar,
+            demand: { ...hangar.demand },
+          }
+        ]))
+        .toObject();
+      hangars[buildingId] = new hangarData(buildingId, isSource);
+      return { hangars };
+    }, resolve(`made hangar for ${buildingId}`));
+  })
 
   reducePieceDrain = pieces => Lazy(pieces).pluck('drain').reduce((acc, curr) => acc + curr, 0)
 
