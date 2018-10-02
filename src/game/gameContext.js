@@ -5,7 +5,7 @@ import Lazy from 'lazy.js';
 import { factoryData } from './pieces/Factory';
 import { assemblerData } from './pieces/Assembler';
 import { generatorData } from './pieces/Generator';
-import { hangarData } from './pieces/hangar';
+import { hangarData } from './pieces/components/hangar';
 import { battlefieldData } from './Battlefield';
 import { portData } from './Port';
 
@@ -35,7 +35,7 @@ export default class GameStore extends React.Component {
     hangars: {},
 
     battlefields: {},
-    ports: {}.
+    ports: {},
 
     units: {},
 
@@ -161,6 +161,19 @@ export default class GameStore extends React.Component {
         })
         .toObject();
       return nextState;
+    }),
+
+    makeBattlefield: () => new Promise((resolve, reject) => {
+      this.setState((prevState, _) => {
+        const nextState = {
+          battlefields: { ...prevState.battlefields },
+          ports: { ...prevState.ports },
+        };
+        const bf = new battlefieldData();
+        nextState.battlefields[bf.id] = bf;
+        nextState.ports[bf.id] = new portData();
+        return nextState;
+      }, resolve('sucess'));
     }),
 
     /*

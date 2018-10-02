@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Building from './Building';
-import BuildQueue from '../components/BuildQueue';
+import BuildQueue from './components/BuildQueue';
 import { hardwareData } from './resources';
 
 export const assemblerData = {

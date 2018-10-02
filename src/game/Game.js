@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Lazy from 'lazy.js';
 
 import Sidebar from './Sidebar'
 import Base from './Base'
@@ -25,6 +26,7 @@ export default class Game extends React.Component {
 
   initialize = () => {
     this.props.store.buildGenerator();
+    this.props.store.makeBattlefield();
   }
 
   tickUpdate = () => {
@@ -38,7 +40,12 @@ export default class Game extends React.Component {
       <GameGrid>
         <Sidebar store={this.props.store} />
         <Base />
-        <Battlefield store={this.props.store} />
+        {Lazy(this.props.store.battlefields).map(bf => (
+          <Battlefield
+            key={bf.id}
+            store={this.props.store}
+          />
+        )).toArray()}
       </GameGrid>
     );
   }

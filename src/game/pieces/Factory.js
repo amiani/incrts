@@ -2,7 +2,7 @@ import React from 'react';
 //import styled from 'styled-components';
 
 import Building from './Building';
-import BuildQueue from '../components/BuildQueue';
+import BuildQueue from './components/BuildQueue';
 import { tankData } from './units';
 
 export const factoryData = {
