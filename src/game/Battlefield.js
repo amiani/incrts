@@ -1,7 +1,12 @@
 import React from 'react';
+import uuidv4 from 'uuid/v4';
 import styled from 'styled-components';
 
 import Port from './pieces/Port';
+
+export function battlefieldData() {
+  this.id = uuidv4();
+}
 
 const Container = styled.div`
   display: flex;

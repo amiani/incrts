@@ -6,6 +6,8 @@ import { factoryData } from './pieces/Factory';
 import { assemblerData } from './pieces/Assembler';
 import { generatorData } from './pieces/Generator';
 import { hangarData } from './pieces/hangar';
+import { battlefieldData } from './Battlefield';
+import { portData } from './Port';
 
 export const GameContext = React.createContext();
 
@@ -27,14 +29,15 @@ export default class GameStore extends React.Component {
     factories: {},
     assemblers: {},
     generators: {},
-    //buildQueues
+
     buildQueues: {},
 
-    //units
-    units: {},
-
-    //storage
     hangars: {},
+
+    battlefields: {},
+    ports: {}.
+
+    units: {},
 
     addEnergy: amount => this.setState((prevState, _) => ({ energy: prevState.energy + amount })),
 
