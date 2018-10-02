@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-//import { GameContext } from './gameContext'
 import Sidebar from './Sidebar'
 import Base from './Base'
 import Battlefield from './Battlefield'

@@ -19,17 +19,16 @@ export default class Assembler extends React.Component {
     this.id = props.data.id;
   }
 
+  state = { message: '' }
+
   addProgress = () => {
     this.props.store.addProgress(this.id, 50*this.props.store.productivity)
+      .catch(error => this.setState({ message: error }));
   }
 
-  enqueueHardware = async () => {
-    try {
-      await this.props.store.enqueue(this.id, new hardwareData());
-    }
-    catch(error) {
-      console.log(error);
-    }
+  enqueueHardware = () => {
+    this.props.store.enqueue(this.id, new hardwareData())
+      .catch(error => this.setState({ message: error }));
   }
 
   render() {
@@ -37,6 +36,7 @@ export default class Assembler extends React.Component {
       <Building 
         width={assemblerData.width}
         height={assemblerData.height}
+        message={this.state.message}
         front={
           <div>
             <BuildQueue

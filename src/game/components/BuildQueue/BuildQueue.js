@@ -13,14 +13,16 @@ const Container = styled.div`
 
 const QueueBox = styled.div`
   display: flex;
-  height: 30px;
-  border: solid 1px red;
+  height: 32px;
+  border: 2px red;
+  border-style: none none groove groove;
 `;
 
 const QueueItem = styled.div`
   height: 30px;
   width: 30px;
   background-image: url(images/${p => p.icon});
+  background-size: 100% 100%;
 `;
 
 export default props => (

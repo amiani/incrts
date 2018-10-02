@@ -26,9 +26,14 @@ export default class GameStore extends React.Component {
     factories: {},
     assemblers: {},
     generators: {},
-    
     //buildQueues
     buildQueues: {},
+
+    //units
+    units: {},
+
+    //storage
+    storage: {},
 
     addEnergy: amount => this.setState((prevState, _) => ({ energy: prevState.energy + amount })),
 
@@ -98,11 +103,20 @@ export default class GameStore extends React.Component {
     }),
 
     //TODO: find way of using prevState for prevActual
-    enqueue: (id, item) => new Promise((resolve, reject) => {
+    enqueue: (id, item) => new Promise(async (resolve, reject) => {
       const prevActual = this.state.buildQueues[id];
       if (prevActual.items.length >= prevActual.maxLength) {
         return reject('queue full');
       }
+      if (item.cost) {
+        try {
+          await this.spend(item.cost);
+        }
+        catch(error) {
+          return reject(error);
+        }
+      }
+
       this.setState((prevState, _) => {
         const buildQueues = this.copyBuildQueues(prevState.buildQueues);
         buildQueues[id].items.push(item);
@@ -141,7 +155,6 @@ export default class GameStore extends React.Component {
           return [buildingId, nextBuildQueue];
         })
         .toObject();
-      //console.log(nextState);
       return nextState;
     }),
   }
