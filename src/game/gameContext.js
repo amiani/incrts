@@ -18,7 +18,7 @@ export default class GameStore extends React.Component {
     creditIncome: 0,
     fabric: 200,
     fabricIncome: 0,
-    hardware: 0,
+    hardware: 50,
     hardwareIncome: 0,
     energy: 0,
     energyIncome: 0,
@@ -114,9 +114,7 @@ export default class GameStore extends React.Component {
         return reject('queue full');
       }
       if (item.cost) {
-        try {
-          await this.spend(item.cost);
-        }
+        try { await this.spend(item.cost); }
         catch(error) {
           return reject(error);
         }
@@ -154,7 +152,7 @@ export default class GameStore extends React.Component {
             items: [...buildQueue.items]
           };
           if (nextBuildQueue.progress >= 100) {
-            this.addOutput(prevState, nextState, nextBuildQueue.items[0].output)
+            this.mutateWithResult(prevState, nextState, nextBuildQueue.items[0])
             this.completeBuild(nextBuildQueue);
           }
           return [buildingId, nextBuildQueue];
@@ -173,7 +171,7 @@ export default class GameStore extends React.Component {
         nextState.battlefields[bf.id] = bf;
         nextState.ports[bf.id] = new portData();
         return nextState;
-      }, resolve('sucess'));
+      }, resolve('success'));
     }),
 
     /*
@@ -181,7 +179,7 @@ export default class GameStore extends React.Component {
       this.setState((prevState, _) => {
         Lazy(prevState.hangars).groupBy('source').
     },
-    */
+        */
   }
 
   canAfford = cost => Lazy(cost).keys().reduce((acc, curr) => acc && this.state[curr] >= cost[curr], true)
@@ -197,10 +195,17 @@ export default class GameStore extends React.Component {
     reject('insufficient resources');
   })
 
-  addOutput = (prevState, nextState, output) => {
-    Lazy(output).each((amt, name) => {
-      nextState[name] = (nextState[name] ? nextState[name] : prevState[name]) + amt;
-    });
+  mutateWithResult = (prevState, nextState, item) => {
+    if (item.isUnit) {
+      !nextState.hangars && (nextState.hangars = this.copyHangars(prevState.hangars));
+      const hangar = nextState.hangars[item.ownerId];
+      !hangar[item.type] && (hangar[item.type] = []);
+      hangar[item.type].push(item);
+    } else {
+      Lazy(item.output).each((amt, name) => {
+        nextState[name] = (nextState[name] ? nextState[name] : prevState[name]) + amt;
+      });
+    }
   }
 
   buildBuilding = data => new Promise(async (resolve, reject) => {
@@ -239,6 +244,16 @@ export default class GameStore extends React.Component {
     ]))
     .toObject();
   }
+
+  copyHangars = hangars => Lazy(hangars)
+    .map((hangar, buildingId) => ([
+      buildingId,
+      {
+        ...hangar,
+        demand: { ...hangar.demand }
+      }
+    ]))
+    .toObject()
 
   completeBuild = buildQueue => {
     buildQueue.progress = 0;

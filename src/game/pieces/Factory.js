@@ -1,7 +1,7 @@
 import React from 'react';
 //import styled from 'styled-components';
 
-import Building from './Building';
+import Building, { Front, Back } from './Building';
 import BuildQueue from './components/BuildQueue';
 import { tankData } from './units';
 
@@ -20,13 +20,14 @@ export default class Factory extends React.Component {
     this.id = props.data.id;
   }
 
-  enqueueTank = async () => {
-    try {
-      await this.props.store.enqueue(this.id, new tankData());
-    }
-    catch(error) {
-      console.log(error);
-    }
+  addProgress = () => {
+    this.props.store.addProgress(this.id, 50*this.props.store.productivity)
+      .catch(error => console.log(error));
+  }
+
+  enqueueTank = () => {
+    this.props.store.enqueue(this.id, new tankData(this.id))
+    .catch(error => console.log(error));
   }
 
   render() {
@@ -35,13 +36,14 @@ export default class Factory extends React.Component {
         width={factoryData.width}
         height={factoryData.height}
         front={
-          <div>
+          <Front>
             <BuildQueue
               items={this.props.buildQueue.items}
               progress={this.props.buildQueue.progress}
             />
+            <button onClick={this.addProgress}>Build</button>
             <button onClick={this.enqueueTank}>Tank</button>
-          </div>
+          </Front>
         }
       />
     );

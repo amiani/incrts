@@ -9,6 +9,7 @@ const Container = styled.div`
   padding: 5px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   background-color: ${p => p.color};
 `;
 
@@ -41,3 +42,15 @@ export default class Building extends React.Component {
     );
   }
 }
+
+export const Front = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+export const Back = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;

@@ -1,6 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
 
-import Building from './Building';
+import Building, { Front, Back } from './Building';
 import BuildQueue from './components/BuildQueue';
 import { hardwareData } from './resources';
 
@@ -12,6 +13,7 @@ export const assemblerData = {
   width: 200,
   height: 250,
 };
+
 
 export default class Assembler extends React.Component {
   constructor(props) {
@@ -38,14 +40,14 @@ export default class Assembler extends React.Component {
         height={assemblerData.height}
         message={this.state.message}
         front={
-          <div>
+          <Front>
             <BuildQueue
               items={this.props.buildQueue.items}
               progress={this.props.buildQueue.progress}
             />
             <button onClick={this.addProgress}>Assemble</button>
             <button onClick={this.enqueueHardware}>Hardware</button>
-          </div>
+          </Front>
         }
       />
     );
