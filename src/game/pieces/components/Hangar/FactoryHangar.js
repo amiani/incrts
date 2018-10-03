@@ -30,14 +30,15 @@ export default class ExpandingHangar extends React.Component {
 
   render() {
     const numCols = Math.floor(this.props.width / (EDGELENGTH + 2));
-    console.log(numCols);
     if (this.state.expanded) {
       return <p>Expanded!</p>;
     } else {
       return (
         <Container height={this.props.height} width={this.props.width}>
           <DotGrid numCols={numCols}>
-            {this.props.hangar.units.map(u => <Dot color={colorDict[u.type]} />)}
+            {this.props.hangar.units.map(u => (
+              <Dot key={u.id} color={colorDict[u.type]} />
+            ))}
           </DotGrid>
         </Container>
       );
