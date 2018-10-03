@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Building, { Front, Back } from './Building';
 import BuildQueue from './components/BuildQueue';
-import ExpandingHangar from './components/Hangar/FactoryHangar';
+import ExpandingHangar from './components/Hangar/ExpandingHangar';
 import { tankData } from './units';
 
 export const factoryData = {

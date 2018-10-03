@@ -5,7 +5,7 @@ import Lazy from 'lazy.js';
 import { factoryData } from './pieces/Factory';
 import { assemblerData } from './pieces/Assembler';
 import { generatorData } from './pieces/Generator';
-import { hangarData } from './pieces/components/Hangar/hangar';
+import { hangarData } from './pieces/components/Hangar';
 import { battlefieldData } from './Battlefield';
 import { portData } from './Port';
 
@@ -168,10 +168,12 @@ export default class GameStore extends React.Component {
         const nextState = {
           battlefields: { ...prevState.battlefields },
           ports: { ...prevState.ports },
+          hangars: { ...prevState.hangars },
         };
         const bf = new battlefieldData();
         nextState.battlefields[bf.id] = bf;
         nextState.ports[bf.id] = new portData();
+        nextState.hangars[bf.id] = new hangarData(bf.id, false);
         return nextState;
       }, resolve('success'));
     }),
@@ -179,9 +181,10 @@ export default class GameStore extends React.Component {
     /*
     updateHangars: () => {
       this.setState((prevState, _) => {
-        Lazy(prevState.hangars).groupBy('source').
+        Lazy(prevState.hangars)
+          .groupBy('source').
     },
-        */
+    */
   }
 
   canAfford = cost => Lazy(cost)

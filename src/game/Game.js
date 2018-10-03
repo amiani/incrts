@@ -44,6 +44,7 @@ export default class Game extends React.Component {
         {Lazy(this.props.store.battlefields).map(bf => (
           <Battlefield
             key={bf.id}
+            id={bf.id}
             store={this.props.store}
           />
         )).toArray()}

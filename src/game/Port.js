@@ -2,6 +2,8 @@ import React from 'react';
 import uuidv4 from 'uuid/v4';
 import styled from 'styled-components';
 
+import { ExpandingHangar } from './pieces/components/Hangar';
+
 export function portData(battlefieldId) {
   this.id = uuidv4();
   this.battlefieldId = battlefieldId;
@@ -18,6 +20,11 @@ export default class Port extends React.Component {
     return (
       <Container>
         Port
+        <ExpandingHangar
+          height={200}
+          width={200}
+          hangar={this.props.hangar}
+        />
       </Container>
     );
   }
