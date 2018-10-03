@@ -34,6 +34,7 @@ export default class Game extends React.Component {
     this.props.store.updateResources();
     this.props.store.updateBuildings();
     this.props.store.updateBuildQueues();
+    this.props.store.updateHangars();
   }
 
   render() {

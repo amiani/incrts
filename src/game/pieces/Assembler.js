@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+//import styled from 'styled-components';
 
 import Building, { Front, Back } from './Building';
 import BuildQueue from './components/BuildQueue';
@@ -13,7 +13,6 @@ export const assemblerData = {
   width: 200,
   height: 250,
 };
-
 
 export default class Assembler extends React.Component {
   constructor(props) {

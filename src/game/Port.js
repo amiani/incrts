@@ -21,8 +21,8 @@ export default class Port extends React.Component {
       <Container>
         Port
         <ExpandingHangar
-          height={200}
-          width={200}
+          height={150}
+          width={150}
           hangar={this.props.hangar}
         />
       </Container>

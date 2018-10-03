@@ -33,6 +33,7 @@ export default class GameStore extends React.Component {
     buildQueues: {},
 
     hangars: {},
+    unitQueues: { tanks: [], },
 
     battlefields: {},
     ports: {},
@@ -174,17 +175,51 @@ export default class GameStore extends React.Component {
         nextState.battlefields[bf.id] = bf;
         nextState.ports[bf.id] = new portData();
         nextState.hangars[bf.id] = new hangarData(bf.id, false);
+        nextState.hangars[bf.id].demand = { tanks: 3 }; //testing
         return nextState;
       }, resolve('success'));
     }),
 
-    /*
     updateHangars: () => {
       this.setState((prevState, _) => {
-        Lazy(prevState.hangars)
-          .groupBy('source').
+        const hangars = this.copyHangars(prevState.hangars);
+        const unitQueues = Lazy(prevState.unitQueues)
+          .map((queue, type) => ([type, queue.map(h => hangars[h.buildingId])]))
+          .toObject();
+
+        Lazy(hangars)
+          .where({ isSource: true })
+          .pluck('units')
+          .each(units => {
+            Lazy(units)
+              .each((unitArr, unitType) => {
+                if (Lazy(unitArr).isEmpty())
+                  return;
+                const actualQueue = unitQueues[unitType];
+                if (actualQueue.length > 0) {
+                  const unit = unitArr.shift();
+                  const firstHangar = actualQueue.shift();
+                  !firstHangar.units[unitType] && (firstHangar.units[unitType] = []);
+                  firstHangar.units[unitType].push(unit);
+                  if (firstHangar.units[unitType].length <= firstHangar.demand[unitType]) {
+                    actualQueue.push(firstHangar);
+                  }
+                }
+              });
+          });
+        Lazy(hangars)
+          .where({ isSource: false })
+          .each(hangar => {
+            Lazy(hangar.demand)
+              .each((amt, unitType) => {
+                if (!hangar.units[unitType] || hangar.units[unitType].length <= amt) {
+                  unitQueues[unitType].push(hangar);
+                }
+              });
+          });
+        return { hangars, unitQueues };
+      });
     },
-    */
   }
 
   canAfford = cost => Lazy(cost)
@@ -208,7 +243,9 @@ export default class GameStore extends React.Component {
   mutateWithResult = (prevState, nextState, item) => {
     if (item.isUnit) {
       !nextState.hangars && (nextState.hangars = this.copyHangars(prevState.hangars));
-      nextState.hangars[item.ownerId].units.push(item);
+      const hangar = nextState.hangars[item.ownerId];
+      !hangar.units[item.type] && (hangar.units[item.type] = []);
+      hangar.units[item.type].push(item);
     } else {
       Lazy(item.output).each((amt, name) => {
         nextState[name] = (nextState[name] ? nextState[name] : prevState[name]) + amt;
@@ -243,14 +280,15 @@ export default class GameStore extends React.Component {
   })
 
   copyBuildQueues = buildQueues => {
-    return Lazy(buildQueues).map((buildQueue, buildingId) => ([
-      buildingId,
-      {
-        ...buildQueue,
-        items: [...buildQueue.items],
-      }
-    ]))
-    .toObject();
+    return Lazy(buildQueues)
+      .map((buildQueue, buildingId) => ([
+        buildingId,
+        {
+          ...buildQueue,
+          items: [...buildQueue.items],
+        }
+      ]))
+      .toObject();
   }
 
   copyHangars = hangars => Lazy(hangars)

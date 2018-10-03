@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import Lazy from 'lazy.js';
 
-import { factoryData } from '../../Factory';
 import { colorDict } from '../../units';
 
 const EDGELENGTH = 5;
@@ -36,9 +36,12 @@ export default class ExpandingHangar extends React.Component {
       return (
         <Container height={this.props.height} width={this.props.width}>
           <DotGrid numCols={numCols}>
-            {this.props.hangar.units.map(u => (
-              <Dot key={u.id} color={colorDict[u.type]} />
-            ))}
+            {Lazy(this.props.hangar.units)
+              .values()
+              .flatten(true)
+              .map(u => <Dot key={u.id} color={colorDict[u.type]} />)
+              .toArray()
+            }
           </DotGrid>
         </Container>
       );
