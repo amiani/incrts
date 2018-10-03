@@ -25,8 +25,9 @@ export default class Game extends React.Component {
   }
 
   initialize = () => {
-    this.props.store.buildGenerator();
     this.props.store.makeBattlefield();
+    this.props.store.buildGenerator();
+    this.props.store.buildFactory();
   }
 
   tickUpdate = () => {

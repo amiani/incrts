@@ -6,4 +6,5 @@ export function hangarData(buildingId, isSource) {
   this.capacity = 10;
   this.isSource = true;
   this.demand = {};
+  this.units = [];
 }

@@ -1,8 +1,9 @@
 import React from 'react';
-//import styled from 'styled-components';
+import styled from 'styled-components';
 
 import Building, { Front, Back } from './Building';
 import BuildQueue from './components/BuildQueue';
+import ExpandingHangar from './components/Hangar/FactoryHangar';
 import { tankData } from './units';
 
 export const factoryData = {
@@ -13,6 +14,11 @@ export const factoryData = {
   width: 200,
   height: 300,
 };
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+`;
 
 export default class Factory extends React.Component {
   constructor(props) {
@@ -32,20 +38,27 @@ export default class Factory extends React.Component {
 
   render() {
     return (
-      <Building
-        width={factoryData.width}
-        height={factoryData.height}
-        front={
-          <Front>
-            <BuildQueue
-              items={this.props.buildQueue.items}
-              progress={this.props.buildQueue.progress}
-            />
-            <button onClick={this.addProgress}>Build</button>
-            <button onClick={this.enqueueTank}>Tank</button>
-          </Front>
-        }
-      />
+      <Container>
+        <Building
+          width={factoryData.width}
+          height={factoryData.height}
+          front={
+            <Front>
+              <BuildQueue
+                items={this.props.buildQueue.items}
+                progress={this.props.buildQueue.progress}
+              />
+              <button onClick={this.addProgress}>Build</button>
+              <button onClick={this.enqueueTank}>Tank</button>
+            </Front>
+          }
+        />
+        <ExpandingHangar
+          height={factoryData.height}
+          width={50}
+          hangar={this.props.store.hangars[this.id]}
+        />
+      </Container>
     );
   }
 }

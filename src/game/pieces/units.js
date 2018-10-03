@@ -1,5 +1,9 @@
 import uuidv4 from 'uuid/v4';
 
+export const colorDict = {
+  tanks: 'blue',
+};
+
 export function tankData(ownerId) {
   this.id = uuidv4();
   this.ownerId = ownerId;

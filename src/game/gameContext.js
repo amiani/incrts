@@ -5,7 +5,7 @@ import Lazy from 'lazy.js';
 import { factoryData } from './pieces/Factory';
 import { assemblerData } from './pieces/Assembler';
 import { generatorData } from './pieces/Generator';
-import { hangarData } from './pieces/components/hangar';
+import { hangarData } from './pieces/components/Hangar/hangar';
 import { battlefieldData } from './Battlefield';
 import { portData } from './Port';
 
@@ -39,7 +39,9 @@ export default class GameStore extends React.Component {
 
     units: {},
 
-    addEnergy: amount => this.setState((prevState, _) => ({ energy: prevState.energy + amount })),
+    addEnergy: amount => {
+      this.setState((prevState, _) => ({ energy: prevState.energy + amount }));
+    },
 
     updateResources: () => this.setState((prevState, _) => {
       let energy = prevState.energy + prevState.energyIncome - prevState.drain;
@@ -182,25 +184,28 @@ export default class GameStore extends React.Component {
         */
   }
 
-  canAfford = cost => Lazy(cost).keys().reduce((acc, curr) => acc && this.state[curr] >= cost[curr], true)
+  canAfford = cost => Lazy(cost)
+    .keys()
+    .reduce((acc, curr) => acc && this.state[curr] >= cost[curr], true)
 
   spend = cost => new Promise((resolve, reject) => {
     if (this.canAfford(cost)) {
       const resources = {};
       this.setState((prevState, _) => {
-        Lazy(cost).keys().each(rsrc => { resources[rsrc] = prevState[rsrc] - cost[rsrc]; });
+        Lazy(cost)
+          .keys()
+          .each(rsrc => { resources[rsrc] = prevState[rsrc] - cost[rsrc]; });
         return resources;
       }, resolve('success'));
     }
     reject('insufficient resources');
   })
 
+  //TODO: find better way of doing this
   mutateWithResult = (prevState, nextState, item) => {
     if (item.isUnit) {
       !nextState.hangars && (nextState.hangars = this.copyHangars(prevState.hangars));
-      const hangar = nextState.hangars[item.ownerId];
-      !hangar[item.type] && (hangar[item.type] = []);
-      hangar[item.type].push(item);
+      nextState.hangars[item.ownerId].units.push(item);
     } else {
       Lazy(item.output).each((amt, name) => {
         nextState[name] = (nextState[name] ? nextState[name] : prevState[name]) + amt;
@@ -276,7 +281,9 @@ export default class GameStore extends React.Component {
     }, resolve(`made hangar for ${buildingId}`));
   })
 
-  reducePieceDrain = pieces => Lazy(pieces).pluck('drain').reduce((acc, curr) => acc + curr, 0)
+  reducePieceDrain = pieces => Lazy(pieces)
+    .pluck('drain')
+    .reduce((acc, curr) => acc + curr, 0)
 
   render() {
     return (
