@@ -1,8 +1,8 @@
 import ExpandingHangar from './ExpandingHangar';
-import hangarData from './hangar';
+import ProtoHangar from './hangar';
 
 export {
   ExpandingHangar,
-  hangarData,
+  ProtoHangar,
 };
 

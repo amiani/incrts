@@ -22,7 +22,7 @@ export default class Battlefield extends React.Component {
         <div>Battlefield</div>
         <Port
           store={this.props.store}
-          hangar={this.props.store.hangars[this.props.id]}
+          hangar={this.props.store.hangars[this.props.battlefield.hangarId]}
         />
       </Container>
     );

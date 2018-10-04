@@ -6,7 +6,7 @@ import { ProtoFactory } from './pieces/Factory';
 import { ProtoAssembler } from './pieces/Assembler';
 import { ProtoGenerator } from './pieces/Generator';
 import { ProtoBuildQueue } from  './pieces/components/BuildQueue';
-import { hangarData } from './pieces/components/Hangar';
+import { ProtoHangar } from './pieces/components/Hangar';
 import { battlefieldData } from './Battlefield';
 
 export const GameContext = React.createContext();
@@ -170,10 +170,11 @@ export default class GameStore extends React.Component {
           battlefields: { ...prevState.battlefields },
           hangars: { ...prevState.hangars },
         };
-        const bf = new battlefieldData();
-        nextState.battlefields[bf.id] = bf;
-        nextState.hangars[bf.id] = new hangarData(bf.id, false);
-        //nextState.hangars[bf.id].demand = { tanks: 3 }; //testing
+        const BF = new battlefieldData();
+        const hangar = new ProtoHangar(BF.id, false);
+        BF.hangarId = hangar.id;
+        nextState.battlefields[BF.id] = BF;
+        nextState.hangars[hangar.id] = hangar;
         return nextState;
       }, resolve('success'));
     }),
@@ -192,7 +193,6 @@ export default class GameStore extends React.Component {
           .map((queue, type) => ([type, queue.map(h => hangars[h.buildingId])]))
           .toObject();
 
-        //console.log(unitQueues);
         Lazy(hangars)
           .where({ isSource: true })
           .pluck('units')
@@ -202,7 +202,6 @@ export default class GameStore extends React.Component {
                 if (Lazy(unitArr).isEmpty())
                   return;
                 const actualQueue = unitQueues[unitType];
-                  console.log(actualQueue);
                 if (actualQueue.length > 0) {
                   const unit = unitArr.shift();
                   const firstHangar = actualQueue.shift();
@@ -293,7 +292,7 @@ export default class GameStore extends React.Component {
   })
 
   makeHangar = (ownerId, isSource) => new Promise((resolve, reject) => {
-    const newHangar = new hangarData(ownerId, isSource);
+    const newHangar = new ProtoHangar(ownerId, isSource);
     this.setState((prevState, _) => {
       const hangars = Lazy(prevState.hangars)
         .map((hangar, hangarId) => ([
