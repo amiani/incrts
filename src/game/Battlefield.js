@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Port from './Port';
 
-export function battlefieldData() {
+export function battlefieldData(portId) {
   this.id = uuidv4();
 }
 
@@ -19,7 +19,11 @@ export default class Battlefield extends React.Component {
     return (
       <Container>
         <div>Battlefield</div>
-        <Port hangar={this.props.store.hangars[this.props.id]} />
+        <Port
+          id={this.props.store.ports[this.props.id].id}
+          store={this.props.store}
+          hangar={this.props.store.hangars[this.props.id]}
+        />
       </Container>
     );
   }

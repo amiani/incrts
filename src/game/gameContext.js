@@ -175,11 +175,16 @@ export default class GameStore extends React.Component {
         nextState.battlefields[bf.id] = bf;
         nextState.ports[bf.id] = new portData();
         nextState.hangars[bf.id] = new hangarData(bf.id, false);
-        nextState.hangars[bf.id].demand = { tanks: 3 }; //testing
+        //nextState.hangars[bf.id].demand = { tanks: 3 }; //testing
         return nextState;
       }, resolve('success'));
     }),
 
+    dispatch: portId => this.setState((prevState, _) => {
+      prevState.ports[portId].building
+    }),
+
+    //TODO: See if possible to delay iteration until end
     updateHangars: () => {
       this.setState((prevState, _) => {
         const hangars = this.copyHangars(prevState.hangars);
@@ -187,6 +192,7 @@ export default class GameStore extends React.Component {
           .map((queue, type) => ([type, queue.map(h => hangars[h.buildingId])]))
           .toObject();
 
+        //console.log(unitQueues);
         Lazy(hangars)
           .where({ isSource: true })
           .pluck('units')
@@ -196,9 +202,11 @@ export default class GameStore extends React.Component {
                 if (Lazy(unitArr).isEmpty())
                   return;
                 const actualQueue = unitQueues[unitType];
+                  console.log(actualQueue);
                 if (actualQueue.length > 0) {
                   const unit = unitArr.shift();
                   const firstHangar = actualQueue.shift();
+                  unit.ownerId = firstHangar.buildingId;
                   !firstHangar.units[unitType] && (firstHangar.units[unitType] = []);
                   firstHangar.units[unitType].push(unit);
                   if (firstHangar.units[unitType].length <= firstHangar.demand[unitType]) {
@@ -207,6 +215,7 @@ export default class GameStore extends React.Component {
                 }
               });
           });
+        /*
         Lazy(hangars)
           .where({ isSource: false })
           .each(hangar => {
@@ -217,6 +226,7 @@ export default class GameStore extends React.Component {
                 }
               });
           });
+          */
         return { hangars, unitQueues };
       });
     },
@@ -279,17 +289,15 @@ export default class GameStore extends React.Component {
     }, resolve(`made BuildQueue for ${buildingId}`));
   })
 
-  copyBuildQueues = buildQueues => {
-    return Lazy(buildQueues)
-      .map((buildQueue, buildingId) => ([
-        buildingId,
-        {
-          ...buildQueue,
-          items: [...buildQueue.items],
-        }
-      ]))
-      .toObject();
-  }
+  copyBuildQueues = buildQueues => Lazy(buildQueues)
+    .map((buildQueue, buildingId) => ([
+      buildingId,
+      {
+        ...buildQueue,
+        items: [...buildQueue.items],
+      }
+    ]))
+    .toObject();
 
   copyHangars = hangars => Lazy(hangars)
     .map((hangar, buildingId) => ([

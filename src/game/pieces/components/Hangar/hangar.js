@@ -5,6 +5,6 @@ export default function hangarData(buildingId, isSource) {
   this.buildingId = buildingId;
   this.capacity = 10;
   this.isSource = isSource;
-  this.demand = {};
+  this.demand = { tanks: 0 };
   this.units = {};
 }
