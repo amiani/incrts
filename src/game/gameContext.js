@@ -240,10 +240,11 @@ export default class GameStore extends React.Component {
         return { hangars, unitQueues };
       }
       if (prevAmt > 0 && nextAmt <= 0) {
-        let unitQueues = this.copyUnitQueues(prevState.unitQueues);
-        unitQueues = Lazy(unitQueues[unitType])
+        const unitQueues = this.copyUnitQueues(prevState.unitQueues);
+        const queue = Lazy(unitQueues[unitType])
           .reject(h => h.id === hangarId)
           .toArray();
+        unitQueues[unitType] = queue;
         return { hangars, unitQueues };
       }
       return { hangars };
