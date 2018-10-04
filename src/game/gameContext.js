@@ -7,7 +7,6 @@ import { assemblerData } from './pieces/Assembler';
 import { generatorData } from './pieces/Generator';
 import { hangarData } from './pieces/components/Hangar';
 import { battlefieldData } from './Battlefield';
-import { portData } from './Port';
 
 export const GameContext = React.createContext();
 
@@ -36,7 +35,6 @@ export default class GameStore extends React.Component {
     unitQueues: { tanks: [], },
 
     battlefields: {},
-    ports: {},
 
     units: {},
 
@@ -168,21 +166,21 @@ export default class GameStore extends React.Component {
       this.setState((prevState, _) => {
         const nextState = {
           battlefields: { ...prevState.battlefields },
-          ports: { ...prevState.ports },
           hangars: { ...prevState.hangars },
         };
         const bf = new battlefieldData();
         nextState.battlefields[bf.id] = bf;
-        nextState.ports[bf.id] = new portData();
         nextState.hangars[bf.id] = new hangarData(bf.id, false);
         //nextState.hangars[bf.id].demand = { tanks: 3 }; //testing
         return nextState;
       }, resolve('success'));
     }),
 
+    /*
     dispatch: portId => this.setState((prevState, _) => {
       prevState.ports[portId].building
     }),
+    */
 
     //TODO: See if possible to delay iteration until end
     updateHangars: () => {
@@ -230,7 +228,14 @@ export default class GameStore extends React.Component {
         return { hangars, unitQueues };
       });
     },
+
+    setDemand: (hangarId, unitType, amt) => this.setState((prevState, _) => {
+      const hangars = this.copyHangars(prevState.hangars);
+      hangars[hangarId].demand[unitType] = amt;
+      return { hangars };
+    }),
   }
+
 
   canAfford = cost => Lazy(cost)
     .keys()

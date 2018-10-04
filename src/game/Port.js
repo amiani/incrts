@@ -5,11 +5,6 @@ import styled from 'styled-components';
 import DemandControl from './pieces/components/Hangar/DemandControl';
 import { ExpandingHangar } from './pieces/components/Hangar';
 
-export function portData(battlefieldId) {
-  this.id = uuidv4();
-  this.battlefieldId = battlefieldId;
-};
-
 const Container = styled.div`
   height: 200px;
   border: solid black 1px;
@@ -19,11 +14,6 @@ const Container = styled.div`
 `;
 
 export default class Port extends React.Component {
-  constructor(props) {
-    super();
-    this.id = props.id;
-  }
-
   dispatch = () => {
     this.props.store.dispatch(this.id); 
   }
