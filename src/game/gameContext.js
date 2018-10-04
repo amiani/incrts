@@ -189,9 +189,7 @@ export default class GameStore extends React.Component {
     updateHangars: () => {
       this.setState((prevState, _) => {
         const hangars = this.copyHangars(prevState.hangars);
-        const unitQueues = Lazy(prevState.unitQueues)
-          .map((queue, type) => ([type, queue.map(h => hangars[h.buildingId])]))
-          .toObject();
+        const unitQueues = this.copyUnitQueues(prevState.unitQueues);
 
         Lazy(hangars)
           .where({ isSource: true })
@@ -232,7 +230,22 @@ export default class GameStore extends React.Component {
 
     setDemand: (hangarId, unitType, amt) => this.setState((prevState, _) => {
       const hangars = this.copyHangars(prevState.hangars);
-      hangars[hangarId].demand[unitType] = amt;
+      const hangar = hangars[hangarId];
+      const nextAmt = amt < 0 ? 0 : amt;
+      const prevAmt = hangar.demand[unitType];
+      hangar.demand[unitType] = nextAmt;
+      if (prevAmt <= 0 && nextAmt > 0) {
+        const unitQueues = this.copyUnitQueues(prevState.unitQueues);
+        unitQueues[unitType].push(hangar);
+        return { hangars, unitQueues };
+      }
+      if (prevAmt > 0 && nextAmt <= 0) {
+        let unitQueues = this.copyUnitQueues(prevState.unitQueues);
+        unitQueues = Lazy(unitQueues[unitType])
+          .reject(h => h.id === hangarId)
+          .toArray();
+        return { hangars, unitQueues };
+      }
       return { hangars };
     }),
   }
@@ -334,6 +347,10 @@ export default class GameStore extends React.Component {
       }
     ]))
     .toObject()
+
+  copyUnitQueues = unitQueues => Lazy(unitQueues)
+    .map((unitQueue, unitType) => ([unitType, [...unitQueue]]))
+    .toObject();
 
   completeBuild = buildQueue => {
     buildQueue.progress = 0;
