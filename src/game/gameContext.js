@@ -206,7 +206,6 @@ export default class GameStore extends React.Component {
                   unit.ownerId = firstHangar.buildingId;
                   !firstHangar.units[unitType] && (firstHangar.units[unitType] = []);
                   firstHangar.units[unitType].push(unit);
-                  console.log(firstHangar);
                   if (firstHangar.units[unitType].length < firstHangar.demand[unitType]) {
                     actualQueue.push(firstHangar.id);
                   }
@@ -236,7 +235,7 @@ export default class GameStore extends React.Component {
       const nextAmt = amt < 0 ? 0 : amt;
       const prevAmt = hangar.demand[unitType];
       hangar.demand[unitType] = nextAmt;
-      if (prevAmt <= 0 && nextAmt > 0) {
+      if (prevAmt <= 0 && nextAmt > 0 || hangar.units[unitType].length < nextAmt) {
         unitQueues[unitType].push(hangarId);
       }
       if (prevAmt > 0 && nextAmt <= 0) {

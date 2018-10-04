@@ -6,5 +6,5 @@ export default function ProtoHangar(buildingId, isSource) {
   this.capacity = 10;
   this.isSource = isSource;
   this.demand = { tanks: 0 };
-  this.units = {};
+  this.units = { tanks: [], };
 }
