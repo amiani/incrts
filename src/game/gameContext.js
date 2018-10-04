@@ -202,12 +202,13 @@ export default class GameStore extends React.Component {
                 const actualQueue = unitQueues[unitType];
                 if (actualQueue.length > 0) {
                   const unit = unitArr.shift();
-                  const firstHangar = actualQueue.shift();
+                  const firstHangar = prevState.hangars[actualQueue.shift()];
                   unit.ownerId = firstHangar.buildingId;
                   !firstHangar.units[unitType] && (firstHangar.units[unitType] = []);
                   firstHangar.units[unitType].push(unit);
-                  if (firstHangar.units[unitType].length <= firstHangar.demand[unitType]) {
-                    actualQueue.push(firstHangar);
+                  console.log(firstHangar);
+                  if (firstHangar.units[unitType].length < firstHangar.demand[unitType]) {
+                    actualQueue.push(firstHangar.id);
                   }
                 }
               });
@@ -230,24 +231,21 @@ export default class GameStore extends React.Component {
 
     setDemand: (hangarId, unitType, amt) => this.setState((prevState, _) => {
       const hangars = this.copyHangars(prevState.hangars);
+      const unitQueues = this.copyUnitQueues(prevState.unitQueues);
       const hangar = hangars[hangarId];
       const nextAmt = amt < 0 ? 0 : amt;
       const prevAmt = hangar.demand[unitType];
       hangar.demand[unitType] = nextAmt;
       if (prevAmt <= 0 && nextAmt > 0) {
-        const unitQueues = this.copyUnitQueues(prevState.unitQueues);
-        unitQueues[unitType].push(hangar);
-        return { hangars, unitQueues };
+        unitQueues[unitType].push(hangarId);
       }
       if (prevAmt > 0 && nextAmt <= 0) {
-        const unitQueues = this.copyUnitQueues(prevState.unitQueues);
         const queue = Lazy(unitQueues[unitType])
-          .reject(h => h.id === hangarId)
+          .reject(h => h === hangarId)
           .toArray();
         unitQueues[unitType] = queue;
-        return { hangars, unitQueues };
       }
-      return { hangars };
+      return { hangars, unitQueues };
     }),
   }
 
