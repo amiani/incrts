@@ -1,7 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
+import uuidv4 from 'uuid/v4';
 
 import ProgressBar from './ProgressBar';
+
+export function ProtoBuildQueue(ownerId) {
+  this.id = uuidv4(),
+  this.ownerId = ownerId;
+  this.progress = 0;
+  this.maxLength = 2;
+  this.items = [];
+};
 
 const Container = styled.div`
   display: flex;

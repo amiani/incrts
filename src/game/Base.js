@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import Lazy from 'lazy.js';
 
 import { GameContext } from './gameContext';
-import { assemblerData } from './pieces/Assembler';
-import { factoryData } from './pieces/Factory';
-import { generatorData } from './pieces/Generator';
+import { ProtoAssembler } from './pieces/Assembler';
+import { ProtoFactory } from './pieces/Factory';
+import { ProtoGenerator } from './pieces/Generator';
 
 import Factory from './pieces/Factory';
 import Assembler from './pieces/Assembler';
@@ -38,31 +38,29 @@ const BuildingRow = styled.div`
 export default props => (
   <GameContext.Consumer>{store => (
     <Container>
-      <BuildingRow height={factoryData.height+12}>
+      <BuildingRow height={ProtoFactory.height+12}>
         {Lazy(store.factories).map(b => (
           <Factory
             key={b.id}
-            data={b}
-            buildQueue={store.buildQueues[b.id]}
+            factory={b}
             store={store}
           />
         )).toArray()}
       </BuildingRow>
-      <BuildingRow height={assemblerData.height+12}>
+      <BuildingRow height={ProtoAssembler.height+12}>
         {Lazy(store.assemblers).map(b => (
           <Assembler
             key={b.id}
-            data={b}
-            buildQueue={store.buildQueues[b.id]}
+            assembler={b}
             store={store}
           />
         )).toArray()}
       </BuildingRow>
-      <BuildingRow height={generatorData.height+12}>
+      <BuildingRow height={ProtoGenerator.height+12}>
         {Lazy(store.generators).map(b => (
           <Generator
             key={b.id}
-            data={b}
+            generator={b}
             store={store}
           />
         )).toArray()}

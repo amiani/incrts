@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import uuidv4 from 'uuid/v4';
 
 import Building, { Front, Back } from './Building';
 import Button from './components/Button';
@@ -7,14 +8,15 @@ import BuildQueue from './components/BuildQueue';
 import ExpandingHangar from './components/Hangar/ExpandingHangar';
 import { tankData } from './units';
 
-export const factoryData = {
-  type: 'factories',
-  name: 'factory',
-  cost: { credits: 50, fabric: 50 },
-  drain: 1,
-  width: 200,
-  height: 300,
+export function ProtoFactory() {
+  this.id = uuidv4();
+  this.type = 'factories';
+  this.name = 'factory';
+  this.cost = { credits: 50, fabric: 50 };
+  this.drain = 1;
 };
+ProtoFactory.height = 300;
+ProtoFactory.width = 200;
 
 const Container = styled.div`
   display: flex;
@@ -24,30 +26,35 @@ const Container = styled.div`
 export default class Factory extends React.Component {
   constructor(props) {
     super();
-    this.id = props.data.id;
+    this.id = props.id;
   }
 
   addProgress = () => {
-    this.props.store.addProgress(this.id, 50*this.props.store.productivity)
+    this.props.store.addProgress(this.props.factory.buildQueueId, 50*this.props.store.productivity)
       .catch(error => console.log(error));
   }
 
   enqueueTank = () => {
-    this.props.store.enqueue(this.id, new tankData(this.id))
-    .catch(error => console.log(error));
+    this.props.store.enqueue(
+      this.props.factory.buildQueueId,
+      new tankData(this.props.factory.id)
+    )
+      .catch(error => console.log(error));
   }
 
   render() {
+    const { store } = this.props;
+    const { buildQueueId, hangarId } = this.props.factory;
     return (
       <Container>
         <Building
-          width={factoryData.width}
-          height={factoryData.height}
+          width={ProtoFactory.width}
+          height={ProtoFactory.height}
           front={
             <Front>
               <BuildQueue
-                items={this.props.buildQueue.items}
-                progress={this.props.buildQueue.progress}
+                items={store.buildQueues[buildQueueId].items}
+                progress={store.buildQueues[buildQueueId].progress}
               />
               <Button onClick={this.addProgress}>Build</Button>
               <Button onClick={this.enqueueTank}>Tank</Button>
@@ -55,9 +62,9 @@ export default class Factory extends React.Component {
           }
         />
         <ExpandingHangar
-          height={factoryData.height}
+          height={ProtoFactory.height}
           width={50}
-          hangar={this.props.store.hangars[this.id]}
+          hangar={store.hangars[this.props.factory.hangarId]}
         />
       </Container>
     );

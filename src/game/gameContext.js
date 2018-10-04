@@ -2,9 +2,10 @@ import React from 'react';
 import uuidv4 from 'uuid/v4';
 import Lazy from 'lazy.js';
 
-import { factoryData } from './pieces/Factory';
-import { assemblerData } from './pieces/Assembler';
-import { generatorData } from './pieces/Generator';
+import { ProtoFactory } from './pieces/Factory';
+import { ProtoAssembler } from './pieces/Assembler';
+import { ProtoGenerator } from './pieces/Generator';
+import { ProtoBuildQueue } from  './pieces/components/BuildQueue';
 import { hangarData } from './pieces/components/Hangar';
 import { battlefieldData } from './Battlefield';
 
@@ -59,12 +60,14 @@ export default class GameStore extends React.Component {
 
     buildFactory: async () => {
       try {
-        const id = uuidv4();
-        await Promise.all([
-          this.buildBuilding({ ...factoryData, id }),
-          this.makeHangar(id, true),
-          this.makeBuildQueue(id),
+        const factory = new ProtoFactory();
+        const [hangarId, buildQId] = await Promise.all([
+          this.makeHangar(factory.id, true),
+          this.makeBuildQueue(factory.id),
         ])
+        factory.hangarId = hangarId;
+        factory.buildQueueId = buildQId;
+        await this.buildBuilding(factory);
       }
       catch(error) {
         console.log(error);
@@ -72,30 +75,29 @@ export default class GameStore extends React.Component {
     },
     buildAssembler: async () => {
       try {
-        const id = uuidv4();
-        await Promise.all([
-          this.buildBuilding({ ...assemblerData, id }),
-          this.makeBuildQueue(id),
-        ]);
+        const assembler = new ProtoAssembler();
+        const buildQId = await this.makeBuildQueue(assembler.id);
+        assembler.buildQueueId = buildQId;
+        await this.buildBuilding(assembler);
       }
       catch(error) {
         console.log(error);
       }
     },
     buildGenerator: async () => {
-      try { await this.buildBuilding({ ...generatorData, id: uuidv4() }); }
+      try { await this.buildBuilding(new ProtoGenerator()); }
       catch(error) {
         console.log(error);
       }
     },
 
-    addProgress: (id, amount) => new Promise((resolve, reject) => {
-      if (this.state.buildQueues[id].items.length > 0) {
+    addProgress: (buildQId, amount) => new Promise((resolve, reject) => {
+      if (this.state.buildQueues[buildQId].items.length > 0) {
         this.setState((prevState, _) => {
           let nextState = {
             buildQueues: this.copyBuildQueues(prevState.buildQueues)
           };
-          const actual = nextState.buildQueues[id];
+          const actual = nextState.buildQueues[buildQId];
           if (actual.progress >= 100) {
             this.addOutput(prevState, nextState, actual.items[0].output);
             this.completeBuild(actual);
@@ -109,8 +111,8 @@ export default class GameStore extends React.Component {
     }),
 
     //TODO: find way of using prevState for prevActual
-    enqueue: (id, item) => new Promise(async (resolve, reject) => {
-      const prevActual = this.state.buildQueues[id];
+    enqueue: (buildQId, item) => new Promise(async (resolve, reject) => {
+      const prevActual = this.state.buildQueues[buildQId];
       if (prevActual.items.length >= prevActual.maxLength) {
         return reject('queue full');
       }
@@ -123,7 +125,7 @@ export default class GameStore extends React.Component {
 
       this.setState((prevState, _) => {
         const buildQueues = this.copyBuildQueues(prevState.buildQueues);
-        buildQueues[id].items.push(item);
+        buildQueues[buildQId].items.push(item);
         return { buildQueues };
       }, resolve('success'));
     }),
@@ -147,7 +149,7 @@ export default class GameStore extends React.Component {
     updateBuildQueues: () => this.setState((prevState, _) => {
       const nextState = {};
       nextState.buildQueues = Lazy(prevState.buildQueues)
-        .map((buildQueue, buildingId) => {
+        .map((buildQueue, buildQId) => {
           const nextBuildQueue = {
             ...buildQueue,
             items: [...buildQueue.items]
@@ -156,7 +158,7 @@ export default class GameStore extends React.Component {
             this.mutateWithResult(prevState, nextState, nextBuildQueue.items[0])
             this.completeBuild(nextBuildQueue);
           }
-          return [buildingId, nextBuildQueue];
+          return [buildQId, nextBuildQueue];
         })
         .toObject();
       return nextState;
@@ -258,7 +260,8 @@ export default class GameStore extends React.Component {
   mutateWithResult = (prevState, nextState, item) => {
     if (item.isUnit) {
       !nextState.hangars && (nextState.hangars = this.copyHangars(prevState.hangars));
-      const hangar = nextState.hangars[item.ownerId];
+      const hangarId = prevState.factories[item.ownerId].hangarId;
+      const hangar = nextState.hangars[hangarId];
       !hangar.units[item.type] && (hangar.units[item.type] = []);
       hangar.units[item.type].push(item);
     } else {
@@ -280,19 +283,38 @@ export default class GameStore extends React.Component {
     }
   })
 
-  makeBuildQueue = buildingId => new Promise((resolve, reject) => {
+  makeBuildQueue = ownerId => new Promise((resolve, reject) => {
+    const newQ = new ProtoBuildQueue(ownerId);
     this.setState((prevState, _) => {
       const buildQueues = this.copyBuildQueues(prevState.buildQueues);
-      buildQueues[buildingId] = {
-        id: uuidv4(),
-        buildingId,
-        progress: 0,
-        maxLength: 2,
-        items: [],
-      };
+      buildQueues[newQ.id] = newQ;
       return { buildQueues };
-    }, resolve(`made BuildQueue for ${buildingId}`));
+    }, resolve(newQ.id));
   })
+
+  makeHangar = (ownerId, isSource) => new Promise((resolve, reject) => {
+    const newHangar = new hangarData(ownerId, isSource);
+    this.setState((prevState, _) => {
+      const hangars = Lazy(prevState.hangars)
+        .map((hangar, hangarId) => ([
+          hangarId,
+          {
+            ...hangar,
+            demand: { ...hangar.demand },
+          }
+        ]))
+        .toObject();
+      hangars[newHangar.id] = newHangar;
+      return { hangars };
+    }, resolve(newHangar.id));
+  })
+
+  copyBuildings = buildings => Lazy(buildings)
+    .map((building, buildingId) => ([
+      buildingId,
+      ...building
+    ]))
+    .toObject();
 
   copyBuildQueues = buildQueues => Lazy(buildQueues)
     .map((buildQueue, buildingId) => ([
@@ -318,22 +340,6 @@ export default class GameStore extends React.Component {
     buildQueue.progress = 0;
     buildQueue.items.shift();
   }
-
-  makeHangar = (buildingId, isSource) => new Promise((resolve, reject) => {
-    this.setState((prevState, _) => {
-      const hangars = Lazy(prevState.hangars)
-        .map((hangar, buildingId) => ([
-          buildingId,
-          {
-            ...hangar,
-            demand: { ...hangar.demand },
-          }
-        ]))
-        .toObject();
-      hangars[buildingId] = new hangarData(buildingId, isSource);
-      return { hangars };
-    }, resolve(`made hangar for ${buildingId}`));
-  })
 
   reducePieceDrain = pieces => Lazy(pieces)
     .pluck('drain')
