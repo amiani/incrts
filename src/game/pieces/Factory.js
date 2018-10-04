@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Building, { Front, Back } from './Building';
+import Button from './components/Button';
 import BuildQueue from './components/BuildQueue';
 import ExpandingHangar from './components/Hangar/ExpandingHangar';
 import { tankData } from './units';
@@ -48,8 +49,8 @@ export default class Factory extends React.Component {
                 items={this.props.buildQueue.items}
                 progress={this.props.buildQueue.progress}
               />
-              <button onClick={this.addProgress}>Build</button>
-              <button onClick={this.enqueueTank}>Tank</button>
+              <Button onClick={this.addProgress}>Build</Button>
+              <Button onClick={this.enqueueTank}>Tank</Button>
             </Front>
           }
         />

@@ -4,8 +4,9 @@ import styled from 'styled-components';
 
 import Port from './Port';
 
-export function battlefieldData(portId) {
+export function battlefieldData(hangarId) {
   this.id = uuidv4();
+  this.hangarId = hangarId;
 }
 
 const Container = styled.div`

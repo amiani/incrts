@@ -2,6 +2,7 @@ import React from 'react';
 //import styled from 'styled-components';
 
 import Building, { Front, Back } from './Building';
+import Button from './components/Button';
 
 export const generatorData = {
   type: 'generators',
@@ -18,7 +19,7 @@ export default props => (
     height={generatorData.height}
     front={
       <Front>
-        <button onClick={()=>props.store.addEnergy(10)}>Generate 10</button>
+        <Button onClick={()=>props.store.addEnergy(10)}>Generate 10</Button>
       </Front>
     }
   />

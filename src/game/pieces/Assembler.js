@@ -1,9 +1,9 @@
 import React from 'react';
-//import styled from 'styled-components';
 
 import Building, { Front, Back } from './Building';
 import BuildQueue from './components/BuildQueue';
 import { hardwareData } from './resources';
+import Button from './components/Button';
 
 export const assemblerData = {
   type: 'assemblers',
@@ -44,8 +44,8 @@ export default class Assembler extends React.Component {
               items={this.props.buildQueue.items}
               progress={this.props.buildQueue.progress}
             />
-            <button onClick={this.addProgress}>Assemble</button>
-            <button onClick={this.enqueueHardware}>Hardware</button>
+            <Button onClick={this.addProgress}>Assemble</Button>
+            <Button onClick={this.enqueueHardware}>Hardware</Button>
           </Front>
         }
       />

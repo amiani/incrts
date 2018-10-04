@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import Button from './components/Button.js';
+
 const Container = styled.div`
   width: ${p=>p.width}px;
   height: ${p=>p.height}px;
@@ -11,6 +13,11 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   background-color: ${p => p.color};
+`;
+
+const Header = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 const MessageBox = styled.div`
@@ -35,7 +42,9 @@ export default class Building extends React.Component {
   render() {
     return (
       <Container {...this.props} color={this.state.flipped ? '#fff2f4' : '#eafeea'}>
-        <button onClick={this.flip}>Flip</button>
+        <Header>
+          <Button onClick={this.flip}>Flip</Button>
+        </Header>
         {this.state.flipped ? this.props.back : this.props.front}
         <MessageBox>{this.props.message}</MessageBox>
       </Container>

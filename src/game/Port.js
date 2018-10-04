@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import DemandControl from './pieces/components/Hangar/DemandControl';
 import { ExpandingHangar } from './pieces/components/Hangar';
+import Button from './pieces/components/Button';
 
 const Container = styled.div`
   height: 200px;
@@ -25,7 +26,7 @@ export default class Port extends React.Component {
   render() {
     return (
       <Container>
-        <button onClick={this.dispatch}>Dispatch</button>
+        <Button onClick={this.dispatch}>Dispatch</Button>
         <ExpandingHangar
           height={150}
           width={150}
