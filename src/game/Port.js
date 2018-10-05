@@ -1,5 +1,4 @@
 import React from 'react';
-import uuidv4 from 'uuid/v4';
 import styled from 'styled-components';
 
 import DemandControl from './pieces/components/Hangar/DemandControl';

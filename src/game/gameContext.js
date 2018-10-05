@@ -1,5 +1,4 @@
 import React from 'react'
-import uuidv4 from 'uuid/v4'
 import Lazy from 'lazy.js'
 
 import { ProtoFactory } from './pieces/Factory';
@@ -235,7 +234,7 @@ export default class GameStore extends React.Component {
       const nextAmt = amt < 0 ? 0 : amt;
       const prevAmt = hangar.demand[unitType];
       hangar.demand[unitType] = nextAmt;
-      if (prevAmt <= 0 && nextAmt > 0 || hangar.units[unitType].length < nextAmt) {
+      if (hangar.units[unitType].length < nextAmt) {
         if (!unitQueues[unitType].includes(hangarId))
           unitQueues[unitType].push(hangarId);
       }
