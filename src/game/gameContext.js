@@ -1,6 +1,6 @@
-import React from 'react';
-import uuidv4 from 'uuid/v4';
-import Lazy from 'lazy.js';
+import React from 'react'
+import uuidv4 from 'uuid/v4'
+import Lazy from 'lazy.js'
 
 import { ProtoFactory } from './pieces/Factory';
 import { ProtoAssembler } from './pieces/Assembler';
@@ -18,9 +18,9 @@ export default class GameStore extends React.Component {
     creditIncome: 0,
     fabric: 200,
     fabricIncome: 0,
-    hardware: 50,
+    hardware: 1000,
     hardwareIncome: 0,
-    energy: 0,
+    energy: 10000,
     energyIncome: 0,
     drain: 0,
     productivity: 1,
@@ -236,7 +236,8 @@ export default class GameStore extends React.Component {
       const prevAmt = hangar.demand[unitType];
       hangar.demand[unitType] = nextAmt;
       if (prevAmt <= 0 && nextAmt > 0 || hangar.units[unitType].length < nextAmt) {
-        unitQueues[unitType].push(hangarId);
+        if (!unitQueues[unitType].includes(hangarId))
+          unitQueues[unitType].push(hangarId);
       }
       if (prevAmt > 0 && nextAmt <= 0) {
         const queue = Lazy(unitQueues[unitType])

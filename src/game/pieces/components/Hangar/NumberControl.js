@@ -7,6 +7,7 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   font-size: 10px;
+  user-select: none;
 `;
 
 const Button = styled.div`
