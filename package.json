@@ -7,9 +7,8 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts": "1.1.5",
-    "styled-components": "^3.4.9",
     "uuid": "^3.3.2",
-    "wu": "^2.1.0"
+    "styled-components": "styled-components/styled-components#develop"
   },
   "scripts": {
     "start": "react-scripts start",
