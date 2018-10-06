@@ -5,7 +5,7 @@ import uuidv4 from 'uuid/v4';
 import ProgressBar from './ProgressBar';
 
 export function ProtoBuildQueue(ownerId) {
-  this.id = uuidv4(),
+  this.id = uuidv4();
   this.ownerId = ownerId;
   this.progress = 0;
   this.maxLength = 2;
