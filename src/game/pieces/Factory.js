@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import uuidv4 from 'uuid/v4';
 
-import Building, { Front, Back } from './Building';
+import Building, { Front } from './Building';
 import Button from './components/Button';
 import BuildQueue from './components/BuildQueue';
 import ExpandingHangar from './components/Hangar/ExpandingHangar';
@@ -64,7 +64,7 @@ export default class Factory extends React.Component {
         <ExpandingHangar
           height={ProtoFactory.height}
           width={50}
-          hangar={store.hangars[this.props.factory.hangarId]}
+          hangar={store.hangars[hangarId]}
         />
       </Container>
     );

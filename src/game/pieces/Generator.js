@@ -1,7 +1,7 @@
 import React from 'react';
 import uuidv4 from 'uuid/v4';
 
-import Building, { Front, Back } from './Building';
+import Building, { Front } from './Building';
 import Button from './components/Button';
 
 export function ProtoGenerator() {
