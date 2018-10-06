@@ -6,7 +6,6 @@ const Container = styled.div`
   flex-shrink: 0;
   height: 20px;
   border: solid black 2px;
-  user-select: none;
   margin: 1px;
   padding: 1px 3px 0px 3px;
   font-size: 12px;

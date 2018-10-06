@@ -7,17 +7,12 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   font-size: 10px;
-  user-select: none;
 `;
 
 const Button = styled.div`
   height: 12px;
   width: 18px;
   border: 2px black solid;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 
   &:hover {
     background-color: green;
