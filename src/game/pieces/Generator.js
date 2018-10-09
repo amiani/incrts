@@ -1,7 +1,7 @@
 import React from 'react';
 import uuidv4 from 'uuid/v4';
 
-import Building, { Front } from './Building';
+import Building from './Building';
 import Button from './components/Button';
 
 export function ProtoGenerator() {
@@ -19,9 +19,10 @@ export default props => (
     width={ProtoGenerator.width}
     height={ProtoGenerator.height}
     front={
-      <Front>
         <Button onClick={()=>props.store.addEnergy(10)}>Generate 10</Button>
-      </Front>
+    }
+    back={
+        <p>This is the back of the Generator</p>
     }
   />
 );

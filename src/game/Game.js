@@ -4,7 +4,7 @@ import Lazy from 'lazy.js';
 
 import Sidebar from './Sidebar'
 import Base from './Base'
-import Battlefield from './Battlefield'
+import Port from './Port'
 
 import { TICKRATE } from './constants'
 
@@ -25,7 +25,7 @@ export default class Game extends React.Component {
   }
 
   initialize = () => {
-    this.props.store.makeBattlefield();
+    this.props.store.makeDelivery()
     this.props.store.buildGenerator();
     this.props.store.buildFactory();
   }
@@ -42,12 +42,14 @@ export default class Game extends React.Component {
       <GameGrid>
         <Sidebar store={this.props.store} />
         <Base />
-        {Lazy(this.props.store.battlefields).map(bf => (
-          <Battlefield
-            key={bf.id}
-            battlefield={bf}
-            store={this.props.store}
-          />
+        {Lazy(this.props.store.objectives).map(obj => (
+          <div key={obj.id}>
+            <obj.Component
+              objective={obj}
+              store={this.props.store}
+            />
+            <Port hangar={this.props.store.hangars[obj.hangarId]}/>
+          </div>
         )).toArray()}
       </GameGrid>
     );

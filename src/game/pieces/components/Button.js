@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  display: inline-block;
+  display: inline;
   flex-shrink: 0;
   height: 20px;
   border: solid black 2px;

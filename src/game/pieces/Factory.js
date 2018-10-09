@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import uuidv4 from 'uuid/v4';
 
-import Building, { Front } from './Building';
+import Building from './Building';
 import Button from './components/Button';
 import BuildQueue from './components/BuildQueue';
 import ExpandingHangar from './components/Hangar/ExpandingHangar';
@@ -51,14 +51,17 @@ export default class Factory extends React.Component {
           width={ProtoFactory.width}
           height={ProtoFactory.height}
           front={
-            <Front>
+            <div>
               <BuildQueue
                 items={store.buildQueues[buildQueueId].items}
                 progress={store.buildQueues[buildQueueId].progress}
               />
               <Button onClick={this.addProgress}>Build</Button>
               <Button onClick={this.enqueueTank}>Tank</Button>
-            </Front>
+            </div>
+          }
+          back={
+            <p>This the factory back</p>
           }
         />
         <ExpandingHangar

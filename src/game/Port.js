@@ -14,11 +14,9 @@ const Container = styled.div`
 `;
 
 export default class Port extends React.Component {
-  /*
   dispatch = () => {
-    this.props.store.dispatch(this.props.hangar
+    this.props.store.dispatch(this.props.hangar.id);
   }
-  */
 
   setDemand = (unitType, amt) => {
     this.props.store.setDemand(this.props.hangar.id, unitType, amt);

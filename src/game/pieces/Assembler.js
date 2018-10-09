@@ -1,7 +1,7 @@
 import React from 'react';
 import uuidv4 from 'uuid/v4';
 
-import Building, { Front } from './Building';
+import Building from './Building';
 import BuildQueue from './components/BuildQueue';
 import { hardwareData } from './resources';
 import Button from './components/Button';
@@ -45,14 +45,14 @@ export default class Assembler extends React.Component {
         height={ProtoAssembler.height}
         message={this.state.message}
         front={
-          <Front>
+          <div>
             <BuildQueue
               items={this.props.store.buildQueues[buildQueueId].items}
               progress={this.props.store.buildQueues[buildQueueId].progress}
             />
             <Button onClick={this.addProgress}>Assemble</Button>
             <Button onClick={this.enqueueHardware}>Hardware</Button>
-          </Front>
+          </div>
         }
       />
     );

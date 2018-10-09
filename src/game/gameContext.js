@@ -6,11 +6,14 @@ import { ProtoAssembler } from './pieces/Assembler';
 import { ProtoGenerator } from './pieces/Generator';
 import { ProtoBuildQueue } from  './pieces/components/BuildQueue';
 import { ProtoHangar } from './pieces/components/Hangar';
-import { battlefieldData } from './Battlefield';
+import { ProtoBattlefield } from './objectives/Battlefield';
+import { ProtoDelivery } from './objectives/Delivery'
 
 export const GameContext = React.createContext();
 
 export default class GameStore extends React.Component {
+  units = {}
+
   state = {
     //resources
     credits: 200,
@@ -34,9 +37,7 @@ export default class GameStore extends React.Component {
     hangars: {},
     unitQueues: { tanks: [], },
 
-    battlefields: {},
-
-    units: {},
+    objectives: {},
 
     addEnergy: amount => {
       this.setState((prevState, _) => ({ energy: prevState.energy + amount }));
@@ -163,13 +164,25 @@ export default class GameStore extends React.Component {
       return nextState;
     }),
 
+    makeDelivery: async () => {
+      try {
+        const delivery = new ProtoDelivery()
+        const hangarId = await this.makeHangar(delivery.id)
+        delivery.hangarId = hangarId
+        this.addObjective(delivery)
+      }
+      catch(error) {
+        console.log(error)
+      }
+    },
+
     makeBattlefield: () => new Promise((resolve, reject) => {
       this.setState((prevState, _) => {
         const nextState = {
           battlefields: { ...prevState.battlefields },
           hangars: { ...prevState.hangars },
         };
-        const BF = new battlefieldData();
+        const BF = new ProtoBattlefield();
         const hangar = new ProtoHangar(BF.id, false);
         BF.hangarId = hangar.id;
         nextState.battlefields[BF.id] = BF;
@@ -178,11 +191,20 @@ export default class GameStore extends React.Component {
       }, resolve('success'));
     }),
 
-    /*
-    dispatch: portId => this.setState((prevState, _) => {
-      prevState.ports[portId].building
+    dispatch: hangarId => this.setState((prevState, _) => {
+      const hangars = this.copyHangars(prevState.hangars);
+      const battlefields = this.copyBattlefields(prevState.battlefields);
+      const hangar = hangars[hangarId];
+      const battlefield = battlefields[hangar.ownerId];
+      const convoy = Lazy(hangar.units)
+        .map((unitArr, unitType) => {
+          hangar.units[unitType] = [];
+          return [unitType, unitArr]
+        })
+        .toObject();
+      battlefield.enroute.concat(convoy);
+      return { battlefields, hangars };
     }),
-    */
 
     //TODO: See if possible to delay iteration until end
     updateHangars: () => {
@@ -202,7 +224,7 @@ export default class GameStore extends React.Component {
                 if (actualQueue.length > 0) {
                   const unit = unitArr.shift();
                   const firstHangar = prevState.hangars[actualQueue.shift()];
-                  unit.ownerId = firstHangar.buildingId;
+                  unit.ownerId = firstHangar.ownerId;
                   !firstHangar.units[unitType] && (firstHangar.units[unitType] = []);
                   firstHangar.units[unitType].push(unit);
                   if (firstHangar.units[unitType].length < firstHangar.demand[unitType]) {
@@ -211,18 +233,6 @@ export default class GameStore extends React.Component {
                 }
               });
           });
-        /*
-        Lazy(hangars)
-          .where({ isSource: false })
-          .each(hangar => {
-            Lazy(hangar.demand)
-              .each((amt, unitType) => {
-                if (!hangar.units[unitType] || hangar.units[unitType].length <= amt) {
-                  unitQueues[unitType].push(hangar);
-                }
-              });
-          });
-          */
         return { hangars, unitQueues };
       });
     },
@@ -319,10 +329,26 @@ export default class GameStore extends React.Component {
     }, resolve(newHangar.id));
   })
 
+  addObjective = objective => this.setState((prevState, _) => {
+      const objectives = Lazy(prevState.objectives)
+        .map((obj, objId) => ([objId, { ...obj }]))
+        .concat([[objective.id, objective]])
+        .toObject()
+    console.log('objectives: ', objectives)
+    return { objectives }
+  })
+
   copyBuildings = buildings => Lazy(buildings)
     .map((building, buildingId) => ([
       buildingId,
-      ...building
+      { ...building }
+    ]))
+    .toObject();
+
+  copyBattlefields = battlefields => Lazy(battlefields)
+    .map((battlefield, battlefieldId) => ([
+      battlefieldId,
+      { ...battlefield }
     ]))
     .toObject();
 
@@ -337,8 +363,8 @@ export default class GameStore extends React.Component {
     .toObject();
 
   copyHangars = hangars => Lazy(hangars)
-    .map((hangar, buildingId) => ([
-      buildingId,
+    .map((hangar, ownerId) => ([
+      ownerId,
       {
         ...hangar,
         demand: { ...hangar.demand }
