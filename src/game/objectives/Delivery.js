@@ -22,7 +22,7 @@ const OrderItem = styled.div`
 
 export default class Delivery extends React.Component {
   state = {
-    timeLeft: null,
+    timeLeft: new Date(Date.now() + 1*60000),
     order: { tanks: 5 },
   }
 
@@ -37,7 +37,7 @@ export default class Delivery extends React.Component {
           ))
           .toArray()
         }
-        <Timer>{this.state.timeLeft}</Timer>
+        <Timer>{this.state.timeLeft.toString()}</Timer>
       </Container>
     )
   }

@@ -48,7 +48,10 @@ export default class Game extends React.Component {
               objective={obj}
               store={this.props.store}
             />
-            <Port hangar={this.props.store.hangars[obj.hangarId]}/>
+            <Port
+              hangar={this.props.store.hangars[obj.hangarId]}
+              store={this.props.store}
+            />
           </div>
         )).toArray()}
       </GameGrid>
