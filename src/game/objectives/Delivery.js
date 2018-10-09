@@ -22,11 +22,12 @@ const OrderItem = styled.div`
 
 export default class Delivery extends React.Component {
   state = {
-    timeLeft: new Date(Date.now() + 1*60000),
+    deadline: new Date(Date.now() + 1*60000),
     order: { tanks: 5 },
   }
 
   render() {
+    const timeLeft = new Date(this.state.deadline - Date.now())
     return (
       <Container>
         {Lazy(this.state.order)
@@ -37,7 +38,11 @@ export default class Delivery extends React.Component {
           ))
           .toArray()
         }
-        <Timer>{this.state.timeLeft.toString()}</Timer>
+        <Timer>
+          {timeLeft.getMinutes()}
+          :
+          {timeLeft.getSeconds()}
+        </Timer>
       </Container>
     )
   }

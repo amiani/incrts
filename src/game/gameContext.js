@@ -329,14 +329,12 @@ export default class GameStore extends React.Component {
     }, resolve(newHangar.id));
   })
 
-  addObjective = objective => this.setState((prevState, _) => {
-      const objectives = Lazy(prevState.objectives)
+  addObjective = objective => this.setState((prevState, _) => ({
+      objectives: Lazy(prevState.objectives)
         .map((obj, objId) => ([objId, { ...obj }]))
         .concat([[objective.id, objective]])
         .toObject()
-    console.log('objectives: ', objectives)
-    return { objectives }
-  })
+  }))
 
   copyBuildings = buildings => Lazy(buildings)
     .map((building, buildingId) => ([
