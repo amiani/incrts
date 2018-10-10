@@ -42,41 +42,31 @@ const MessageBox = styled.div`
   }
 `;
 
-const Front = styled.div`
+const Face = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
-  z-index: 2;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
   backface-visibility: hidden;
   transform-style: preserve-3d;
-  transform: rotateY(${p => p.flipped ? 180 : 0}deg);
   transition: transform ease 500ms;
   border: black solid 2px;
   padding: 2px;
-  background: linear-gradient(to bottom right, #eafeea, white);
   box-shadow: 2px 2px 1px 0px;
 `;
 
-const Back = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
+const Front = styled(Face)`
+  z-index: 2;
+  transform: rotateY(${p => p.flipped ? 180 : 0}deg);
+  background: linear-gradient(to bottom right, #eafeea, white);
+`;
+
+const Back = styled(Face)`
   transform: rotateY(${p => p.flipped ? 0 : -180}deg);
-  transition: transform ease 500ms;
-  border: black solid 2px;
-  padding: 2px;
   background: linear-gradient(#fff2f4, white);
-  box-shadow: 2px 2px 2px 0px;
 `;
 
 export default class Building extends React.Component {

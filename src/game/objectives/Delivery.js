@@ -28,7 +28,7 @@ const OrderItem = styled.div`
 
 export default class Delivery extends React.Component {
   state = {
-    deadline: new Date(Date.now() + .1*60000),
+    deadline: null,
     order: { tanks: 5 },
   }
 
