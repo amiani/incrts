@@ -46,7 +46,7 @@ export default class Game extends React.Component {
         {Lazy(this.props.store.objectives).map(obj => (
           <div key={obj.id}>
             <obj.Component
-              objective={obj}
+              {...obj.getProps()}
               store={this.props.store}
             />
             <Port

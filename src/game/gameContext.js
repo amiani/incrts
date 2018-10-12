@@ -43,6 +43,8 @@ export default class GameStore extends React.Component {
       this.setState((prevState, _) => ({ energy: prevState.energy + amount }))
     },
 
+    addCredits: amt => this.setState((prevState, _) => ({ credits: prevState.credits + amt })),
+
     updateResources: () => this.setState((prevState, _) => {
       let energy = prevState.energy + prevState.energyIncome - prevState.drain
       energy = energy > 0 ? energy : 0
@@ -166,7 +168,7 @@ export default class GameStore extends React.Component {
 
     makeDelivery: async () => {
       try {
-        const delivery = new Delivery()
+        const delivery = new Delivery(this.state)
         const hangarId = await this.makeHangar(delivery.id)
         delivery.hangarId = hangarId
         this.addObjective(delivery)
@@ -191,16 +193,21 @@ export default class GameStore extends React.Component {
       }, resolve('success'))
     }),
 
-    dispatch: hangarId => this.setState((prevState, _) => {
-      const hangars = this.copyHangars(prevState.hangars)
-      const objectives = this.copyObjectives(prevState.objectives)
-      const hangar = hangars[hangarId]
-      const objective = objectives[hangar.ownerId]
-      this.units = 
-      objective.dispatch(hangar.units)
-      hangar.units = { tanks: [] }
-      return { objectives, hangars }
-    }),
+    dispatch: hangarId => {
+      let objective, hangarUnits
+      this.setState((prevState, _) => {
+        const hangars = this.copyHangars(prevState.hangars)
+        const objectives = this.copyObjectives(prevState.objectives)
+        const hangar = hangars[hangarId]
+        objective = objectives[hangar.ownerId]
+        hangarUnits = Lazy(hangar.units).map((unitArr, unitType) => ([unitType, unitArr]))
+        this.units = Lazy(this.units)
+          .merge(hangarUnits)
+          .toObject()
+        hangar.units = { tanks: [] }
+        return { objectives, hangars }
+      }, () => objective.dispatch(hangarUnits))
+    },
 
     //TODO: See if possible to delay iteration until end
     updateHangars: () => {

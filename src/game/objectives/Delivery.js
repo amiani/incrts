@@ -4,17 +4,59 @@ import uuidv4 from 'uuid/v4'
 import Lazy from 'lazy.js'
 
 export default class Delivery {
+  constructor(store) {
+    this.store = store
+    this.setDeadline(20000)
+  }
+
   id = uuidv4()
   units = {}
+  deadline = null
+  order = { tanks: 5 }
   Component = DeliveryComponent
 
+  getProps = () => ({
+    deadline: this.deadline,
+    order: this.order,
+    units: this.units,
+  })
+
   dispatch = shipment => {
-    this.units = Lazy(this.units)
+    const unitsSeq = Lazy(this.units)
       .merge(shipment)
-      .toObject()
+
+    if (this.order) {
+      const totalUnitsLeft = unitsSeq
+        .reduce((acc, curr, currType) => {
+          let unitsLeft = this.order[currType] - curr.length
+          unitsLeft = unitsLeft >= 0 ? unitsLeft : 0
+          return acc + unitsLeft
+        }, 0)
+      if (totalUnitsLeft <= 0) {
+        this.store.addCredits(100)
+        this.order = null
+        this.deadline = null
+      }
+    }
+
+    this.units = unitsSeq.toObject()
   }
 
   update = () => {
+  }
+
+  isFulfilled = () => {
+  }
+
+  setDeadline = milliseconds => {
+    this.deadline = new Date(Date.now() + milliseconds)
+    setTimeout(this.checkDeadline, milliseconds)
+  }
+
+  checkDeadline = () => {
+    if (this.deadline && Date.now() >= this.deadline) {
+      this.order = null
+    }
   }
 }
 
@@ -31,34 +73,12 @@ const OrderItem = styled.div`
 `
 
 class DeliveryComponent extends React.Component {
-  state = {
-    deadline: null,
-    order: { tanks: 5 },
-  }
-
-  componentDidMount() {
-    this.setDeadline(3000)
-  }
-
-  setDeadline = milliseconds => {
-    this.setState(
-      { deadline: new Date(Date.now() + milliseconds) },
-      () => setTimeout(this.checkDeadline, milliseconds)
-    )
-  }
-
-  checkDeadline = () => {
-    if (this.state.deadline && Date.now() >= this.state.deadline) {
-      this.setState({ order: null })
-    }
-  }
-
   render() {
-    const timeLeft = new Date(this.state.deadline - Date.now())
-    if (this.state.order) {
+    const timeLeft = new Date(this.props.deadline - Date.now())
+    if (this.props.order) {
       return (
         <Container>
-          {Lazy(this.state.order)
+          {Lazy(this.props.order)
             .map((amt, unitType, i) => (
               <OrderItem key={unitType+i}>
                 {unitType}: {amt}
