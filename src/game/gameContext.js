@@ -7,7 +7,7 @@ import { ProtoGenerator } from './pieces/Generator'
 import { ProtoBuildQueue } from  './pieces/components/BuildQueue'
 import { ProtoHangar } from './pieces/components/Hangar'
 import { ProtoBattlefield } from './objectives/Battlefield'
-import { ProtoDelivery } from './objectives/Delivery'
+import Delivery from './objectives/Delivery'
 
 export const GameContext = React.createContext()
 
@@ -166,7 +166,7 @@ export default class GameStore extends React.Component {
 
     makeDelivery: async () => {
       try {
-        const delivery = new ProtoDelivery()
+        const delivery = new Delivery()
         const hangarId = await this.makeHangar(delivery.id)
         delivery.hangarId = hangarId
         this.addObjective(delivery)
@@ -232,6 +232,8 @@ export default class GameStore extends React.Component {
         return { hangars, unitQueues }
       })
     },
+
+    updateObjectives: () => Lazy(this.state.objectives).each(o => o.update()),
 
     setDemand: (hangarId, unitType, amt) => this.setState((prevState, _) => {
       const hangars = this.copyHangars(prevState.hangars)
@@ -325,12 +327,11 @@ export default class GameStore extends React.Component {
     }, resolve(newHangar.id))
   })
 
-  addObjective = objective => this.setState((prevState, _) => ({
-      objectives: Lazy(prevState.objectives)
-        .map((obj, objId) => ([objId, { ...obj }]))
-        .concat([[objective.id, objective]])
-        .toObject()
-  }))
+  addObjective = objective => this.setState((prevState, _) => {
+      const objectives = prevState.objectives
+      objectives[objective.id] = objective
+      return { objectives }
+  })
 
   copyBuildings = buildings => Lazy(buildings)
     .map((building, buildingId) => ([

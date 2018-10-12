@@ -3,15 +3,19 @@ import styled from 'styled-components'
 import uuidv4 from 'uuid/v4'
 import Lazy from 'lazy.js'
 
-export function ProtoDelivery() {
-  this.id = uuidv4()
-  this.Component = Delivery
-  this.dispatch = shipment => {
+export default class Delivery {
+  id = uuidv4()
+  units = {}
+  Component = DeliveryComponent
+
+  dispatch = shipment => {
     this.units = Lazy(this.units)
       .merge(shipment)
       .toObject()
   }
-  this.units = {}
+
+  update = () => {
+  }
 }
 
 const Container = styled.div`
@@ -26,7 +30,7 @@ const Timer = styled.div`
 const OrderItem = styled.div`
 `
 
-export default class Delivery extends React.Component {
+class DeliveryComponent extends React.Component {
   state = {
     deadline: null,
     order: { tanks: 5 },
