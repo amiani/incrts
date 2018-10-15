@@ -1,15 +1,16 @@
-import React from 'react';
-import styled from 'styled-components';
-import uuidv4 from 'uuid/v4';
+import React from 'react'
+import styled from 'styled-components'
+import uuidv4 from 'uuid/v4'
 
-import ProgressBar from './ProgressBar';
+import ProgressBar from './ProgressBar'
 
 export function ProtoBuildQueue(ownerId) {
-  this.id = uuidv4();
-  this.ownerId = ownerId;
-  this.progress = 0;
-  this.maxLength = 2;
-  this.items = [];
+  this.id = uuidv4()
+  this.ownerId = ownerId
+  this.progress = 0
+  this.maxLength = 2
+  this.items = []
+  this.loop = true
 };
 
 const Container = styled.div`
@@ -18,6 +19,11 @@ const Container = styled.div`
   justify-content: space-between;
   height: 40px;
   margin: 5px 0 5px 0;
+  border: 3px dashed ${p => p.loop ? 'blue' : 'transparent'};
+
+  :hover {
+    border: 3px dashed grey;
+  }
 `;
 
 const QueueBox = styled.div`
@@ -35,7 +41,7 @@ const QueueItem = styled.div`
 `;
 
 export default props => (
-  <Container>
+  <Container onDoubleClick={props.toggleLoop} loop={props.loop}>
     <QueueBox>
       {props.items.map(q => <QueueItem key={q.id} icon={q.icon} />)}
     </QueueBox>

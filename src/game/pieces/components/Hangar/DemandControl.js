@@ -5,7 +5,6 @@ import Lazy from 'lazy.js';
 import NumberControl from './NumberControl';
 
 const Container = styled.div`
-  width: 100px;
   height: 200px;
   display: flex;
   flex-direction: column;

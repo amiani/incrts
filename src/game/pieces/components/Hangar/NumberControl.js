@@ -1,23 +1,15 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
+
+import Button from '../Button'
 
 const Container = styled.div`
   width: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 10px;
-`;
-
-const Button = styled.div`
-  height: 12px;
-  width: 18px;
-  border: 2px black solid;
-
-  &:hover {
-    background-color: green;
-  }
-`;
+  font-size: 13px;
+`
 
 export default props => (
   <Container>
@@ -26,4 +18,4 @@ export default props => (
     {props.amt}
     <Button onClick={()=>props.set(props.amt+1)}>+1</Button>
   </Container>
-);
+)

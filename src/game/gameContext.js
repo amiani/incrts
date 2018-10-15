@@ -131,6 +131,12 @@ export default class GameStore extends React.Component {
         return { buildQueues }
       }, resolve('success'))
     }),
+
+    toggleQueueLoop: buildQId => this.setState((prevState, _) => {
+      const buildQueues = this.copyBuildQueues(prevState.buildQueues)
+      buildQueues[buildQId].loop = !buildQueues[buildQId].loop
+      return { buildQueues }
+    }),
         
     getBuildingsDrain: () => {
       const factoryDrain = this.reducePieceDrain(this.state.factories)
@@ -193,21 +199,17 @@ export default class GameStore extends React.Component {
       }, resolve('success'))
     }),
 
-    dispatch: hangarId => {
-      let objective, hangarUnits
-      this.setState((prevState, _) => {
-        const hangars = this.copyHangars(prevState.hangars)
-        const objectives = this.copyObjectives(prevState.objectives)
-        const hangar = hangars[hangarId]
-        objective = objectives[hangar.ownerId]
-        hangarUnits = Lazy(hangar.units).map((unitArr, unitType) => ([unitType, unitArr]))
-        this.units = Lazy(this.units)
-          .merge(hangarUnits)
-          .toObject()
-        hangar.units = { tanks: [] }
-        return { objectives, hangars }
-      }, () => objective.dispatch(hangarUnits))
-    },
+    dispatch: hangarId => this.setState((prevState, _) => {
+      const hangars = this.copyHangars(prevState.hangars)
+      const objectives = this.copyObjectives(prevState.objectives)
+      const hangar = hangars[hangarId]
+      objectives[hangar.ownerId].dispatch(hangar.units)
+      this.units = Lazy(this.units)
+        .merge(hangar.units)
+        .toObject()
+      hangar.units = { tanks: [] }
+      return { objectives, hangars }
+    }),
 
     //TODO: See if possible to delay iteration until end
     updateHangars: () => {

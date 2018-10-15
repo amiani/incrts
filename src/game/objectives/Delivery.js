@@ -22,13 +22,16 @@ export default class Delivery {
   })
 
   dispatch = shipment => {
-    const unitsSeq = Lazy(this.units)
+    this.units = Lazy(this.units)
       .merge(shipment)
+      .toObject()
+  }
 
+  update = () => {
     if (this.order) {
-      const totalUnitsLeft = unitsSeq
+      const totalUnitsLeft = Lazy(this.order)
         .reduce((acc, curr, currType) => {
-          let unitsLeft = this.order[currType] - curr.length
+          let unitsLeft = curr - (this.units[currType] ? this.units[currType].length : 0)
           unitsLeft = unitsLeft >= 0 ? unitsLeft : 0
           return acc + unitsLeft
         }, 0)
@@ -38,14 +41,6 @@ export default class Delivery {
         this.deadline = null
       }
     }
-
-    this.units = unitsSeq.toObject()
-  }
-
-  update = () => {
-  }
-
-  isFulfilled = () => {
   }
 
   setDeadline = milliseconds => {
@@ -81,7 +76,7 @@ class DeliveryComponent extends React.Component {
           {Lazy(this.props.order)
             .map((amt, unitType, i) => (
               <OrderItem key={unitType+i}>
-                {unitType}: {amt}
+                {unitType}: {this.props.units[unitType] ? this.props.units[unitType].length : 0} / {amt}
               </OrderItem>
             ))
             .toArray()
