@@ -24,13 +24,19 @@ const resources = [
   'productivity',
 ]
 
+const buildings = ['factories', 'assemblers', 'generators']
+
 const GameContext = React.createContext(
   null,
   (prev, next) => {
     let result = 0
-    if (!resources.every(rsrc => prev[rsrc] === next[rsrc])) {
+    if (resources.some(rsrc => prev[rsrc] !== next[rsrc])) {
       result |= OBSERVEDBITS.resources
     }
+    if (buildings.some(b => Object.keys(prev[b]).length !== Object.keys(next[b]).length)) {
+      result |= OBSERVEDBITS.buildingsLength
+    }
+
     return result
   }
 )

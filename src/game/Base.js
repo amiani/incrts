@@ -10,6 +10,7 @@ import { ProtoGenerator } from './pieces/Generator'
 import Factory from './pieces/Factory'
 import Assembler from './pieces/Assembler'
 import Generator from './pieces/Generator'
+import { OBSERVEDBITS } from './constants'
 
 const Container = styled.div`
   display: flex;
