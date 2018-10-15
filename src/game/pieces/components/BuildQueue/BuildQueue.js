@@ -17,8 +17,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 40px;
-  margin: 5px 0 5px 0;
+  height: 48px;
+  margin-bottom: 5px;
   border: 3px dashed ${p => p.loop ? 'blue' : 'transparent'};
 
   :hover {
