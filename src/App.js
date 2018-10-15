@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { createGlobalStyle } from 'styled-components';
+import React, { Component } from 'react'
+import { createGlobalStyle } from 'styled-components'
 
-import Game from './game/Game';
-import GameStore, { GameContext } from './game/gameContext';
-import './App.css';
+import Game from './game/Game'
+import GameContext, { GameStore } from './game/gameContext'
+import './App.css'
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -17,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     user-select: none;
   }
-`;
+`
 
 class App extends Component {
   render() {
@@ -30,8 +30,8 @@ class App extends Component {
           <GlobalStyle />
         </GameStore>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App

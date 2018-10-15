@@ -1,33 +1,20 @@
-import React from 'react';
-import styled from 'styled-components';
-import Lazy from 'lazy.js';
+import React from 'react'
+import styled from 'styled-components'
+import Lazy from 'lazy.js'
 
-import { GameContext } from './gameContext';
-import { ProtoAssembler } from './pieces/Assembler';
-import { ProtoFactory } from './pieces/Factory';
-import { ProtoGenerator } from './pieces/Generator';
+import GameContext from './gameContext'
+import { ProtoAssembler } from './pieces/Assembler'
+import { ProtoFactory } from './pieces/Factory'
+import { ProtoGenerator } from './pieces/Generator'
 
-import Factory from './pieces/Factory';
-import Assembler from './pieces/Assembler';
-import Generator from './pieces/Generator';
+import Factory from './pieces/Factory'
+import Assembler from './pieces/Assembler'
+import Generator from './pieces/Generator'
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
 `
-
-/*
-const FactoryRow = styled.div`
-  display: flex;
-  height: ${factorySize.height};
-  margin-bottom: 10px;
-`;
-
-const AssemblerRow = styled.div`
-  display: flex;
-  height: ${assemblerSize.height};
-`;
-*/
 
 const BuildingRow = styled.div`
   display: flex;
@@ -36,7 +23,9 @@ const BuildingRow = styled.div`
 `;
 
 export default props => (
-  <GameContext.Consumer>{store => (
+  <GameContext.Consumer
+    unstable_observedBits={OBSERVEDBITS.buildingsLength}
+  >{store => (
     <Container>
       <BuildingRow height={ProtoFactory.height+12}>
         {Lazy(store.factories).map(b => (
@@ -67,4 +56,4 @@ export default props => (
       </BuildingRow>
     </Container>
   )}</GameContext.Consumer>
-);
+)

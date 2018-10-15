@@ -29,6 +29,9 @@ export default class Factory extends React.Component {
     this.id = props.id
   }
 
+  shouldComponentUpdate(nextProps) {
+  }
+
   addProgress = () => {
     this.props.store.addProgress(this.props.factory.buildQueueId, 50*this.props.store.productivity)
       .catch(error => console.log(error))

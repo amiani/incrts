@@ -41,7 +41,7 @@ export default class Game extends React.Component {
   render() {
     return (
       <GameGrid>
-        <Sidebar store={this.props.store} />
+        <Sidebar />
         <Base />
         {Lazy(this.props.store.objectives).map(obj => (
           <div key={obj.id}>

@@ -9,16 +9,44 @@ import { ProtoHangar } from './pieces/components/Hangar'
 import { ProtoBattlefield } from './objectives/Battlefield'
 import Delivery from './objectives/Delivery'
 
-export const GameContext = React.createContext()
+import { OBSERVEDBITS } from './constants'
 
-export default class GameStore extends React.Component {
+const resources = [
+  'credits',
+  'creditIncome',
+  'fabric',
+  'fabricIncome',
+  'hardware',
+  'hardwareIncome',
+  'energy',
+  'energyIncome',
+  'drain',
+  'productivity',
+]
+
+const GameContext = React.createContext(
+  null,
+  (prev, next) => {
+    let result = 0
+    if (!resources.every(rsrc => prev[rsrc] === next[rsrc])) {
+      result |= OBSERVEDBITS.resources
+    }
+    return result
+  }
+)
+export default GameContext
+
+
+export class GameStore extends React.Component {
   units = {}
+
+  observedBits = OBSERVEDBITS
 
   state = {
     //resources
-    credits: 200,
+    credits: 3200,
     creditIncome: 0,
-    fabric: 200,
+    fabric: 3200,
     fabricIncome: 0,
     hardware: 1000,
     hardwareIncome: 0,
