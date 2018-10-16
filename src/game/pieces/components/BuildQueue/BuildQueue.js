@@ -45,12 +45,12 @@ export default props => (
   <GameContext.Consumer>{store => {
     const data = store.buildQueues[props.id]
     return (
-      <Container onDoubleClick={props.toggleLoop} loop={props.loop}>
-        <QueueBox>
-          {data.items.map(q => <QueueItem key={q.id} icon={q.icon} />)}
-        </QueueBox>
-        <ProgressBar progress={data.progress} />
-      </Container>
+    <Container onDoubleClick={()=>store.toggleQueueLoop(props.id)} loop={data.loop}>
+      <QueueBox>
+        {data.items.map(q => <QueueItem key={q.id} icon={q.icon} />)}
+      </QueueBox>
+      <ProgressBar progress={data.progress} />
+    </Container>
     )
   }}</GameContext.Consumer>
 )

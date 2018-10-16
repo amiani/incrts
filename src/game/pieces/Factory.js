@@ -72,6 +72,7 @@ export default class Factory extends React.Component {
           }
         />
         <ExpandingHangar
+          id={hangarId}
           height={ProtoFactory.height}
           width={50}
           hangar={store.hangars[hangarId]}

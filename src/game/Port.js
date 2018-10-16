@@ -27,6 +27,7 @@ export default class Port extends React.Component {
       <Container>
         <Button onClick={this.dispatch}>Dispatch</Button>
         <ExpandingHangar
+          id={this.props.hangar.id}
           height={150}
           width={150}
           hangar={this.props.hangar}

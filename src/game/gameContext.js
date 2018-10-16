@@ -33,6 +33,7 @@ const GameContext = React.createContext(
     if (resources.some(r => prev[r] !== next[r])) {
       result |= OBSERVEDBITS.resources
     }
+
     const didBuildingsChange = buildingTypes.some(buildingType => {
       return Lazy(next[buildingType])
         .some(building => building !== prev[buildingType][building.id])
