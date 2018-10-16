@@ -2,11 +2,11 @@ export const TICKRATE = 150
 
 export const OBSERVEDBITS = {
   resources: 0b01,
-  buildingsLength: 0b10,
-  factories: 0b11,
-  assemblers: 0b100,
-  generators: 0b101,
-  buildQueues: 0b110,
-  hangars: 0b111,
-  objectivesLength: 0b1000,
+  buildings: 0b10,
+  factories: 0b100,
+  assemblers: 0b1000,
+  generators: 0b10000,
+  buildQueues: 0b100000,
+  hangars: 0b1000000,
+  objectivesLength: 0b10000000,
 }

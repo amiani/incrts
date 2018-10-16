@@ -4,7 +4,7 @@ export const colorDict = {
   tanks: 'blue',
 };
 
-export function tankData(ownerId) {
+export function ProtoTank(ownerId) {
   this.id = uuidv4();
   this.ownerId = ownerId;
   this.name = 'Light Tank';

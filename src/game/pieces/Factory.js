@@ -6,7 +6,7 @@ import Building from './Building'
 import Button from './components/Button'
 import BuildQueue from './components/BuildQueue'
 import ExpandingHangar from './components/Hangar/ExpandingHangar'
-import { tankData } from './units'
+import { ProtoTank } from './units'
 
 export function ProtoFactory() {
   this.id = uuidv4()
@@ -30,14 +30,17 @@ export default class Factory extends React.Component {
   }
 
   addProgress = () => {
-    this.props.store.addProgress(this.props.factory.buildQueueId, 50*this.props.store.productivity)
+    this.props.store.addProgress(
+      this.props.factory.buildQueueId, 
+      50*this.props.store.productivity
+    )
       .catch(error => console.log(error))
   }
 
   enqueueTank = () => {
     this.props.store.enqueue(
       this.props.factory.buildQueueId,
-      new tankData(this.props.factory.id)
+      new ProtoTank(this.props.factory.id)
     )
       .catch(error => console.log(error))
   }
@@ -54,6 +57,7 @@ export default class Factory extends React.Component {
           front={
             <div>
               <BuildQueue
+                id={buildQueueId}
                 items={store.buildQueues[buildQueueId].items}
                 progress={store.buildQueues[buildQueueId].progress}
                 loop={store.buildQueues[buildQueueId].loop}

@@ -48,6 +48,7 @@ export default class Assembler extends React.Component {
         front={
           <div>
             <BuildQueue
+              id={buildQueueId}
               items={buildQueue.items}
               progress={buildQueue.progress}
               loop={buildQueue.loop}

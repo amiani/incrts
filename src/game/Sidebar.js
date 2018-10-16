@@ -14,6 +14,10 @@ const ResourceInfo = styled.p`
 `
 
 export default class Sidebar extends React.Component {
+  shouldComponentUpdate() {
+    return false
+  }
+
   render() {
     return (
       <GameContext.Consumer

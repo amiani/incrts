@@ -23,38 +23,47 @@ const BuildingRow = styled.div`
   margin-bottom: 10px;
 `;
 
-export default props => (
-  <GameContext.Consumer
-    unstable_observedBits={OBSERVEDBITS.buildingsLength}
-  >{store => (
-    <Container>
-      <BuildingRow height={ProtoFactory.height+12}>
-        {Lazy(store.factories).map(b => (
-          <Factory
-            key={b.id}
-            factory={b}
-            store={store}
-          />
-        )).toArray()}
-      </BuildingRow>
-      <BuildingRow height={ProtoAssembler.height+12}>
-        {Lazy(store.assemblers).map(b => (
-          <Assembler
-            key={b.id}
-            assembler={b}
-            store={store}
-          />
-        )).toArray()}
-      </BuildingRow>
-      <BuildingRow height={ProtoGenerator.height+12}>
-        {Lazy(store.generators).map(b => (
-          <Generator
-            key={b.id}
-            generator={b}
-            store={store}
-          />
-        )).toArray()}
-      </BuildingRow>
-    </Container>
-  )}</GameContext.Consumer>
-)
+export default class Base extends React.Component {
+  shouldComponentUpdate() {
+    return false;
+  }
+
+  render() {
+    return (
+      <GameContext.Consumer
+        unstable_observedBits={OBSERVEDBITS.buildings}
+      >{store => { console.log('base render')
+        return (
+        <Container>
+          <BuildingRow height={ProtoFactory.height+12}>
+            {Lazy(store.factories).map(b => (
+              <Factory
+                key={b.id}
+                factory={b}
+                store={store}
+              />
+            )).toArray()}
+          </BuildingRow>
+          <BuildingRow height={ProtoAssembler.height+12}>
+            {Lazy(store.assemblers).map(b => (
+              <Assembler
+                key={b.id}
+                assembler={b}
+                store={store}
+              />
+            )).toArray()}
+          </BuildingRow>
+          <BuildingRow height={ProtoGenerator.height+12}>
+            {Lazy(store.generators).map(b => (
+              <Generator
+                key={b.id}
+                generator={b}
+                store={store}
+              />
+            )).toArray()}
+          </BuildingRow>
+        </Container>
+      )}}</GameContext.Consumer>
+    )
+  }
+}

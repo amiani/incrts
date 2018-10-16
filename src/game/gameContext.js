@@ -24,18 +24,20 @@ const resources = [
   'productivity',
 ]
 
-const buildings = ['factories', 'assemblers', 'generators']
+const buildingTypes = ['factories', 'assemblers', 'generators']
 
 const GameContext = React.createContext(
   null,
   (prev, next) => {
     let result = 0
-    if (resources.some(rsrc => prev[rsrc] !== next[rsrc])) {
+    if (resources.some(r => prev[r] !== next[r])) {
       result |= OBSERVEDBITS.resources
     }
-    if (buildings.some(b => Object.keys(prev[b]).length !== Object.keys(next[b]).length)) {
-      result |= OBSERVEDBITS.buildingsLength
-    }
+    const didBuildingsChange = buildingTypes.some(buildingType => {
+      return Lazy(next[buildingType])
+        .some(building => building !== prev[buildingType][building.id])
+    })
+    result |= didBuildingsChange ? OBSERVEDBITS.buildings : 0
 
     return result
   }
@@ -45,8 +47,6 @@ export default GameContext
 
 export class GameStore extends React.Component {
   units = {}
-
-  observedBits = OBSERVEDBITS
 
   state = {
     //resources
