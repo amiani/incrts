@@ -32,6 +32,7 @@ export default class Sidebar extends React.Component {
             <ResourceInfo>Drain: {store.getBuildingsDrain()}</ResourceInfo>
             <ResourceInfo>Productivity: {(store.productivity * 100).toFixed(0)}%</ResourceInfo>
           </div>
+          <Button onClick={()=>store.buyFabric(10)}>Buy 10 Fabric</Button>
           <Button onClick={store.buildFactory}>Build Factory</Button>
           <Button onClick={store.buildAssembler}>Build Assembler</Button>
           <Button onClick={store.buildGenerator}>Build Generator</Button>

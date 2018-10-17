@@ -9,7 +9,7 @@ import { ProtoHangar } from './pieces/components/Hangar'
 import { ProtoBattlefield } from './objectives/Battlefield'
 import Order from './objectives/Order'
 
-import { OBSERVEDBITS } from './constants'
+import { FABRICPRICE, OBSERVEDBITS } from './constants'
 
 const resources = [
   'credits',
@@ -79,6 +79,17 @@ export class GameStore extends React.Component {
     },
 
     addCredits: amt => this.setState((prevState, _) => ({ credits: prevState.credits + amt })),
+
+    buyFabric: amt => new Promise((resolve, reject) => this.setState((prevState, _) => {
+      if (this.canAfford({ credits: amt * FABRICPRICE }, prevState)) {
+        return {
+          credits: prevState.credits - amt * FABRICPRICE,
+          fabric: prevState.fabric + amt
+        }
+      }
+      reject('Insufficient Funds')
+      return null
+    }, resolve('success'))),
 
     updateResources: () => this.setState((prevState, _) => {
       let energy = prevState.energy + prevState.energyIncome - prevState.drain
@@ -301,12 +312,12 @@ export class GameStore extends React.Component {
   }
 
 
-  canAfford = cost => Lazy(cost)
+  canAfford = (cost, state) => Lazy(cost)
     .keys()
-    .reduce((acc, curr) => acc && this.state[curr] >= cost[curr], true)
+    .reduce((acc, curr) => acc && state[curr] >= cost[curr], true)
 
   spend = cost => new Promise((resolve, reject) => {
-    if (this.canAfford(cost)) {
+    if (this.canAfford(cost, this.state)) {
       const resources = {}
       this.setState((prevState, _) => {
         Lazy(cost)
