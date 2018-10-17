@@ -1,4 +1,5 @@
 export const TICKRATE = 150
+export const FABRICPRICE = 10
 
 export const OBSERVEDBITS = {
   resources: 0b01,
