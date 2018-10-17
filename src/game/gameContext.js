@@ -7,7 +7,7 @@ import { ProtoGenerator } from './pieces/Generator'
 import { ProtoBuildQueue } from  './pieces/components/BuildQueue'
 import { ProtoHangar } from './pieces/components/Hangar'
 import { ProtoBattlefield } from './objectives/Battlefield'
-import Delivery from './objectives/Delivery'
+import Order from './objectives/Order'
 
 import { OBSERVEDBITS } from './constants'
 
@@ -72,7 +72,7 @@ export class GameStore extends React.Component {
     hangars: {},
     unitQueues: { tanks: [], },
 
-    objectives: {},
+    orders: {},
 
     addEnergy: amount => {
       this.setState((prevState, _) => ({ energy: prevState.energy + amount }))
@@ -207,12 +207,12 @@ export class GameStore extends React.Component {
       return nextState
     }),
 
-    makeDelivery: async () => {
+    makeOrder: async () => {
       try {
-        const delivery = new Delivery(this.state)
-        const hangarId = await this.makeHangar(delivery.id)
-        delivery.hangarId = hangarId
-        this.addObjective(delivery)
+        const order = new Order(this.state)
+        const hangarId = await this.makeHangar(order.id)
+        order.hangarId = hangarId
+        this.addOrder(order)
       }
       catch(error) {
         console.log(error)
@@ -236,14 +236,14 @@ export class GameStore extends React.Component {
 
     dispatch: hangarId => this.setState((prevState, _) => {
       const hangars = this.copyHangars(prevState.hangars)
-      const objectives = this.copyObjectives(prevState.objectives)
+      const orders = this.copyOrders(prevState.orders)
       const hangar = hangars[hangarId]
-      objectives[hangar.ownerId].dispatch(hangar.units)
+      orders[hangar.ownerId].dispatch(hangar.units)
       this.units = Lazy(this.units)
         .merge(hangar.units)
         .toObject()
       hangar.units = { tanks: [] }
-      return { objectives, hangars }
+      return { orders, hangars }
     }),
 
     //TODO: See if possible to delay iteration until end
@@ -277,7 +277,7 @@ export class GameStore extends React.Component {
       })
     },
 
-    updateObjectives: () => Lazy(this.state.objectives).each(o => o.update()),
+    updateOrders: () => Lazy(this.state.orders).each(o => o.update()),
 
     setDemand: (hangarId, unitType, amt) => this.setState((prevState, _) => {
       const hangars = this.copyHangars(prevState.hangars)
@@ -371,10 +371,10 @@ export class GameStore extends React.Component {
     }, resolve(newHangar.id))
   })
 
-  addObjective = objective => this.setState((prevState, _) => {
-      const objectives = prevState.objectives
-      objectives[objective.id] = objective
-      return { objectives }
+  addOrder = order => this.setState((prevState, _) => {
+      const orders = prevState.orders
+      orders[order.id] = order
+      return { orders }
   })
 
   copyBuildings = buildings => Lazy(buildings)
@@ -384,10 +384,10 @@ export class GameStore extends React.Component {
     ]))
     .toObject()
 
-  copyObjectives = objectives => Lazy(objectives)
-    .map((objective, objectiveId) => ([
-      objectiveId,
-      { ...objective }
+  copyOrders = orders => Lazy(orders)
+    .map((order, orderId) => ([
+      orderId,
+      { ...order }
     ]))
     .toObject()
 

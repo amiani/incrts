@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import uuidv4 from 'uuid/v4'
 import Lazy from 'lazy.js'
 
-export default class Delivery {
+export default class Order {
   constructor(store) {
     this.store = store
     this.setDeadline(20000)
@@ -13,7 +13,7 @@ export default class Delivery {
   units = {}
   deadline = null
   order = { tanks: 5 }
-  Component = DeliveryComponent
+  Component = OrderComponent
 
   getProps = () => ({
     deadline: this.deadline,
@@ -67,7 +67,7 @@ const Timer = styled.div`
 const OrderItem = styled.div`
 `
 
-class DeliveryComponent extends React.Component {
+class OrderComponent extends React.Component {
   render() {
     const timeLeft = new Date(this.props.deadline - Date.now())
     if (this.props.order) {
