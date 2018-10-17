@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import GameContext from './gameContext'
 import Button from './pieces/components/Button'
+import MessageBox from './pieces/components/MessageBox'
 import { OBSERVEDBITS } from './constants'
 
 const Container = styled.div`
@@ -14,6 +15,8 @@ const ResourceInfo = styled.p`
 `
 
 export default class Sidebar extends React.Component {
+  state = { message: '' }
+
   shouldComponentUpdate() {
     return false
   }
@@ -36,6 +39,7 @@ export default class Sidebar extends React.Component {
           <Button onClick={store.buildFactory}>Build Factory</Button>
           <Button onClick={store.buildAssembler}>Build Assembler</Button>
           <Button onClick={store.buildGenerator}>Build Generator</Button>
+          <MessageBox message={this.state.message} />
         </Container>
       )}</GameContext.Consumer>
     )

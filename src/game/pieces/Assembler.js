@@ -38,8 +38,6 @@ export default class Assembler extends React.Component {
   }
 
   render() {
-    const { buildQueueId } = this.props.assembler
-    const buildQueue = this.props.store.buildQueues[buildQueueId]
     return (
       <Building 
         width={ProtoAssembler.width}
@@ -47,18 +45,12 @@ export default class Assembler extends React.Component {
         message={this.state.message}
         front={
           <div>
-            <BuildQueue
-              id={buildQueueId}
-              items={buildQueue.items}
-              progress={buildQueue.progress}
-              loop={buildQueue.loop}
-              toggleLoop={()=>this.props.store.toggleQueueLoop(buildQueueId)}
-            />
+            <BuildQueue id={this.props.assembler.buildQueueId} />
             <Button onClick={this.addProgress}>Assemble</Button>
             <Button onClick={this.enqueueHardware}>Hardware</Button>
           </div>
         }
       />
-    );
+    )
   }
 }

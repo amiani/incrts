@@ -32,8 +32,7 @@ export default class Base extends React.Component {
     return (
       <GameContext.Consumer
         unstable_observedBits={OBSERVEDBITS.buildings}
-      >{store => { console.log('base render')
-        return (
+      >{store => (
         <Container>
           <BuildingRow height={ProtoFactory.height+12}>
             {Lazy(store.factories).map(b => (
@@ -63,7 +62,7 @@ export default class Base extends React.Component {
             )).toArray()}
           </BuildingRow>
         </Container>
-      )}}</GameContext.Consumer>
+      )}</GameContext.Consumer>
     )
   }
 }

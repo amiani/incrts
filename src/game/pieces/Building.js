@@ -1,7 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
-import Button from './components/Button.js';
+import Button from './components/Button.js'
+import MessageBox from './components/MessageBox'
 
 const Container = styled.div`
   width: ${p=>p.width}px;
@@ -13,7 +14,7 @@ const Container = styled.div`
   background-color: ${p => p.color};
 
   perspective: 1000px;
-`;
+`
 
 const Header = styled.div`
   display: flex;
@@ -22,25 +23,12 @@ const Header = styled.div`
   border: solid black 2px;
   padding: 1px;
   margin-bottom: 2px;
-`;
+`
 
 const Flipper = styled.div`
   transform-style: preserve-3d;
   height: 100%;
-`;
-
-const MessageBox = styled.div`
-  color: red;
-  height: 10px;
-  flex-shrink: 0;
-  font-size: 10px;
-  opacity: 1;
-  @keyframes flash {
-    0% { opacity: 0 }
-    50% { opacity: 1 }
-    100% { opacity: 0 }
-  }
-`;
+`
 
 const Face = styled.div`
   display: flex;
@@ -56,18 +44,18 @@ const Face = styled.div`
   border: black solid 2px;
   padding: 2px;
   box-shadow: 2px 2px 1px 0px;
-`;
+`
 
 const Front = styled(Face)`
   z-index: 2;
   transform: rotateY(${p => p.flipped ? 180 : 0}deg);
   background: linear-gradient(to bottom right, #eafeea, white);
-`;
+`
 
 const Back = styled(Face)`
   transform: rotateY(${p => p.flipped ? 0 : -180}deg);
   background: linear-gradient(#fff2f4, white);
-`;
+`
 
 export default class Building extends React.Component {
   state = {
@@ -90,8 +78,8 @@ export default class Building extends React.Component {
             {this.props.back}
           </Back>
         </Flipper>
-        <MessageBox>{this.props.message}</MessageBox>
+        <MessageBox message={this.props.message} />
       </Container>
-    );
+    )
   }
 }

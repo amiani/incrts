@@ -46,7 +46,6 @@ export default class Factory extends React.Component {
   }
 
   render() {
-    console.log('factory render')
     const { store } = this.props
     const { buildQueueId, hangarId } = this.props.factory
     return (
@@ -56,13 +55,7 @@ export default class Factory extends React.Component {
           height={ProtoFactory.height}
           front={
             <div>
-              <BuildQueue
-                id={buildQueueId}
-                items={store.buildQueues[buildQueueId].items}
-                progress={store.buildQueues[buildQueueId].progress}
-                loop={store.buildQueues[buildQueueId].loop}
-                toggleLoop={()=>store.toggleQueueLoop(buildQueueId)}
-              />
+              <BuildQueue id={buildQueueId} />
               <Button onClick={this.addProgress}>Build</Button>
               <Button onClick={this.enqueueTank}>Tank</Button>
             </div>
