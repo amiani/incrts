@@ -29,9 +29,9 @@ export default class Sidebar extends React.Component {
         <Container>
           <div>
             <ResourceInfo>Credits: {store.credits.toFixed(0)}</ResourceInfo>
+            <ResourceInfo>Energy: {store.energy.toFixed(1)}</ResourceInfo>
             <ResourceInfo>Fabric: {store.fabric.toFixed(0)}</ResourceInfo>
             <ResourceInfo>Hardware: {store.hardware.toFixed(0)}</ResourceInfo>
-            <ResourceInfo>Energy: {store.energy.toFixed(1)}</ResourceInfo>
             <ResourceInfo>Drain: {store.getBuildingsDrain()}</ResourceInfo>
             <ResourceInfo>Productivity: {(store.productivity * 100).toFixed(0)}%</ResourceInfo>
           </div>

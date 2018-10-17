@@ -64,9 +64,13 @@ export default class Building extends React.Component {
 
   flip = () => this.setState((prevState, _) => ({ flipped: !prevState.flipped }))
 
+  handleMouseUp = e => {
+    e.button === 1 && this.flip()
+  }
+
   render() {
     return (
-      <Container {...this.props} color={this.state.flipped ? '' : ''}>
+      <Container {...this.props} onMouseUp={e => this.handleMouseUp(e)}>
         <Header>
           <Button onClick={this.flip}>Flip</Button>
         </Header>
