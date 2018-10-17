@@ -25,7 +25,7 @@ export default class Game extends React.Component {
   }
 
   initialize = () => {
-    this.props.store.makeDelivery()
+    this.props.store.makeOrder()
     this.props.store.buildGenerator()
     this.props.store.buildFactory()
   }
@@ -35,7 +35,7 @@ export default class Game extends React.Component {
     this.props.store.updateBuildings()
     this.props.store.updateBuildQueues()
     this.props.store.updateHangars()
-    this.props.store.updateObjectives()
+    this.props.store.updateOrders()
   }
 
   render() {
@@ -43,7 +43,7 @@ export default class Game extends React.Component {
       <GameGrid>
         <Sidebar />
         <Base />
-        {Lazy(this.props.store.objectives).map(obj => (
+        {Lazy(this.props.store.orders).map(obj => (
           <div key={obj.id}>
             <obj.Component
               {...obj.getProps()}
