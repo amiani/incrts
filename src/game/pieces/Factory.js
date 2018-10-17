@@ -14,6 +14,7 @@ export function ProtoFactory() {
   this.name = 'factory'
   this.cost = { credits: 50, fabric: 50 }
   this.drain = 1
+  this.status = true
 }
 ProtoFactory.height = 300
 ProtoFactory.width = 200
@@ -26,7 +27,7 @@ const Container = styled.div`
 export default class Factory extends React.Component {
   constructor(props) {
     super()
-    this.id = props.id
+    this.id = props.factory.id
   }
 
   addProgress = () => {
@@ -45,9 +46,12 @@ export default class Factory extends React.Component {
       .catch(error => console.log(error))
   }
 
+  handlePowerChange = e => {
+    this.props.store.togglePower(this.id)
+  }
+
   render() {
-    const { store } = this.props
-    const { buildQueueId, hangarId } = this.props.factory
+    const { buildQueueId, hangarId, status } = this.props.factory
     return (
       <Container>
         <Building
@@ -61,14 +65,15 @@ export default class Factory extends React.Component {
             </div>
           }
           back={
-            <p>This the factory back</p>
+            <div>
+              Power: <input type='checkbox' value={status} defaultChecked={true} onChange={this.handlePowerChange} />
+            </div>
           }
         />
         <ExpandingHangar
           id={hangarId}
           height={ProtoFactory.height}
           width={50}
-          hangar={store.hangars[hangarId]}
         />
       </Container>
     )

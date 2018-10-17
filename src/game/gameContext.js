@@ -309,6 +309,12 @@ export class GameStore extends React.Component {
       }
       return { hangars, unitQueues }
     }),
+
+    togglePower: buildingId => this.setState((prev, _) => {
+      const factories = this.copyBuildings(prev.factories)
+      factories[buildingId].status = !factories[buildingId].status
+      return { factories }
+    }),
   }
 
 

@@ -70,7 +70,7 @@ export default class Building extends React.Component {
 
   render() {
     return (
-      <Container {...this.props} onMouseUp={e => this.handleMouseUp(e)}>
+      <Container {...this.props} onMouseUp={this.handleMouseUp}>
         <Header>
           <Button onClick={this.flip}>Flip</Button>
         </Header>
