@@ -20,6 +20,9 @@ export const ModPanelFront = props => (
 
 export const ModPanelBack = props => (
   <Box>
-    Back Mod Panel
+    {Lazy(props.mods).map(m => (
+      <m.Control key={m.id} mod={m} />
+    ))
+    .toArray()}
   </Box>
 )

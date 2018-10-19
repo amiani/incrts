@@ -20,7 +20,6 @@ export function ProtoAssembler() {
   this.name = 'assembler'
   this.cost = { credits: 50, fabric: 50 }
   this.drain = 1
-  this.mods = { 1: { id: 123, icon: 'devicemod.png' } }
 }
 ProtoAssembler.width = 200
 ProtoAssembler.height = 250
