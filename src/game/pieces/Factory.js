@@ -7,7 +7,8 @@ import Button from '../components/Button'
 import BuildQueue from '../components/BuildQueue'
 import ExpandingHangar from '../components/Hangar/ExpandingHangar'
 import { ProtoTank } from './units'
-import { FrontModPanel } from '../components/mods/ModPanel'
+import { ModPanelFront } from '../components/mods/ModPanel'
+import Switch from '../components/Switch'
 
 export function ProtoFactory() {
   this.id = uuidv4()
@@ -63,13 +64,11 @@ export default class Factory extends React.Component {
               <BuildQueue id={buildQueueId} />
               <Button onClick={this.addProgress}>Build</Button>
               <Button onClick={this.enqueueTank}>Tank</Button>
-              <FrontModPanel mods={mods} />
+              <ModPanelFront mods={mods} />
             </div>
           }
           back={
-            <div>
-              Power: <input type='checkbox' value={status} defaultChecked={true} onChange={this.handlePowerChange} />
-            </div>
+            <Switch on={status} handleChange={this.handlePowerChange} />
           }
         />
         <ExpandingHangar

@@ -1,4 +1,4 @@
-import FrontModPanel from './FrontModPanel'
+import ModPanelFront from './ModPanelFront'
 export {
-  FrontModPanel
+  ModPanelFront
 }

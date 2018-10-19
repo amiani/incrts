@@ -6,12 +6,12 @@ import Building from './Building'
 import BuildQueue from '../components/BuildQueue'
 import { hardwareData } from './resources'
 import Button from '../components/Button'
-import { FrontModPanel } from '../components/mods/ModPanel'
+import { ModPanelFront } from '../components/mods/ModPanel'
 
-const FrontBox = styled.div`
+const BoxFront = styled.div`
 `
 
-const BackBox = styled.div`
+const BoxBack = styled.div`
 `
 
 export function ProtoAssembler() {
@@ -20,6 +20,7 @@ export function ProtoAssembler() {
   this.name = 'assembler'
   this.cost = { credits: 50, fabric: 50 }
   this.drain = 1
+  this.mods = { 1: { id: 123, icon: 'devicemod.png' } }
 }
 ProtoAssembler.width = 200
 ProtoAssembler.height = 250
@@ -54,12 +55,12 @@ export default class Assembler extends React.Component {
         front={
           <div>
             <BuildQueue id={this.props.assembler.buildQueueId} />
-            <FrontModPanel mods={this.props.assembler.mods} />
+            <ModPanelFront mods={this.props.assembler.mods} />
           </div>
         }
         back={
-          <BackBox>
-          </BackBox>
+          <BoxBack>
+          </BoxBack>
         }
       />
     )

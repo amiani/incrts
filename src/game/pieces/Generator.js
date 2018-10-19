@@ -3,7 +3,7 @@ import uuidv4 from 'uuid/v4'
 import styled from 'styled-components'
 
 import Building from './Building'
-import { FrontModPanel } from '../components/mods/ModPanel'
+import { ModPanelFront } from '../components/mods/ModPanel'
 import Button from '../components/Button'
 
 export function ProtoGenerator() {
@@ -16,7 +16,7 @@ export function ProtoGenerator() {
 ProtoGenerator.width = 200
 ProtoGenerator.height = 200
 
-const FrontBox = styled.div`
+const BoxFront = styled.div`
 `
 
 export default props => (
@@ -24,10 +24,10 @@ export default props => (
     width={ProtoGenerator.width}
     height={ProtoGenerator.height}
     front={
-      <FrontBox>
+      <BoxFront>
         <Button onClick={()=>props.store.addEnergy(10)}>Generate 10</Button>
-        <FrontModPanel mods={props.generator.mods} />
-      </FrontBox>
+        <ModPanelFront mods={props.generator.mods} />
+      </BoxFront>
     }
     back={
         <p>This is the back of the Generator</p>
