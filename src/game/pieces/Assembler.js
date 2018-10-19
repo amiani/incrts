@@ -6,6 +6,7 @@ import Building from './Building'
 import BuildQueue from '../components/BuildQueue'
 import { hardwareData } from './resources'
 import Button from '../components/Button'
+import ModulePanel from '../components/modules/ModulePanel'
 
 const FrontBox = styled.div`
 `
@@ -54,7 +55,7 @@ export default class Assembler extends React.Component {
           <div>
             <BuildQueue id={this.props.assembler.buildQueueId} />
             <Button onClick={this.addProgress}>Assemble</Button>
-            <Button onClick={this.enqueueHardware}>Hardware</Button>
+            <ModulePanel modules={this.props.assembler.modules} />
           </div>
         }
         back={

@@ -12,7 +12,8 @@ export function ProtoBuildQueue(ownerId) {
   this.maxLength = 2
   this.items = []
   this.loop = true
-};
+  this.buildRate = 1
+}
 
 const Box = styled.div`
   display: flex;
@@ -25,21 +26,21 @@ const Box = styled.div`
   :hover {
     border: 3px dashed grey;
   }
-`;
+`
 
 const QueueBox = styled.div`
   display: flex;
   height: 32px;
   border: 2px red;
   border-style: none none groove groove;
-`;
+`
 
 const QueueItem = styled.div`
   height: 30px;
   width: 30px;
   background-image: url(images/${p => p.icon});
   background-size: 100% 100%;
-`;
+`
 
 export default props => (
   <GameContext.Consumer>{store => {

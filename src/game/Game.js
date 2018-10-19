@@ -28,6 +28,7 @@ export default class Game extends React.Component {
     this.props.store.makeOrder()
     this.props.store.buildGenerator()
     this.props.store.buildFactory()
+    this.props.store.buildAssembler()
   }
 
   tickUpdate = () => {

@@ -7,6 +7,7 @@ import Button from '../components/Button'
 import BuildQueue from '../components/BuildQueue'
 import ExpandingHangar from '../components/Hangar/ExpandingHangar'
 import { ProtoTank } from './units'
+import ModulePanel from '../components/modules/ModulePanel'
 
 export function ProtoFactory() {
   this.id = uuidv4()
@@ -51,7 +52,7 @@ export default class Factory extends React.Component {
   }
 
   render() {
-    const { buildQueueId, hangarId, status } = this.props.factory
+    const { buildQueueId, hangarId, status, modules } = this.props.factory
     return (
       <Box>
         <Building
@@ -62,6 +63,7 @@ export default class Factory extends React.Component {
               <BuildQueue id={buildQueueId} />
               <Button onClick={this.addProgress}>Build</Button>
               <Button onClick={this.enqueueTank}>Tank</Button>
+              <ModulePanel modules={modules} />
             </div>
           }
           back={
