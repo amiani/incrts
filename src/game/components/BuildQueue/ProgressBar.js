@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div`
+const Box = styled.div`
   height: 10px;
   border: 2px blue;
   border-style: none none groove groove;
@@ -17,7 +17,7 @@ const Progress = styled.div`
 //width: ${p => p.progress > 100 ? 100 : p.progress}%;
 
 export default props => (
-  <Container>
+  <Box>
     <Progress progress={props.progress} />
-  </Container>
+  </Box>
 );

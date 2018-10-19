@@ -4,8 +4,8 @@ import Lazy from 'lazy.js'
 import { ProtoFactory } from './pieces/Factory'
 import { ProtoAssembler } from './pieces/Assembler'
 import { ProtoGenerator } from './pieces/Generator'
-import { ProtoBuildQueue } from  './pieces/components/BuildQueue'
-import { ProtoHangar } from './pieces/components/Hangar'
+import { ProtoBuildQueue } from  './components/BuildQueue'
+import { ProtoHangar } from './components/Hangar'
 import { ProtoBattlefield } from './objectives/Battlefield'
 import Order from './objectives/Order'
 
@@ -57,6 +57,8 @@ export class GameStore extends React.Component {
     fabricIncome: 0,
     hardware: 1000,
     hardwareIncome: 0,
+    devices: 0,
+    synthetics: 0,
     energy: 10000,
     energyIncome: 0,
     drain: 0,

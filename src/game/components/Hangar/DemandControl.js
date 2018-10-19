@@ -4,7 +4,7 @@ import Lazy from 'lazy.js';
 
 import NumberControl from './NumberControl';
 
-const Container = styled.div`
+const Box = styled.div`
   height: 200px;
   display: flex;
   flex-direction: column;
@@ -12,7 +12,7 @@ const Container = styled.div`
 `;
 
 export default props => (
-  <Container>
+  <Box>
     {Lazy(props.demand)
       .map((amt, unitType, i) => (
         <NumberControl
@@ -24,5 +24,5 @@ export default props => (
         ))
       .toArray()
     }
-  </Container>
+  </Box>
 );

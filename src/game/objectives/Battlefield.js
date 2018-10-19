@@ -11,7 +11,7 @@ export function ProtoBattlefield(hangarId) {
   this.enroute = []
 }
 
-const Container = styled.div`
+const Box = styled.div`
   display: flex
   flex-direction: column
   justify-content: space-between
@@ -24,13 +24,13 @@ export default class Battlefield extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Box>
         <div>Battlefield</div>
         <Port
           store={this.props.store}
           hangar={this.props.store.hangars[this.props.battlefield.hangarId]}
         />
-      </Container>
+      </Box>
     )
   }
 }

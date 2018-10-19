@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const Container = styled.div`
+const Box = styled.div`
   color: red;
   height: 10px;
   flex-shrink: 0;
@@ -27,11 +27,11 @@ export default class MessageBox extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Box>
         <Message key={this.state.key}>
           {this.props.message}
         </Message>
-      </Container>
+      </Box>
     )
   }
 }

@@ -1,10 +1,17 @@
 import React from 'react'
 import uuidv4 from 'uuid/v4'
+import styled from 'styled-components'
 
 import Building from './Building'
-import BuildQueue from './components/BuildQueue'
+import BuildQueue from '../components/BuildQueue'
 import { hardwareData } from './resources'
-import Button from './components/Button'
+import Button from '../components/Button'
+
+const FrontBox = styled.div`
+`
+
+const BackBox = styled.div`
+`
 
 export function ProtoAssembler() {
   this.id = uuidv4()
@@ -49,6 +56,10 @@ export default class Assembler extends React.Component {
             <Button onClick={this.addProgress}>Assemble</Button>
             <Button onClick={this.enqueueHardware}>Hardware</Button>
           </div>
+        }
+        back={
+          <BackBox>
+          </BackBox>
         }
       />
     )

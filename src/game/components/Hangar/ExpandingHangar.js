@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import Lazy from 'lazy.js';
 
-import GameContext from '../../../gameContext'
-import { colorDict } from '../../units';
+import GameContext from '../../gameContext'
+import { colorDict } from '../../pieces/units';
 
 const EDGELENGTH = 5;
 
-const Container = styled.div`
+const Box = styled.div`
   height: ${p => p.height}px;
   width: ${p => p.width}px;
   padding: 5px;
@@ -38,7 +38,7 @@ export default class ExpandingHangar extends React.Component {
     } else {
       return (
         <GameContext.Consumer>{({ hangars }) => (
-          <Container height={this.props.height} width={this.props.width}>
+          <Box height={this.props.height} width={this.props.width}>
             <DotGrid numCols={numCols}>
               {Lazy(hangars[this.props.id].units)
                 .values()
@@ -47,7 +47,7 @@ export default class ExpandingHangar extends React.Component {
                 .toArray()
               }
             </DotGrid>
-          </Container>
+          </Box>
         )}</GameContext.Consumer>
       );
     }

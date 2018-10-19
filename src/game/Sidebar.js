@@ -2,11 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 
 import GameContext from './gameContext'
-import Button from './pieces/components/Button'
-import MessageBox from './pieces/components/MessageBox'
+import Button from './components/Button'
+import MessageBox from './components/MessageBox'
 import { OBSERVEDBITS } from './constants'
 
-const Container = styled.div`
+const Box = styled.div`
   display: flex;
   flex-direction: column;
 `
@@ -26,7 +26,7 @@ export default class Sidebar extends React.Component {
       <GameContext.Consumer
         unstable_observedBits={OBSERVEDBITS.resources}
       >{store => (
-        <Container>
+        <Box>
           <div>
             <ResourceInfo>Credits: {store.credits.toFixed(0)}</ResourceInfo>
             <ResourceInfo>Energy: {store.energy.toFixed(1)}</ResourceInfo>
@@ -40,7 +40,7 @@ export default class Sidebar extends React.Component {
           <Button onClick={store.buildAssembler}>Build Assembler</Button>
           <Button onClick={store.buildGenerator}>Build Generator</Button>
           <MessageBox message={this.state.message} />
-        </Container>
+        </Box>
       )}</GameContext.Consumer>
     )
   }

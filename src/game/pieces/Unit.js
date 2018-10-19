@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Container = styled.div`
+const Box = styled.div`
   height: 32px;
   width: 32px;
   background-image: url(${p => p.icon});
@@ -8,6 +8,6 @@ const Container = styled.div`
 `;
 
 export default props => (
-  <Container>
-  </Container>
+  <Box>
+  </Box>
 );

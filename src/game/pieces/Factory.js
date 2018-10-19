@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import uuidv4 from 'uuid/v4'
 
 import Building from './Building'
-import Button from './components/Button'
-import BuildQueue from './components/BuildQueue'
-import ExpandingHangar from './components/Hangar/ExpandingHangar'
+import Button from '../components/Button'
+import BuildQueue from '../components/BuildQueue'
+import ExpandingHangar from '../components/Hangar/ExpandingHangar'
 import { ProtoTank } from './units'
 
 export function ProtoFactory() {
@@ -19,7 +19,7 @@ export function ProtoFactory() {
 ProtoFactory.height = 300
 ProtoFactory.width = 200
 
-const Container = styled.div`
+const Box = styled.div`
   display: flex;
   justify-content: space-evenly;
 `
@@ -53,7 +53,7 @@ export default class Factory extends React.Component {
   render() {
     const { buildQueueId, hangarId, status } = this.props.factory
     return (
-      <Container>
+      <Box>
         <Building
           width={ProtoFactory.width}
           height={ProtoFactory.height}
@@ -75,7 +75,7 @@ export default class Factory extends React.Component {
           height={ProtoFactory.height}
           width={50}
         />
-      </Container>
+      </Box>
     )
   }
 }

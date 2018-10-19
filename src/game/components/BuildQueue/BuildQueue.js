@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import uuidv4 from 'uuid/v4'
 
-import GameContext from '../../../gameContext'
+import GameContext from '../../gameContext'
 import ProgressBar from './ProgressBar'
 
 export function ProtoBuildQueue(ownerId) {
@@ -14,7 +14,7 @@ export function ProtoBuildQueue(ownerId) {
   this.loop = true
 };
 
-const Container = styled.div`
+const Box = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -45,12 +45,12 @@ export default props => (
   <GameContext.Consumer>{store => {
     const data = store.buildQueues[props.id]
     return (
-    <Container onDoubleClick={()=>store.toggleQueueLoop(props.id)} loop={data.loop}>
+    <Box onDoubleClick={()=>store.toggleQueueLoop(props.id)} loop={data.loop}>
       <QueueBox>
         {data.items.map(q => <QueueItem key={q.id} icon={q.icon} />)}
       </QueueBox>
       <ProgressBar progress={data.progress} />
-    </Container>
+    </Box>
     )
   }}</GameContext.Consumer>
 )

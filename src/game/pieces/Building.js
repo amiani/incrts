@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Button from './components/Button.js'
-import MessageBox from './components/MessageBox'
+import Button from '../components/Button.js'
+import MessageBox from '../components/MessageBox'
 
-const Container = styled.div`
+const Box = styled.div`
   width: ${p=>p.width}px;
   height: ${p=>p.height}px;
   margin-left: 5px;
@@ -70,7 +70,7 @@ export default class Building extends React.Component {
 
   render() {
     return (
-      <Container {...this.props} onMouseUp={this.handleMouseUp}>
+      <Box {...this.props} onMouseUp={this.handleMouseUp}>
         <Header>
           <Button onClick={this.flip}>Flip</Button>
         </Header>
@@ -83,7 +83,7 @@ export default class Building extends React.Component {
           </Back>
         </Flipper>
         <MessageBox message={this.props.message} />
-      </Container>
+      </Box>
     )
   }
 }

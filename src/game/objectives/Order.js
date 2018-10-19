@@ -55,7 +55,7 @@ export default class Order {
   }
 }
 
-const Container = styled.div`
+const Box = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -72,7 +72,7 @@ class OrderComponent extends React.Component {
     const timeLeft = new Date(this.props.deadline - Date.now())
     if (this.props.order) {
       return (
-        <Container>
+        <Box>
           {Lazy(this.props.order)
             .map((amt, unitType, i) => (
               <OrderItem key={unitType+i}>
@@ -87,13 +87,13 @@ class OrderComponent extends React.Component {
             :
             {timeLeft.getSeconds()}
           </Timer>
-        </Container>
+        </Box>
       )
     } else {
       return (
-        <Container>
+        <Box>
           Deadline passed!
-        </Container>
+        </Box>
       )
     }
   }

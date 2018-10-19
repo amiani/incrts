@@ -12,7 +12,7 @@ import Assembler from './pieces/Assembler'
 import Generator from './pieces/Generator'
 import { OBSERVEDBITS } from './constants'
 
-const Container = styled.div`
+const Box = styled.div`
   display: flex;
   flex-direction: column;
 `
@@ -33,7 +33,7 @@ export default class Base extends React.Component {
       <GameContext.Consumer
         unstable_observedBits={OBSERVEDBITS.buildings}
       >{store => (
-        <Container>
+        <Box>
           <BuildingRow height={ProtoFactory.height+12}>
             {Lazy(store.factories).map(b => (
               <Factory
@@ -61,7 +61,7 @@ export default class Base extends React.Component {
               />
             )).toArray()}
           </BuildingRow>
-        </Container>
+        </Box>
       )}</GameContext.Consumer>
     )
   }

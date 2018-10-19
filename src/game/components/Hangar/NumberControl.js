@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import Button from '../Button'
 
-const Container = styled.div`
+const Box = styled.div`
   width: 100px;
   display: flex;
   justify-content: space-between;
@@ -12,10 +12,10 @@ const Container = styled.div`
 `
 
 export default props => (
-  <Container>
+  <Box>
     {props.label}
     <Button onClick={()=>props.set(props.amt-1)}>-1</Button>
     {props.amt}
     <Button onClick={()=>props.set(props.amt+1)}>+1</Button>
-  </Container>
+  </Box>
 )

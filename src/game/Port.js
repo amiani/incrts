@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import DemandControl from './pieces/components/Hangar/DemandControl';
-import { ExpandingHangar } from './pieces/components/Hangar';
-import Button from './pieces/components/Button';
+import DemandControl from './components/Hangar/DemandControl';
+import { ExpandingHangar } from './components/Hangar';
+import Button from './components/Button';
 
-const Container = styled.div`
+const Box = styled.div`
   height: 200px;
   border: solid black 1px;
   background-color: #e6f3f7;
@@ -24,7 +24,7 @@ export default class Port extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Box>
         <Button onClick={this.dispatch}>Dispatch</Button>
         <ExpandingHangar
           id={this.props.hangar.id}
@@ -36,7 +36,7 @@ export default class Port extends React.Component {
           demand={this.props.hangar.demand}
           setDemand={this.setDemand}
         />
-      </Container>
+      </Box>
     );
   }
 }
