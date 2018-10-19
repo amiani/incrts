@@ -21,7 +21,7 @@ const BuildingRow = styled.div`
   display: flex;
   height: ${p => p.height}px;
   margin-bottom: 10px;
-`;
+`
 
 export default class Base extends React.Component {
   shouldComponentUpdate() {
