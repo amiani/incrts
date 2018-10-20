@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
+import game from './game.worker.js'
 import Sidebar from './Sidebar'
 import Base from './Base'
 import Port from './Port'
@@ -25,6 +26,7 @@ export default class Game extends React.Component {
   }
 
   initialize = () => {
+    this.main = new game()
     this.props.store.makeOrder()
     this.props.store.buildGenerator()
     this.props.store.buildFactory()
