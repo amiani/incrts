@@ -77,7 +77,8 @@ const buildAssembler = () => {
   buildBuilding(assembler)
   postMessage({ name: 'buildings', body: { assmeblers: data.assmeblers } })
 }
-const buildGenerator: () => {
+
+const buildGenerator = () => {
   buildBuilding(new ProtoGenerator())
   postMessage({ name: 'buildings', body: { generators: data.generators } })
 }
