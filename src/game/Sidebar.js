@@ -35,27 +35,27 @@ export default class Sidebar extends React.Component {
     super()
     game.addListener(
       'update',
-      { id: 'sidebar', onmessage: a=>this.setState(a) }
+      { id: 'sidebar', onmessage: data=>this.setState(data) }
     )
   }
 
   render() {
     return (
-        <Box>
-          <div>
-            <ResourceInfo>Credits: {this.state.credits.toFixed(0)}</ResourceInfo>
-            <ResourceInfo>Energy: {this.state.energy.toFixed(1)}</ResourceInfo>
-            <ResourceInfo>Fabric: {this.state.fabric.toFixed(0)}</ResourceInfo>
-            <ResourceInfo>Hardware: {this.state.hardware.toFixed(0)}</ResourceInfo>
-            <ResourceInfo>Drain: {this.state.drain}</ResourceInfo>
-            <ResourceInfo>Productivity: {(this.state.productivity * 100).toFixed(0)}%</ResourceInfo>
-          </div>
-          <Button onClick={()=>this.state.buyFabric(10).catch(e=>this.setState({ message: e }))}>Buy 10 Fabric</Button>
-          <Button onClick={this.state.buildFactory}>Build Factory</Button>
-          <Button onClick={this.state.buildAssembler}>Build Assembler</Button>
-          <Button onClick={this.state.buildGenerator}>Build Generator</Button>
-          <MessageBox message={this.state.message} />
-        </Box>
+      <Box>
+        <div>
+          <ResourceInfo>Credits: {this.state.credits.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Energy: {this.state.energy.toFixed(1)}</ResourceInfo>
+          <ResourceInfo>Fabric: {this.state.fabric.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Hardware: {this.state.hardware.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Drain: {this.state.drain}</ResourceInfo>
+          <ResourceInfo>Productivity: {(this.state.productivity * 100).toFixed(0)}%</ResourceInfo>
+        </div>
+        <Button onClick={()=>this.state.buyFabric(10).catch(e=>this.setState({ message: e }))}>Buy 10 Fabric</Button>
+        <Button onClick={()=>game.post({ name: 'buildfactory' })}>Build Factory</Button>
+        <Button onClick={()=>game.post({ name: 'buildassembler' })}>Build Assembler</Button>
+        <Button onClick={()=>game.post({ name: 'buildgenerator' })}>Build Generator</Button>
+        <MessageBox message={this.state.message} />
+      </Box>
     )
   }
 }

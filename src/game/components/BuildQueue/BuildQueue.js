@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import uuidv4 from 'uuid/v4'
 
+import game from '../../game'
 import GameContext from '../../gameContext'
 import ProgressBar from './ProgressBar'
 
@@ -42,16 +43,36 @@ const QueueItem = styled.div`
   background-size: 100% 100%;
 `
 
-export default props => (
-  <GameContext.Consumer>{store => {
-    const data = store.buildQueues[props.id]
-    return (
-    <Box onDoubleClick={()=>store.toggleQueueLoop(props.id)} loop={data.loop}>
-      <QueueBox>
-        {data.items.map(q => <QueueItem key={q.id} icon={q.icon} />)}
-      </QueueBox>
-      <ProgressBar progress={data.progress} />
-    </Box>
+export default class BuildQueue extends React.Component {
+  state = {
+    items: [],
+    loop: true,
+    progress: 0
+  }
+  
+  constructor(props) {
+    super()
+    this.id = props.id
+    game.addListener(
+      'update',
+      { id: this.id, onmessage: this.onmessage }
     )
-  }}</GameContext.Consumer>
-)
+  }
+
+  onmessage = body => {
+    body[this.id] && this.setState(body[this.id])
+  }
+
+  handleDoubleClick = () => game.post({ name: 'toggleloop', id: this.id })
+
+  render() {
+    return (
+      <Box onDoubleClick={this.handleDoubleClick} loop={this.state.loop}>
+        <QueueBox>
+          {this.state.items.map(q => <QueueItem key={q.id} icon={q.icon} />)}
+        </QueueBox>
+        <ProgressBar progress={this.state.progress} />
+      </Box>
+    )
+  }
+}
