@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { createGlobalStyle } from 'styled-components'
 
-import Game from './game/Game'
+import Main from './game/Main'
 import GameContext, { GameStore } from './game/gameContext'
 import './App.css'
 
@@ -25,7 +25,7 @@ class App extends Component {
       <div className="App">
         <GameStore>
           <GameContext.Consumer>
-            {store => <Game store={store} />}
+            {store => <Main store={store} />}
           </GameContext.Consumer>
           <GlobalStyle />
         </GameStore>

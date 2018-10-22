@@ -1,7 +1,6 @@
 import { TICKRATE } from './constants'
 
-/*
-  //resources
+const resources = {
   credits: 3200,
   creditIncome: 0,
   fabric: 3200,
@@ -12,23 +11,37 @@ import { TICKRATE } from './constants'
   synthetics: 0,
   energy: 10000,
   energyIncome: 0,
-  drain: 0,
+  drain: 5,
   productivity: 1,
+}
 
-  //buildings
-  factories: {},
-  assemblers: {},
-  generators: {},
+//buildings
+const factories = {}
+const assemblers = {}
+const generators = {}
 
-  buildQueues: {},
+const buildQueues = {}
 
-  hangars: {},
-  unitQueues: { tanks: [], },
+const hangars = {}
+const unitQueues = { tanks: [], }
 
-  orders: {},
-  */
+const orders = {}
 
+const update = () => {
+  updateResources()
+  postMessage({ name: 'update', message: resources })
+}
 
 onmessage = e => {
   console.log('recived message')
 }
+
+const updateResources = () => {
+  let nextEnergy = resources.energy + resources.energyIncome - resources.drain
+  resources.energy = nextEnergy > 0 ? nextEnergy : 0
+  resources.productivity = resources.energy > resources.drain || !resources.drain
+    ? 1
+    : resources.energyIncome / resources.drain
+}
+
+setInterval(update, TICKRATE);

@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
-import game from './game.worker.js'
 import Sidebar from './Sidebar'
 import Base from './Base'
 import Port from './Port'
@@ -18,7 +17,7 @@ const GameGrid = styled.div`
   width: calc(100vw - 2*var(--pad))
 `
 
-export default class Game extends React.Component {
+export default class Main extends React.Component {
   constructor(props) {
     super(props)
     this.initialize()
@@ -26,7 +25,6 @@ export default class Game extends React.Component {
   }
 
   initialize = () => {
-    this.main = new game()
     this.props.store.makeOrder()
     this.props.store.buildGenerator()
     this.props.store.buildFactory()
