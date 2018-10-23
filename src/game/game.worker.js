@@ -3,10 +3,8 @@ import Lazy from 'lazy.js'
 import { TICKRATE } from './constants'
 import { ProtoFactory, ProtoAssembler, ProtoGenerator } from './pieces/prototypes'
 import { ProtoBuildQueue, ProtoHangar } from  './components/prototypes'
-  /*
-import { ProtoBattlefield } from './objectives/Battlefield'
+//import { ProtoBattlefield } from './objectives/Battlefield'
 import Order from './objectives/Order'
-*/
 
 const data = {
   resources: {
@@ -39,6 +37,8 @@ const data = {
 
 const update = () => {
   updateResources()
+  updateBuildQueues()
+  updateHangars()
   postMessage({
     name: 'update',
     body: {
@@ -68,6 +68,12 @@ onmessage = e => {
     case 'toggleloop':
       toggleLoop(e.data.body)
       break
+    case 'togglepower':
+      togglePower(e.data.body)
+      break
+    case 'dispatch':
+      dispatch(e.data.body)
+      break
     default:
       console.log(`Received message with no listener: ${e.data.name}`)
       break
@@ -77,6 +83,13 @@ onmessage = e => {
 setInterval(update, TICKRATE);
 
 const updateResources = () => {
+  data.resources.energyIncome = Lazy(data.generators)
+    .pluck('output')
+    .sum()
+  data.resources.drain = Lazy(data.factories)
+    .merge(data.assemblers)
+    .pluck('drain')
+    .sum()
   let nextEnergy = data.resources.energy + data.resources.energyIncome - data.resources.drain
   data.resources.energy = nextEnergy > 0 ? nextEnergy : 0
   data.resources.productivity = data.resources.energy > data.resources.drain || !data.resources.drain
@@ -119,6 +132,35 @@ const updateBuildQueues = () => {
     })
 }
 
+const dispatch = ({ hangarId }) => {
+  const hangar = data.hangars[hangarId]
+  data.orders[hangar.ownerId].dispatch(hangar.units)
+  hangar.units = { tanks: [] }
+}
+
+const updateHangars = () => {
+  Lazy(data.hangars)
+    .where({ isSource: true })
+    .pluck('units')
+    .each(units => Lazy(units)
+      .each((unitArr, unitType) => {
+        if (Lazy(unitArr).isEmpty())
+          return
+        const actualQueue = data.unitQueues[unitType]
+        if (actualQueue.length > 0) {
+          const unit = unitArr.shift()
+          const firstHangar = hangars[actualQueue.shift()]
+          unit.ownerId = firstHangar.ownerId
+          !firstHangar.units[unitType] && (firstHangar.units[unitType] = [])
+          firstHangar.units[unitType].push(unit)
+          if (firstHangar.units[unitType].length < firstHangar.demand[unitType]) {
+            actualQueue.push(firstHangar.id)
+          }
+        }
+      })
+    )
+}
+
 const buildFactory = () => {
   const factory = new ProtoFactory()
   const hangar = makeHangar(factory.id, true)
@@ -159,6 +201,13 @@ const makeBuildQueue = ownerId => {
   return buildQ
 }
 
+const makeOrder = () => {
+  const order = new Order()
+  const hangar = makeHangar(order.id)
+  order.hangarId = hangarId
+  data.orders[order.id] = order
+}
+
 const enqueue = ({ buildQId, item }) => {
   const buildQ = data.buildQueues[buildQId]
   if (buildQ.items.length >= buildQ.maxLength) {
@@ -172,6 +221,8 @@ const enqueue = ({ buildQId, item }) => {
 }
 
 const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[id].loop }
+
+const togglePower = ({ buildingId }) => data.factories[buildingId].status = !data.factories[buildingId].status
 
 const spend = cost => {
   const costSeq = Lazy(cost)

@@ -1,1 +1,1 @@
-export const TICKRATE = 150
+export const TICKRATE = 100

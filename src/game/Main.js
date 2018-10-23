@@ -7,8 +7,6 @@ import Base from './Base'
 import Port from './Port'
 import broker from './broker'
 
-import { TICKRATE } from './constants'
-
 const GameGrid = styled.div`
   display: grid
   grid-template-columns: 1fr 4fr 2fr
@@ -19,40 +17,37 @@ const GameGrid = styled.div`
 `
 
 export default class Main extends React.Component {
+  state = { orders: {}, hangars: {} }
   constructor(props) {
     super(props)
+    broker.addListener(
+      'orders',
+      { id: 'Main', onmessage: this.onmessage }
+    )
     this.initialize()
   }
 
   initialize = () => {
-    this.props.store.makeOrder()
+    broker.post({ name: 'makeorder' })
     broker.post({ name: 'buildfactory' })
     broker.post({ name: 'buildassembler' })
     broker.post({ name: 'buildgenerator' })
   }
 
-  tickUpdate = () => {
-    this.props.store.updateResources()
-    this.props.store.updateBuildings()
-    this.props.store.updateBuildQueues()
-    this.props.store.updateHangars()
-    this.props.store.updateOrders()
-  }
+  onmessage = body => this.setState(body.data)
 
   render() {
     return (
       <GameGrid>
         <Sidebar />
         <Base />
-        {Lazy(this.props.store.orders).map(obj => (
-          <div key={obj.id}>
-            <obj.Component
-              {...obj.getProps()}
-              store={this.props.store}
+        {Lazy(this.state.orders).map(o => (
+          <div key={o.id}>
+            <o.Component
+              {...o.getProps()}
             />
             <Port
-              hangar={this.props.store.hangars[obj.hangarId]}
-              store={this.props.store}
+              hangar={this.state.hangars[o.hangarId]}
             />
           </div>
         )).toArray()}

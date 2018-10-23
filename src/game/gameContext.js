@@ -170,18 +170,21 @@ export class GameStore extends React.Component {
       }, resolve('success'))
     }),
 
+    //converted
     toggleQueueLoop: buildQId => this.setState((prevState, _) => {
       const buildQueues = this.copyBuildQueues(prevState.buildQueues)
       buildQueues[buildQId].loop = !buildQueues[buildQId].loop
       return { buildQueues }
     }),
         
+    //converted
     getBuildingsDrain: () => {
       const factoryDrain = this.reducePieceDrain(this.state.factories)
       const assemblerDrain = this.reducePieceDrain(this.state.assemblers)
       return factoryDrain + assemblerDrain
     },
 
+    //converted
     updateBuildings: () => {
       const drain = this.state.getBuildingsDrain()
 
@@ -238,6 +241,7 @@ export class GameStore extends React.Component {
       }, resolve('success'))
     }),
 
+    //converted
     dispatch: hangarId => this.setState((prevState, _) => {
       const hangars = this.copyHangars(prevState.hangars)
       const orders = this.copyOrders(prevState.orders)
@@ -250,6 +254,7 @@ export class GameStore extends React.Component {
       return { orders, hangars }
     }),
 
+    //converted
     //TODO: See if possible to delay iteration until end
     updateHangars: () => {
       this.setState((prevState, _) => {
@@ -303,6 +308,7 @@ export class GameStore extends React.Component {
       return { hangars, unitQueues }
     }),
 
+    //converted
     togglePower: buildingId => this.setState((prev, _) => {
       const factories = this.copyBuildings(prev.factories)
       factories[buildingId].status = !factories[buildingId].status
@@ -437,6 +443,7 @@ export class GameStore extends React.Component {
     buildQueue.items.shift()
   }
 
+  //converted
   reducePieceDrain = pieces => Lazy(pieces)
     .pluck('drain')
     .reduce((acc, curr) => acc + curr, 0)

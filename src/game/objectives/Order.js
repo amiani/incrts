@@ -3,9 +3,10 @@ import styled from 'styled-components'
 import uuidv4 from 'uuid/v4'
 import Lazy from 'lazy.js'
 
+import broker from '../broker'
+
 export default class Order {
-  constructor(store) {
-    this.store = store
+  constructor() {
     this.setDeadline(20000)
   }
 
@@ -36,7 +37,7 @@ export default class Order {
           return acc + unitsLeft
         }, 0)
       if (totalUnitsLeft <= 0) {
-        this.store.addCredits(100)
+        broker.post({ name: 'addcredits', body: 100 })
         this.order = null
         this.deadline = null
       }

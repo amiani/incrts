@@ -53,7 +53,10 @@ export default class Factory extends React.Component {
   }
 
   handlePowerChange = e => {
-    this.props.store.togglePower(this.id)
+    broker.post({
+      name: 'togglepower',
+      body: { buildingId: this.id }
+    })
   }
 
   render() {
