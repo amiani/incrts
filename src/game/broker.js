@@ -6,7 +6,7 @@ const listeners = {}
 
 worker.onmessage = e => {
   const listenerList = listeners[e.data.name]
-  for (let i = 0, n = listenerList.length; i != n; i++) {
+  for (let i = 0, n = listenerList.length; i !== n; i++) {
     listenerList[i].onmessage(e.data.body)
   }
 }
