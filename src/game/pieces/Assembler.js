@@ -1,11 +1,9 @@
 import React from 'react'
-import uuidv4 from 'uuid/v4'
 import styled from 'styled-components'
 
 import Building from './Building'
 import BuildQueue from '../components/BuildQueue'
 import { hardwareData } from './resources'
-import Button from '../components/Button'
 import { ModPanelFront } from '../components/mods/ModPanel'
 import { ProtoAssembler } from './prototypes'
 

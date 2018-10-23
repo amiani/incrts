@@ -1,2 +1,2 @@
-import BuildQueue, { ProtoBuildQueue } from './BuildQueue';
-export default BuildQueue;
+import BuildQueue from './BuildQueue'
+export default BuildQueue

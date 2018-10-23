@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 
 import broker from '../../broker'
-import GameContext from '../../gameContext'
 import ProgressBar from './ProgressBar'
 
 const Box = styled.div`

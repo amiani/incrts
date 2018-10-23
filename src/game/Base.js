@@ -2,16 +2,12 @@ import React from 'react'
 import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
-import GameContext from './gameContext'
 import broker from './broker'
-import { ProtoAssembler } from './pieces/prototypes'
-import { ProtoFactory } from './pieces/prototypes'
-import { ProtoGenerator } from './pieces/prototypes'
+import { ProtoAssembler, ProtoFactory, ProtoGenerator } from './pieces/prototypes'
 
 import Factory from './pieces/Factory'
 import Assembler from './pieces/Assembler'
 import Generator from './pieces/Generator'
-import { OBSERVEDBITS } from './constants'
 
 const Box = styled.div`
   display: flex;

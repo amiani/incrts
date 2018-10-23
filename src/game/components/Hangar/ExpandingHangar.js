@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
-import GameContext from '../../gameContext'
 import { colorDict } from '../../pieces/units'
 import broker from '../../broker'
 

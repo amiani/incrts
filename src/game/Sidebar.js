@@ -1,11 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import GameContext from './gameContext'
 import broker from './broker'
 import Button from './components/Button'
 import MessageBox from './components/MessageBox'
-import { OBSERVEDBITS } from './constants'
 
 const Box = styled.div`
   display: flex;
