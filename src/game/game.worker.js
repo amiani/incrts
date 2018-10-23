@@ -14,6 +14,7 @@ const data = {
     creditIncome: 0,
     fabric: 3200,
     fabricIncome: 0,
+    fabricPrice: { credits: 10 },
     hardware: 1000,
     hardwareIncome: 0,
     devices: 0,
@@ -56,13 +57,16 @@ onmessage = e => {
       buildAssembler()
       break
     case 'buildgenerator':
-      console.log(global)
-      self.buildGenerator()
+      buildGenerator()
       break
     case 'enqueue':
       enqueue(e.data.body)
       break
+    case 'buy':
+      buy(e.data.body)
+      break
     default:
+      console.log(`Received message with no listener: ${e.data.name}`)
       break
   }
 }
@@ -75,6 +79,22 @@ const updateResources = () => {
   data.resources.productivity = data.resources.energy > data.resources.drain || !data.resources.drain
     ? 1
     : data.resources.energyIncome / data.resources.drain
+}
+
+const buy = want => {
+  const wantSeq = Lazy(want)
+  const cost = wantSeq
+    .reduce((acc, amt, name) => {
+      Lazy(data.resources[`${name}Price`])
+        .each((price, priceName) => {
+          !acc[priceName] && (acc[priceName] = 0)
+          acc[priceName] += amt * price
+        })
+      return acc
+    }, {})
+  if (spend(cost)) {
+    wantSeq.each((amt, name) => { data.resources[name] += amt })
+  }
 }
 
 const updateBuildQueues = () => {
@@ -94,25 +114,6 @@ const updateBuildQueues = () => {
         buildQ.items.shift()
       }
     })
-}
-
-const mutateWithResult = (prevState, nextState, item) => {
-  if (item.isUnit) {
-    !nextState.hangars && (nextState.hangars = this.copyHangars(prevState.hangars))
-    const hangarId = prevState.factories[item.ownerId].hangarId
-    const hangar = nextState.hangars[hangarId]
-    !hangar.units[item.type] && (hangar.units[item.type] = [])
-    hangar.units[item.type].push(item)
-  } else {
-    Lazy(item.output).each((amt, name) => {
-      nextState[name] = (nextState[name] ? nextState[name] : prevState[name]) + amt
-    })
-  }
-}
-
-const completeBuild = buildQueue => {
-  buildQueue.progress = 0
-  buildQueue.items.shift()
 }
 
 const buildFactory = () => {
@@ -172,8 +173,10 @@ const spend = cost => {
   if (canAfford(costSeq)) {
     costSeq
       .each((amt, name) => { data.resources[name] -= amt })
+    return true
   } else {
     //respond with error
+    return false
   }
 }
 

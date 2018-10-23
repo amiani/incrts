@@ -33,8 +33,17 @@ export default class Sidebar extends React.Component {
     super()
     broker.addListener(
       'update',
-      { id: 'sidebar', onmessage: data=>this.setState(data) }
+      { id: 'sidebar', onmessage: this.onmessage }
     )
+  }
+
+  onmessage = ({ resources }) => this.setState(resources)
+
+  buyFabric = amt => {
+    broker.post({
+      name: 'buy',
+      body: { fabric: amt }
+    })
   }
 
   render() {
@@ -48,7 +57,7 @@ export default class Sidebar extends React.Component {
           <ResourceInfo>Drain: {this.state.drain}</ResourceInfo>
           <ResourceInfo>Productivity: {(this.state.productivity * 100).toFixed(0)}%</ResourceInfo>
         </div>
-        <Button onClick={()=>this.state.buyFabric(10).catch(e=>this.setState({ message: e }))}>Buy 10 Fabric</Button>
+        <Button onClick={()=>this.buyFabric(10)}>Buy 10 Fabric</Button>
         <Button onClick={()=>broker.post({ name: 'buildfactory' })}>Build Factory</Button>
         <Button onClick={()=>broker.post({ name: 'buildassembler' })}>Build Assembler</Button>
         <Button onClick={()=>broker.post({ name: 'buildgenerator' })}>Build Generator</Button>
