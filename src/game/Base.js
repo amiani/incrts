@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
 import GameContext from './gameContext'
-import game from './game'
+import broker from './broker'
 import { ProtoAssembler } from './pieces/Assembler'
 import { ProtoFactory } from './pieces/Factory'
 import { ProtoGenerator } from './pieces/Generator'
@@ -33,7 +33,7 @@ export default class Base extends React.Component {
 
   constructor() {
     super()
-    game.addListener(
+    broker.addListener(
       'buildings',
       { id: 'Base', onmessage: a=>this.setState(a) }
     )

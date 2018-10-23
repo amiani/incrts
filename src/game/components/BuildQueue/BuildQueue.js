@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import uuidv4 from 'uuid/v4'
 
-import game from '../../game'
+//import game from '../../game'
 import GameContext from '../../gameContext'
 import ProgressBar from './ProgressBar'
 
@@ -53,17 +53,19 @@ export default class BuildQueue extends React.Component {
   constructor(props) {
     super()
     this.id = props.id
-    game.addListener(
+      /*
+    broker.addListener(
       'update',
       { id: this.id, onmessage: this.onmessage }
     )
+    */
   }
 
   onmessage = body => {
     body[this.id] && this.setState(body[this.id])
   }
 
-  handleDoubleClick = () => game.post({ name: 'toggleloop', id: this.id })
+  handleDoubleClick = () => {}/*broker.post({ name: 'toggleloop', id: this.id })*/
 
   render() {
     return (

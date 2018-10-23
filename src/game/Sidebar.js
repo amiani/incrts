@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import GameContext from './gameContext'
-import game from './game'
+import broker from './broker'
 import Button from './components/Button'
 import MessageBox from './components/MessageBox'
 import { OBSERVEDBITS } from './constants'
@@ -33,7 +33,7 @@ export default class Sidebar extends React.Component {
 
   constructor() {
     super()
-    game.addListener(
+    broker.addListener(
       'update',
       { id: 'sidebar', onmessage: data=>this.setState(data) }
     )
@@ -51,9 +51,9 @@ export default class Sidebar extends React.Component {
           <ResourceInfo>Productivity: {(this.state.productivity * 100).toFixed(0)}%</ResourceInfo>
         </div>
         <Button onClick={()=>this.state.buyFabric(10).catch(e=>this.setState({ message: e }))}>Buy 10 Fabric</Button>
-        <Button onClick={()=>game.post({ name: 'buildfactory' })}>Build Factory</Button>
-        <Button onClick={()=>game.post({ name: 'buildassembler' })}>Build Assembler</Button>
-        <Button onClick={()=>game.post({ name: 'buildgenerator' })}>Build Generator</Button>
+        <Button onClick={()=>broker.post({ name: 'buildfactory' })}>Build Factory</Button>
+        <Button onClick={()=>broker.post({ name: 'buildassembler' })}>Build Assembler</Button>
+        <Button onClick={()=>broker.post({ name: 'buildgenerator' })}>Build Generator</Button>
         <MessageBox message={this.state.message} />
       </Box>
     )
