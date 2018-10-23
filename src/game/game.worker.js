@@ -2,7 +2,7 @@ import Lazy from 'lazy.js'
 
 import { TICKRATE } from './constants'
 import { ProtoFactory, ProtoAssembler, ProtoGenerator } from './pieces/prototypes'
-import { ProtoBuildQueue, ProtoHangar } from  './components/prototypes'
+import { ProtoBuildQueue, ProtoHangar, ProtoDeviceMod } from  './components/prototypes'
 import { ProtoOrder } from './objectives/prototypes'
 //import { ProtoBattlefield } from './objectives/Battlefield'
 
@@ -138,7 +138,7 @@ const updateBuildQueues = () => {
         }
         buildQ.progress = 0
       }
-      buildQ.progress += 5
+      buildQ.progress += buildQ.buildRate
     })
 }
 
@@ -219,6 +219,7 @@ const buildFactory = () => {
 
 const buildAssembler = () => {
   const assembler = new ProtoAssembler()
+  console.log(assembler)
   const buildQ = makeBuildQueue(assembler.id)
   assembler.buildQueueId = buildQ.id
   buildBuilding(assembler)
