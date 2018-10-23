@@ -11,21 +11,6 @@ import Order from './objectives/Order'
 
 const FABRICPRICE = 10
 
-const resources = [
-  'credits',
-  'creditIncome',
-  'fabric',
-  'fabricIncome',
-  'hardware',
-  'hardwareIncome',
-  'energy',
-  'energyIncome',
-  'drain',
-  'productivity',
-]
-
-const buildingTypes = ['factories', 'assemblers', 'generators']
-
 const GameContext = React.createContext()
 export default GameContext
 
@@ -64,6 +49,7 @@ export class GameStore extends React.Component {
       this.setState((prevState, _) => ({ energy: prevState.energy + amount }))
     },
 
+    //converted
     addCredits: amt => this.setState((prevState, _) => ({ credits: prevState.credits + amt })),
 
     //converted
@@ -214,6 +200,7 @@ export class GameStore extends React.Component {
       return nextState
     }),
 
+    //converted
     makeOrder: async () => {
       try {
         const order = new Order(this.state)
@@ -393,6 +380,7 @@ export class GameStore extends React.Component {
     }, resolve(newHangar.id))
   })
 
+  //converted
   addOrder = order => this.setState((prevState, _) => {
       const orders = prevState.orders
       orders[order.id] = order

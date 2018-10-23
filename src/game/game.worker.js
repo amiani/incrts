@@ -39,6 +39,7 @@ const update = () => {
   updateResources()
   updateBuildQueues()
   updateHangars()
+  updateOrders()
   postMessage({
     name: 'update',
     body: {
@@ -73,6 +74,9 @@ onmessage = e => {
       break
     case 'dispatch':
       dispatch(e.data.body)
+      break
+    case 'makeorder':
+      makeOrder(e.data.body)
       break
     default:
       console.log(`Received message with no listener: ${e.data.name}`)
@@ -161,6 +165,8 @@ const updateHangars = () => {
     )
 }
 
+const updateOrders = () => Lazy(data.orders).each(o => o.update())
+
 const buildFactory = () => {
   const factory = new ProtoFactory()
   const hangar = makeHangar(factory.id, true)
@@ -204,7 +210,7 @@ const makeBuildQueue = ownerId => {
 const makeOrder = () => {
   const order = new Order()
   const hangar = makeHangar(order.id)
-  order.hangarId = hangarId
+  order.hangarId = hangar.id
   data.orders[order.id] = order
 }
 
