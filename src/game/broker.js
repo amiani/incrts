@@ -10,7 +10,7 @@ worker.onmessage = e => {
   }
 }
 
-const game = {
+const broker = {
   addListener: (name, listener) => {
     !listeners[name] && (listeners[name] = [])
     listeners[name].push(listener)
@@ -24,4 +24,4 @@ const game = {
   post: message => worker.postMessage(message),
 }
 
-export default game
+export default broker
