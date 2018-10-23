@@ -1,20 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import uuidv4 from 'uuid/v4'
 
-//import game from '../../game'
+import broker from '../../broker'
 import GameContext from '../../gameContext'
 import ProgressBar from './ProgressBar'
-
-export function ProtoBuildQueue(ownerId) {
-  this.id = uuidv4()
-  this.ownerId = ownerId
-  this.progress = 0
-  this.maxLength = 2
-  this.items = []
-  this.loop = true
-  this.buildRate = 1
-}
 
 const Box = styled.div`
   display: flex;
@@ -53,19 +42,17 @@ export default class BuildQueue extends React.Component {
   constructor(props) {
     super()
     this.id = props.id
-      /*
     broker.addListener(
       'update',
       { id: this.id, onmessage: this.onmessage }
     )
-    */
   }
 
   onmessage = body => {
     body[this.id] && this.setState(body[this.id])
   }
 
-  handleDoubleClick = () => {}/*broker.post({ name: 'toggleloop', id: this.id })*/
+  handleDoubleClick = () => broker.post({ name: 'toggleloop', id: this.id })
 
   render() {
     return (

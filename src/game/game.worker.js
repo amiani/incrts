@@ -1,13 +1,15 @@
 import Lazy from 'lazy.js'
 
 import { TICKRATE } from './constants'
-import { ProtoFactory } from './pieces/Factory'
-import { ProtoAssembler } from './pieces/Assembler'
-import { ProtoGenerator } from './pieces/Generator'
-import { ProtoBuildQueue } from  './components/BuildQueue'
-import { ProtoHangar } from './components/Hangar'
+import { ProtoFactory } from './pieces/prototypes'
+import { ProtoAssembler } from './pieces/prototypes'
+import { ProtoGenerator } from './pieces/prototypes'
+import { ProtoBuildQueue } from  './components/prototypes'
+import { ProtoHangar } from './components/prototypes'
+  /*
 import { ProtoBattlefield } from './objectives/Battlefield'
 import Order from './objectives/Order'
+*/
 
 const data = {
   resources: {

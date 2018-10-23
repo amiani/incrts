@@ -5,16 +5,7 @@ import styled from 'styled-components'
 import Building from './Building'
 import { ModPanelFront } from '../components/mods/ModPanel'
 import Button from '../components/Button'
-
-export function ProtoGenerator() {
-  this.id = uuidv4()
-  this.type = 'generators'
-  this.name = 'generator'
-  this.cost = { credits: 50, fabric: 50 }
-  this.output = 0
-}
-ProtoGenerator.width = 200
-ProtoGenerator.height = 200
+import { ProtoGenerator } from './prototypes'
 
 const BoxFront = styled.div`
 `

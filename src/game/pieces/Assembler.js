@@ -7,22 +7,13 @@ import BuildQueue from '../components/BuildQueue'
 import { hardwareData } from './resources'
 import Button from '../components/Button'
 import { ModPanelFront } from '../components/mods/ModPanel'
+import { ProtoAssembler } from './prototypes'
 
 const BoxFront = styled.div`
 `
 
 const BoxBack = styled.div`
 `
-
-export function ProtoAssembler() {
-  this.id = uuidv4()
-  this.type = 'assemblers'
-  this.name = 'assembler'
-  this.cost = { credits: 50, fabric: 50 }
-  this.drain = 1
-}
-ProtoAssembler.width = 200
-ProtoAssembler.height = 250
 
 export default class Assembler extends React.Component {
   constructor(props) {

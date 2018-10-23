@@ -3,6 +3,5 @@ import ProtoHangar from './hangar';
 
 export {
   ExpandingHangar,
-  ProtoHangar,
 };
 

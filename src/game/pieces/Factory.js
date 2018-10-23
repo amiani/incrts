@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import uuidv4 from 'uuid/v4'
 
 import Building from './Building'
 import Button from '../components/Button'
@@ -9,17 +8,7 @@ import ExpandingHangar from '../components/Hangar/ExpandingHangar'
 import { ProtoTank } from './units'
 import { ModPanelFront } from '../components/mods/ModPanel'
 import Switch from '../components/Switch'
-
-export function ProtoFactory() {
-  this.id = uuidv4()
-  this.type = 'factories'
-  this.name = 'factory'
-  this.cost = { credits: 50, fabric: 50 }
-  this.drain = 1
-  this.status = true
-}
-ProtoFactory.height = 300
-ProtoFactory.width = 200
+import { ProtoFactory } from './prototypes'
 
 const Box = styled.div`
   display: flex;

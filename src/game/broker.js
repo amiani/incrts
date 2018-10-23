@@ -1,4 +1,5 @@
-import gameWorker from './game.worker'
+// eslint-disable-next-line
+import gameWorker from 'worker-loader!./game.worker'
 
 const worker = new gameWorker()
 const listeners = {}

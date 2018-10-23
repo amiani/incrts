@@ -4,9 +4,9 @@ import Lazy from 'lazy.js'
 
 import GameContext from './gameContext'
 import broker from './broker'
-import { ProtoAssembler } from './pieces/Assembler'
-import { ProtoFactory } from './pieces/Factory'
-import { ProtoGenerator } from './pieces/Generator'
+import { ProtoAssembler } from './pieces/prototypes'
+import { ProtoFactory } from './pieces/prototypes'
+import { ProtoGenerator } from './pieces/prototypes'
 
 import Factory from './pieces/Factory'
 import Assembler from './pieces/Assembler'
