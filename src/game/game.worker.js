@@ -38,13 +38,26 @@ const data = {
 
 const update = () => {
   updateResources()
-  postMessage({ name: 'update', body: data.resources })
+  postMessage({
+    name: 'update',
+    body: {
+      resources: data.resources,
+      buildQueues: data.buildQueues,
+    }
+  })
 }
 
 onmessage = e => {
   switch(e.data.name) {
     case 'buildfactory':
       buildFactory()
+      break
+    case 'buildassembler':
+      buildAssembler()
+      break
+    case 'buildgenerator':
+      console.log(global)
+      self.buildGenerator()
       break
     case 'enqueue':
       enqueue(e.data.body)
@@ -64,6 +77,44 @@ const updateResources = () => {
     : data.resources.energyIncome / data.resources.drain
 }
 
+const updateBuildQueues = () => {
+  Lazy(data.buildQueues)
+    .each(buildQ => {
+      //add progress
+      if (buildQ.progress >= 100) {
+        if (item.isUnit) {
+          const hangarId = data.factores[item.ownerId].hangarId
+          const hangar = data.hangars[hangarId]
+          !hangar.units[item.type] && (hangar.units[item.type] = [])
+          hangar.units[item.type].push(item)
+        } else {
+          Lazy(item.output).each((amt, name) => data.resources[name] += amt)
+        }
+        buildQ.progress = 0
+        buildQ.items.shift()
+      }
+    })
+}
+
+const mutateWithResult = (prevState, nextState, item) => {
+  if (item.isUnit) {
+    !nextState.hangars && (nextState.hangars = this.copyHangars(prevState.hangars))
+    const hangarId = prevState.factories[item.ownerId].hangarId
+    const hangar = nextState.hangars[hangarId]
+    !hangar.units[item.type] && (hangar.units[item.type] = [])
+    hangar.units[item.type].push(item)
+  } else {
+    Lazy(item.output).each((amt, name) => {
+      nextState[name] = (nextState[name] ? nextState[name] : prevState[name]) + amt
+    })
+  }
+}
+
+const completeBuild = buildQueue => {
+  buildQueue.progress = 0
+  buildQueue.items.shift()
+}
+
 const buildFactory = () => {
   const factory = new ProtoFactory()
   const hangar = makeHangar(factory.id, true)
@@ -79,7 +130,7 @@ const buildAssembler = () => {
   const buildQ = makeBuildQueue(assembler.id)
   assembler.buildQueueId = buildQ.id
   buildBuilding(assembler)
-  postMessage({ name: 'buildings', body: { assmeblers: data.assmeblers } })
+  postMessage({ name: 'buildings', body: { assemblers: data.assemblers } })
 }
 
 const buildGenerator = () => {
@@ -107,12 +158,13 @@ const makeBuildQueue = ownerId => {
 const enqueue = ({ buildQId, item }) => {
   const buildQ = data.buildQueues[buildQId]
   if (buildQ.items.length >= buildQ.maxLength) {
+    //respond with error
+    return
   }
   if (item.cost) {
     spend(item.cost)
   }
   buildQ.items.push(item)
-  postMessage({ name: 'buildqueues', body: { [buildQId]: buildQ } })
 }
 
 const spend = cost => {
@@ -120,6 +172,8 @@ const spend = cost => {
   if (canAfford(costSeq)) {
     costSeq
       .each((amt, name) => { data.resources[name] -= amt })
+  } else {
+    //respond with error
   }
 }
 

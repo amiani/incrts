@@ -42,14 +42,12 @@ export default class BuildQueue extends React.Component {
     super()
     this.id = props.id
     broker.addListener(
-      'buildqueues',
+      'update',
       { id: this.id, onmessage: this.onmessage }
     )
   }
 
-  onmessage = body => {
-    body[this.id] && this.setState(body[this.id])
-  }
+  onmessage = body => this.setState(body.buildQueues[this.id])
 
   handleDoubleClick = () => broker.post({ name: 'toggleloop', id: this.id })
 
