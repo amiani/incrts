@@ -9,7 +9,7 @@ import { ProtoHangar } from './components/prototypes'
 import { ProtoBattlefield } from './objectives/Battlefield'
 import Order from './objectives/Order'
 
-import { FABRICPRICE, OBSERVEDBITS } from './constants'
+const FABRICPRICE = 10
 
 const resources = [
   'credits',
@@ -26,23 +26,7 @@ const resources = [
 
 const buildingTypes = ['factories', 'assemblers', 'generators']
 
-const GameContext = React.createContext(
-  null,
-  (prev, next) => {
-    let result = 0
-    if (resources.some(r => prev[r] !== next[r])) {
-      result |= OBSERVEDBITS.resources
-    }
-
-    const didBuildingsChange = buildingTypes.some(buildingType => {
-      return Lazy(next[buildingType])
-        .some(building => building !== prev[buildingType][building.id])
-    })
-    result |= didBuildingsChange ? OBSERVEDBITS.buildings : 0
-
-    return result
-  }
-)
+const GameContext = React.createContext()
 export default GameContext
 
 
@@ -82,6 +66,7 @@ export class GameStore extends React.Component {
 
     addCredits: amt => this.setState((prevState, _) => ({ credits: prevState.credits + amt })),
 
+    //converted
     buyFabric: amt => new Promise((resolve, reject) => this.setState((prevState, _) => {
       if (this.canAfford({ credits: amt * FABRICPRICE }, prevState)) {
         return {
@@ -93,6 +78,7 @@ export class GameStore extends React.Component {
       return null
     }, resolve('success'))),
 
+    //converted
     updateResources: () => this.setState((prevState, _) => {
       let energy = prevState.energy + prevState.energyIncome - prevState.drain
       energy = energy > 0 ? energy : 0
@@ -108,6 +94,7 @@ export class GameStore extends React.Component {
       })
     }),
 
+    //converted
     buildFactory: async () => {
       try {
         const factory = new ProtoFactory()
@@ -123,6 +110,7 @@ export class GameStore extends React.Component {
         console.log(error)
       }
     },
+    //converted
     buildAssembler: async () => {
       try {
         const assembler = new ProtoAssembler()
@@ -134,6 +122,7 @@ export class GameStore extends React.Component {
         console.log(error)
       }
     },
+    //converted
     buildGenerator: async () => {
       try { await this.buildBuilding(new ProtoGenerator()) }
       catch(error) {
@@ -160,6 +149,7 @@ export class GameStore extends React.Component {
       reject('nothing queued')
     }),
 
+    //converted
     //TODO: find way of using prevState for prevActual
     enqueue: (buildQId, item) => new Promise(async (resolve, reject) => {
       const prevActual = this.state.buildQueues[buildQId]
@@ -202,6 +192,7 @@ export class GameStore extends React.Component {
       this.setState((prevState, _) => ({ drain, energyIncome }))
     },
 
+    //converted
     updateBuildQueues: () => this.setState((prevState, _) => {
       const nextState = {}
       nextState.buildQueues = Lazy(prevState.buildQueues)
@@ -320,10 +311,12 @@ export class GameStore extends React.Component {
   }
 
 
+    //converted
   canAfford = (cost, state) => Lazy(cost)
     .keys()
     .reduce((acc, curr) => acc && state[curr] >= cost[curr], true)
 
+    //converted
   spend = cost => new Promise((resolve, reject) => {
     if (this.canAfford(cost, this.state)) {
       const resources = {}
@@ -337,6 +330,7 @@ export class GameStore extends React.Component {
     reject('insufficient resources')
   })
 
+    //converted
   //TODO: find better way of doing this
   mutateWithResult = (prevState, nextState, item) => {
     if (item.isUnit) {
@@ -352,6 +346,7 @@ export class GameStore extends React.Component {
     }
   }
 
+    //converted
   buildBuilding = data => new Promise(async (resolve, reject) => {
     try {
       await this.spend(data.cost)
@@ -364,6 +359,7 @@ export class GameStore extends React.Component {
     }
   })
 
+    //converted
   makeBuildQueue = ownerId => new Promise((resolve, reject) => {
     const newQ = new ProtoBuildQueue(ownerId)
     this.setState((prevState, _) => {
@@ -373,6 +369,7 @@ export class GameStore extends React.Component {
     }, resolve(newQ.id))
   })
 
+    //converted
   makeHangar = (ownerId, isSource) => new Promise((resolve, reject) => {
     const newHangar = new ProtoHangar(ownerId, isSource)
     this.setState((prevState, _) => {
@@ -434,6 +431,7 @@ export class GameStore extends React.Component {
     .map((unitQueue, unitType) => ([unitType, [...unitQueue]]))
     .toObject()
 
+    //converted
   completeBuild = buildQueue => {
     buildQueue.progress = 0
     buildQueue.items.shift()

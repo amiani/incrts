@@ -22,14 +22,13 @@ export default class Main extends React.Component {
   constructor(props) {
     super(props)
     this.initialize()
-    setInterval(this.tickUpdate, TICKRATE)
   }
 
   initialize = () => {
     this.props.store.makeOrder()
-    this.props.store.buildGenerator()
     broker.post({ name: 'buildfactory' })
-    this.props.store.buildAssembler()
+    broker.post({ name: 'buildassembler' })
+    broker.post({ name: 'buildgenerator' })
   }
 
   tickUpdate = () => {

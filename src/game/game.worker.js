@@ -65,6 +65,9 @@ onmessage = e => {
     case 'buy':
       buy(e.data.body)
       break
+    case 'toggleloop':
+      toggleLoop(e.data.body)
+      break
     default:
       console.log(`Received message with no listener: ${e.data.name}`)
       break
@@ -167,6 +170,8 @@ const enqueue = ({ buildQId, item }) => {
   }
   buildQ.items.push(item)
 }
+
+const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[id].loop }
 
 const spend = cost => {
   const costSeq = Lazy(cost)
