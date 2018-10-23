@@ -3,8 +3,8 @@ import Lazy from 'lazy.js'
 import { TICKRATE } from './constants'
 import { ProtoFactory, ProtoAssembler, ProtoGenerator } from './pieces/prototypes'
 import { ProtoBuildQueue, ProtoHangar } from  './components/prototypes'
+import { ProtoOrder } from './objectives/prototypes'
 //import { ProtoBattlefield } from './objectives/Battlefield'
-import Order from './objectives/Order'
 
 const data = {
   resources: {
@@ -45,6 +45,7 @@ const update = () => {
     body: {
       resources: data.resources,
       buildQueues: data.buildQueues,
+      hangars: data.hangars,
     }
   })
 }
@@ -77,6 +78,9 @@ onmessage = e => {
       break
     case 'makeorder':
       makeOrder(e.data.body)
+      break
+    case 'setdemand':
+      setDemand(e.data.body)
       break
     default:
       console.log(`Received message with no listener: ${e.data.name}`)
@@ -120,26 +124,47 @@ const buy = want => {
 const updateBuildQueues = () => {
   Lazy(data.buildQueues)
     .each(buildQ => {
-      //add progress
       if (buildQ.progress >= 100) {
-        if (item.isUnit) {
-          const hangarId = data.factores[item.ownerId].hangarId
-          const hangar = data.hangars[hangarId]
-          !hangar.units[item.type] && (hangar.units[item.type] = [])
-          hangar.units[item.type].push(item)
-        } else {
-          Lazy(item.output).each((amt, name) => data.resources[name] += amt)
+        const item = buildQ.items.shift()
+        if (item) {
+          if (item.isUnit) {
+            const hangarId = data.factories[item.ownerId].hangarId
+            const hangar = data.hangars[hangarId]
+            !hangar.units[item.type] && (hangar.units[item.type] = [])
+            hangar.units[item.type].push(item)
+          } else {
+            Lazy(item.output).each((amt, name) => data.resources[name] += amt)
+          }
         }
         buildQ.progress = 0
-        buildQ.items.shift()
       }
+      buildQ.progress += 5
     })
 }
 
 const dispatch = ({ hangarId }) => {
   const hangar = data.hangars[hangarId]
-  data.orders[hangar.ownerId].dispatch(hangar.units)
+  data.orders[hangar.ownerId] = Lazy(data.orders[hangar.ownerId].units)
+    .merge(hangar.units)
+    .toObject()
   hangar.units = { tanks: [] }
+}
+
+const setDemand = ({ hangarId, unitType, amt }) => {
+  const hangar = data.hangars[hangarId]
+  const nextAmt = amt < 0 ? 0 : amt
+  const prevAmt = hangar.demand[unitType]
+  hangar.demand[unitType] = nextAmt
+  if (hangar.units[unitType].length < nextAmt) {
+    if (!data.unitQueues[unitType].includes(hangarId))
+      data.unitQueues[unitType].push(hangarId)
+  }
+  if (prevAmt > 0 && nextAmt <= 0) {
+    const queue = Lazy(data.unitQueues[unitType])
+      .reject(h => h === hangarId)
+      .toArray()
+    data.unitQueues[unitType] = queue
+  }
 }
 
 const updateHangars = () => {
@@ -153,7 +178,7 @@ const updateHangars = () => {
         const actualQueue = data.unitQueues[unitType]
         if (actualQueue.length > 0) {
           const unit = unitArr.shift()
-          const firstHangar = hangars[actualQueue.shift()]
+          const firstHangar = data.hangars[actualQueue.shift()]
           unit.ownerId = firstHangar.ownerId
           !firstHangar.units[unitType] && (firstHangar.units[unitType] = [])
           firstHangar.units[unitType].push(unit)
@@ -165,7 +190,22 @@ const updateHangars = () => {
     )
 }
 
-const updateOrders = () => Lazy(data.orders).each(o => o.update())
+const updateOrders = () => Lazy(data.orders)
+  .each(o => {
+    if (o.want) {
+      const totalUnitsLeft = Lazy(o.want)
+        .reduce((acc, curr, currType) => {
+          let unitsLeft = curr - (o.units[currType] ? o.units[currType].length : 0)
+          unitsLeft = unitsLeft >= 0 ? unitsLeft : 0
+          return acc + unitsLeft
+        }, 0)
+      if (totalUnitsLeft <= 0) {
+        data.credits += 100
+        o.order = null
+        o.deadline = null
+      }
+    }
+  })
 
 const buildFactory = () => {
   const factory = new ProtoFactory()
@@ -208,10 +248,11 @@ const makeBuildQueue = ownerId => {
 }
 
 const makeOrder = () => {
-  const order = new Order()
+  const order = new ProtoOrder({ tanks: 10 }, new Date(Date.now() + 20000))
   const hangar = makeHangar(order.id)
   order.hangarId = hangar.id
   data.orders[order.id] = order
+  postMessage({ name: 'orders', body: { orders: data.orders, hangars: data.hangars } })
 }
 
 const enqueue = ({ buildQId, item }) => {

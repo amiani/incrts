@@ -5,6 +5,7 @@ import Lazy from 'lazy.js'
 import Sidebar from './Sidebar'
 import Base from './Base'
 import Port from './Port'
+import Order from './objectives/Order'
 import broker from './broker'
 
 const GameGrid = styled.div`
@@ -34,7 +35,7 @@ export default class Main extends React.Component {
     broker.post({ name: 'buildgenerator' })
   }
 
-  onmessage = body => this.setState(body.data)
+  onmessage = body => this.setState(body)
 
   render() {
     return (
@@ -43,12 +44,8 @@ export default class Main extends React.Component {
         <Base />
         {Lazy(this.state.orders).map(o => (
           <div key={o.id}>
-            <o.Component
-              {...o.getProps()}
-            />
-            <Port
-              hangar={this.state.hangars[o.hangarId]}
-            />
+            <Order id={o.id} />
+            <Port hangar={this.state.hangars[o.hangarId]} />
           </div>
         )).toArray()}
       </GameGrid>

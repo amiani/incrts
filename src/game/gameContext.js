@@ -273,6 +273,7 @@ export class GameStore extends React.Component {
       })
     },
 
+    //converted
     updateOrders: () => Lazy(this.state.orders).each(o => o.update()),
 
     setDemand: (hangarId, unitType, amt) => this.setState((prevState, _) => {

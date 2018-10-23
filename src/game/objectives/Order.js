@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import uuidv4 from 'uuid/v4'
 import Lazy from 'lazy.js'
 
-//import broker from '../broker'
+import broker from '../broker'
 
-export default class Order {
+class OrderOld {
   constructor() {
     this.setDeadline(20000)
   }
@@ -14,7 +14,6 @@ export default class Order {
   units = {}
   deadline = null
   order = { tanks: 5 }
-  Component = OrderComponent
 
   getProps = () => ({
     deadline: this.deadline,
@@ -68,16 +67,28 @@ const Timer = styled.div`
 const OrderItem = styled.div`
 `
 
-class OrderComponent extends React.Component {
+export default class Order extends React.Component {
+  state = { units: {}, deadline: null, want: null }
+  constructor(props) {
+    super()
+    this.id = props.id
+    broker.addListener(
+      'dispatch',
+      { id: this.id, onmessage: this.onmessage }
+    )
+  }
+
+  onmessage = body => body[this.id] && this.setState(body[this.id])
+
   render() {
-    const timeLeft = new Date(this.props.deadline - Date.now())
-    if (this.props.order) {
+    const timeLeft = new Date(this.state.deadline - Date.now())
+    if (this.state.want) {
       return (
         <Box>
-          {Lazy(this.props.order)
+          {Lazy(this.state.want)
             .map((amt, unitType, i) => (
               <OrderItem key={unitType+i}>
-                {unitType}: {this.props.units[unitType] ? this.props.units[unitType].length : 0} / {amt}
+                {unitType}: {this.state.units[unitType] ? this.state.units[unitType].length : 0} / {amt}
               </OrderItem>
             ))
             .toArray()

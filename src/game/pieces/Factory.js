@@ -20,19 +20,15 @@ export default class Factory extends React.Component {
   constructor(props) {
     super()
     this.id = props.factory.id
-      /*
     broker.addListener(
       'buildings',
       { id: this.id, onmessage: this.onmessage }
     )
-    */
   }
   
-    /*
   onmessage = body => {
     body[this.id] && this.setState(body[this.id])
   }
-  */
 
   addProgress = () => {
     this.props.store.addProgress(

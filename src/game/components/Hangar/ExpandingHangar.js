@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
 import { colorDict } from '../../pieces/units'
+import DemandControl from './DemandControl'
 import broker from '../../broker'
 
 const EDGELENGTH = 5
@@ -11,6 +12,7 @@ const Box = styled.div`
   height: ${p => p.height}px;
   width: ${p => p.width}px;
   padding: 5px;
+  display: flex;
 `
 
 const Dot = styled.div`
@@ -42,7 +44,18 @@ export default class ExpandingHangar extends React.Component {
   }
 
   onmessage = body => {
-    body[this.id] && this.setState(body[this.id])
+    body.hangars[this.id] && this.setState(body.hangars[this.id])
+  }
+  
+  setDemand = (unitType, amt) => {
+    broker.post({
+      name: 'setdemand',
+      body: {
+        hangarId: this.id,
+        unitType,
+        amt
+      }
+    })
   }
 
   render() {
@@ -60,6 +73,12 @@ export default class ExpandingHangar extends React.Component {
               .toArray()
             }
           </DotGrid>
+          {this.props.withControl ? (
+            <DemandControl
+              demand={this.state.demand}
+              setDemand={this.setDemand}
+            />
+          ) : null}
         </Box>
       )
     }
