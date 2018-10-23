@@ -9,6 +9,7 @@ import { ProtoTank } from './units'
 import { ModPanelFront } from '../components/mods/ModPanel'
 import Switch from '../components/Switch'
 import { ProtoFactory } from './prototypes'
+import broker from '../broker'
 
 const Box = styled.div`
   display: flex;
@@ -19,7 +20,19 @@ export default class Factory extends React.Component {
   constructor(props) {
     super()
     this.id = props.factory.id
+      /*
+    broker.addListener(
+      'buildings',
+      { id: this.id, onmessage: this.onmessage }
+    )
+    */
   }
+  
+    /*
+  onmessage = body => {
+    body[this.id] && this.setState(body[this.id])
+  }
+  */
 
   addProgress = () => {
     this.props.store.addProgress(
@@ -30,11 +43,13 @@ export default class Factory extends React.Component {
   }
 
   enqueueTank = () => {
-    this.props.store.enqueue(
-      this.props.factory.buildQueueId,
-      new ProtoTank(this.props.factory.id)
-    )
-      .catch(error => console.log(error))
+    broker.post({
+      name: 'enqueue',
+      body: { 
+        buildQId: this.props.factory.buildQueueId, 
+        item: new ProtoTank(this.id) 
+      }
+    })
   }
 
   handlePowerChange = e => {

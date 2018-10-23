@@ -5,6 +5,7 @@ import Lazy from 'lazy.js'
 import Sidebar from './Sidebar'
 import Base from './Base'
 import Port from './Port'
+import broker from './broker'
 
 import { TICKRATE } from './constants'
 
@@ -27,7 +28,7 @@ export default class Main extends React.Component {
   initialize = () => {
     this.props.store.makeOrder()
     this.props.store.buildGenerator()
-    this.props.store.buildFactory()
+    broker.post({ name: 'buildfactory' })
     this.props.store.buildAssembler()
   }
 

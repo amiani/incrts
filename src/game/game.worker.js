@@ -46,6 +46,11 @@ onmessage = e => {
     case 'buildfactory':
       buildFactory()
       break
+    case 'enqueue':
+      enqueue(e.data.body)
+      break
+    default:
+      break
   }
 }
 
@@ -82,6 +87,11 @@ const buildGenerator = () => {
   postMessage({ name: 'buildings', body: { generators: data.generators } })
 }
 
+const buildBuilding = building => {
+  spend(building.cost)
+  data[building.type][building.id] = building
+}
+
 const makeHangar = (ownerId, isSource) => {
   const hangar = new ProtoHangar(ownerId, isSource)
   data.hangars[hangar.id] = hangar
@@ -94,9 +104,15 @@ const makeBuildQueue = ownerId => {
   return buildQ
 }
 
-const buildBuilding = building => {
-  spend(building.cost)
-  data[building.type][building.id] = building
+const enqueue = ({ buildQId, item }) => {
+  const buildQ = data.buildQueues[buildQId]
+  if (buildQ.items.length >= buildQ.maxLength) {
+  }
+  if (item.cost) {
+    spend(item.cost)
+  }
+  buildQ.items.push(item)
+  postMessage({ name: 'buildqueues', body: { [buildQId]: buildQ } })
 }
 
 const spend = cost => {

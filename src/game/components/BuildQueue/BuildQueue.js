@@ -42,7 +42,7 @@ export default class BuildQueue extends React.Component {
     super()
     this.id = props.id
     broker.addListener(
-      'update',
+      'buildqueues',
       { id: this.id, onmessage: this.onmessage }
     )
   }
