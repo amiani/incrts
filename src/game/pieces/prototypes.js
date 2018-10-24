@@ -1,5 +1,6 @@
 import uuidv4 from 'uuid/v4'
 import { ProtoDeviceMod } from './mods/prototypes.js'
+import { hardware, device } from '../components/recipes'
 
 export function ProtoFactory() {
   this.id = uuidv4()
@@ -7,6 +8,7 @@ export function ProtoFactory() {
   this.name = 'factory'
   this.cost = { credits: 50, fabric: 50 }
   this.drain = 1
+  this.recipes = {}
   this.status = true
 }
 ProtoFactory.height = 300
@@ -18,6 +20,7 @@ export function ProtoAssembler() {
   this.name = 'assembler'
   this.cost = { credits: 50, fabric: 50 }
   this.mods = { aaa: new ProtoDeviceMod() }
+  this.recipes = [hardware, device]
   this.drain = 1
 }
 ProtoAssembler.width = 200

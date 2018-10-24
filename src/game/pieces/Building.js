@@ -12,7 +12,6 @@ const Box = styled.div`
   flex-direction: column;
   justify-content: space-between;
   background-color: ${p => p.color};
-
   perspective: 1000px;
 `
 

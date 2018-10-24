@@ -104,6 +104,9 @@ const updateResources = () => {
     : data.resources.energyIncome / data.resources.drain
 }
 
+const updateBuilding = ({ buildingId }) => {
+}
+
 const buy = want => {
   const wantSeq = Lazy(want)
   const cost = wantSeq
