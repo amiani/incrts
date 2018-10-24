@@ -72,6 +72,9 @@ export default class Building extends React.Component {
       <Box {...this.props} onMouseUp={this.handleMouseUp}>
         <Header>
           <Button onClick={this.flip}>Flip</Button>
+          {this.props.showSider &&
+            <Button onClick={this.props.showSider}>Show Sider</Button>
+          }
         </Header>
         <Flipper>
           <Front flipped={this.state.flipped}>

@@ -1,4 +1,5 @@
 import Lazy from 'lazy.js'
+import uuidv4 from 'uuid/v4'
 
 import { TICKRATE } from './constants'
 import { ProtoFactory, ProtoAssembler, ProtoGenerator } from './pieces/prototypes'
@@ -134,10 +135,12 @@ const updateBuildQueues = () => {
         bq.progress += bq.buildRate * item.buildRate
         if (bq.progress >= 100) {
           if (item.isUnit) {
-            const hangarId = data.factories[item.ownerId].hangarId
+            const unit = { ...item }
+            unit.id = uuidv4()
+            const hangarId = data.factories[unit.ownerId].hangarId
             const hangar = data.hangars[hangarId]
-            !hangar.units[item.type] && (hangar.units[item.type] = [])
-            hangar.units[item.type].push(item)
+            !hangar.units[unit.type] && (hangar.units[unit.type] = [])
+            hangar.units[unit.type].push(unit)
           } else {
             Lazy(item.output).each((amt, name) => data.resources[name] += amt)
           }

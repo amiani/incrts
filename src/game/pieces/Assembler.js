@@ -22,7 +22,7 @@ const BoxBack = styled.div`
 `
 
 export default class Assembler extends React.Component {
-  state = { showSider: true }
+  state = { showSider: false }
   constructor(props) {
     super()
     this.id = props.assembler.id
@@ -45,6 +45,8 @@ export default class Assembler extends React.Component {
     }
   })
 
+  toggleSider = () => this.setState({ showSider: !this.state.showSider })
+
   render() {
     return (
       <Box>
@@ -52,6 +54,7 @@ export default class Assembler extends React.Component {
           width={ProtoAssembler.width}
           height={ProtoAssembler.height}
           message={this.state.message}
+          showSider={this.toggleSider}
           front={
             <BoxFront>
               <BuildQueue id={this.props.assembler.buildQueueId} />

@@ -15,5 +15,6 @@ export function ProtoTank(ownerId) {
   this.damage = 1
   this.speed = 1
   this.shields = 0
+  this.buildRate = 1
   this.cost = { hardware: 10, }
 }

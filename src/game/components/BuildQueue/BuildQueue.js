@@ -58,8 +58,12 @@ export default class BuildQueue extends React.Component {
     return (
       <Box onDoubleClick={this.handleDoubleClick} loop={this.state.loop}>
         <QueueBox>
-          {this.state.items.map((q, i) => (
-            <QueueItem key={q.id+i} icon={q.icon} curr={this.state.currItem==i} />
+          {this.state.items.map((item, i) => (
+            <QueueItem
+              key={item.id+i}
+              icon={item.icon}
+              curr={this.state.currItem==i}
+            />
           ))}
         </QueueBox>
         <ProgressBar progress={this.state.progress} />
