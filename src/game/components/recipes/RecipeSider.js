@@ -13,14 +13,23 @@ const Recipe = styled.div`
   width: 50px;
   background-image: url(images/${p=>p.icon});
   background-size: 100% 100%;
+
+  :hover {
+    border: solid pink 2px;
+  }
 `
 
 export default props => {
   const rows = props.height / 50
-  const cols = props.recipes / rows
   return (
-    <Box height={props.height} rows={rows} cols={cols}>
-      {props.recipes.map(r => <Recipe key={r.id} icon={r.icon} />)}
+    <Box height={props.height} rows={rows}>
+      {props.recipes.map(r => (
+        <Recipe
+          key={r.id}
+          icon={r.icon}
+          onClick={()=>props.enqueue(r)}
+        />
+      ))}
     </Box>
   )
 }

@@ -40,11 +40,11 @@ export default class Assembler extends React.Component {
       .catch(error => this.setState({ message: error }))
   }
 
-  enqueue = recipe => broker.post({
+  enqueue = item => broker.post({
     name: 'enqueue',
     body: {
       buildQId: this.props.assembler.buildQueueId,
-      recipe,
+      item
     }
   })
 
