@@ -81,6 +81,9 @@ onmessage = e => {
     case 'setdemand':
       setDemand(e.data.body)
       break
+    case 'addmod':
+      addMod(e.data.body)
+      break
     default:
       console.log(`Received message with no listener: ${e.data.name}`)
       break
@@ -208,6 +211,17 @@ const updateOrders = () => Lazy(data.orders)
       }
     }
   })
+
+const addMod = ({ buildingId, type, mod }) => {
+  const building = data[type][buildingId]
+  building.mods[mod.id] = mod
+  postMessage({
+    name: 'buildings',
+    body: {
+      [type]: { [buildingId]: building }
+    }
+  })
+}
 
 const buildFactory = () => {
   const factory = new ProtoFactory()

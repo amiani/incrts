@@ -7,6 +7,8 @@ import { hardwareData } from './resources'
 import { ModPanelFront, ModPanelBack } from '../components/mods/ModPanel'
 import { ProtoAssembler } from './prototypes'
 import { RecipeSider } from '../components/recipes'
+import Button from '../components/Button'
+import { ProtoDeviceMod } from './mods/prototypes'
 import broker from '../broker'
 
 const Box = styled.div`
@@ -20,18 +22,26 @@ const BoxBack = styled.div`
 `
 
 export default class Assembler extends React.Component {
+  state = { showSider: true }
   constructor(props) {
     super()
     this.id = props.assembler.id
   }
-
-  state = { showSider: true }
 
   enqueue = item => broker.post({
     name: 'enqueue',
     body: {
       buildQId: this.props.assembler.buildQueueId,
       item: { ...item }
+    }
+  })
+
+  addMod = () => broker.post({
+    name: 'addmod',
+    body: {
+      buildingId: this.id,
+      type: 'assemblers',
+      mod: new ProtoDeviceMod()
     }
   })
 
@@ -45,6 +55,7 @@ export default class Assembler extends React.Component {
           front={
             <div>
               <BuildQueue id={this.props.assembler.buildQueueId} />
+              <Button onClick={this.addMod}>Add Mod</Button>
               <ModPanelFront mods={this.props.assembler.mods} />
             </div>
           }
