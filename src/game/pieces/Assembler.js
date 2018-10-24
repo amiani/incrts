@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Building from './Building'
 import BuildQueue from '../components/BuildQueue'
 import { hardwareData } from './resources'
-import { ModPanelFront } from '../components/mods/ModPanel'
+import { ModPanelFront, ModPanelBack } from '../components/mods/ModPanel'
 import { ProtoAssembler } from './prototypes'
 
 const BoxFront = styled.div`
@@ -48,6 +48,7 @@ export default class Assembler extends React.Component {
         }
         back={
           <BoxBack>
+            <ModPanelBack mods={this.props.assembler.mods} />
           </BoxBack>
         }
       />

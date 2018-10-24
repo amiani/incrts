@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
 import ModFront from './ModFront'
+import controlMap from '../controlMap'
 
 const Box = styled.div`
   display: flex;
@@ -18,11 +19,15 @@ export const ModPanelFront = props => (
   </Box>
 )
 
-export const ModPanelBack = props => (
-  <Box>
-    {Lazy(props.mods).map(m => (
-      <m.Control key={m.id} mod={m} />
-    ))
-    .toArray()}
-  </Box>
-)
+export const ModPanelBack = props => {
+  let Control
+  return (
+    <Box>
+      {Lazy(props.mods).map(m => {
+        Control = controlMap[m.control]
+        return <Control key={m.id} mod={m} />
+      })
+      .toArray()}
+    </Box>
+  )
+}

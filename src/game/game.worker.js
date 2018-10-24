@@ -219,7 +219,6 @@ const buildFactory = () => {
 
 const buildAssembler = () => {
   const assembler = new ProtoAssembler()
-  console.log(assembler)
   const buildQ = makeBuildQueue(assembler.id)
   assembler.buildQueueId = buildQ.id
   buildBuilding(assembler)
@@ -270,7 +269,14 @@ const enqueue = ({ buildQId, item }) => {
 
 const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[id].loop }
 
-const togglePower = ({ buildingId }) => data.factories[buildingId].status = !data.factories[buildingId].status
+const togglePower = ({ buildingId }) => {
+  const factory = data.factories[buldingId]
+  factory.status = factory.status
+  postMessage({
+    name: 'buildings',
+    body: { [factory.id]: factory }
+  })
+}
 
 const spend = cost => {
   const costSeq = Lazy(cost)

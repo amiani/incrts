@@ -17,7 +17,7 @@ export function ProtoAssembler() {
   this.type = 'assemblers'
   this.name = 'assembler'
   this.cost = { credits: 50, fabric: 50 }
-  this.mods = {}
+  this.mods = { aaa: new ProtoDeviceMod() }
   this.drain = 1
 }
 ProtoAssembler.width = 200

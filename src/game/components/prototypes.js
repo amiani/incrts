@@ -1,4 +1,3 @@
-import DeviceModControl from './mods/DeviceMod'
 import uuidv4 from 'uuid/v4'
 
 export function ProtoBuildQueue(ownerId) {
@@ -29,5 +28,5 @@ export function ProtoDeviceMod() {
   this.cost = { fabric: 50 }
   this.drain = 0
   this.status = true
-  this.Control = DeviceModControl
+  this.control = 'DeviceModControl'
 }
