@@ -59,8 +59,6 @@ export default class Factory extends React.Component {
           front={
             <div>
               <BuildQueue id={buildQueueId} />
-              <Button onClick={this.addProgress}>Build</Button>
-              <Button onClick={this.enqueueTank}>Tank</Button>
               <ModPanelFront mods={mods} />
             </div>
           }
