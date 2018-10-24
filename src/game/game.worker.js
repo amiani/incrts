@@ -4,7 +4,6 @@ import { TICKRATE } from './constants'
 import { ProtoFactory, ProtoAssembler, ProtoGenerator } from './pieces/prototypes'
 import { ProtoBuildQueue, ProtoHangar, ProtoDeviceMod } from  './components/prototypes'
 import { ProtoOrder } from './objectives/prototypes'
-//import { ProtoBattlefield } from './objectives/Battlefield'
 
 const data = {
   resources: {

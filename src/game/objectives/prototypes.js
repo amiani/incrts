@@ -6,3 +6,10 @@ export function ProtoOrder(want, deadline) {
   this.units = {}
   this.deadline = deadline
 }
+
+export function ProtoBattlefield(hangarId) {
+  this.id = uuidv4()
+  this.component = 'Battlefield'
+  this.hangarId = hangarId
+  this.enroute = []
+}
