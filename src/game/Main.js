@@ -29,10 +29,10 @@ export default class Main extends React.Component {
   }
 
   initialize = () => {
-    broker.post({ name: 'makeorder' })
-    broker.post({ name: 'buildfactory' })
-    broker.post({ name: 'buildassembler' })
-    broker.post({ name: 'buildgenerator' })
+    broker.post({ sub: 'makeorder' })
+    broker.post({ sub: 'buildfactory' })
+    broker.post({ sub: 'buildassembler' })
+    broker.post({ sub: 'buildgenerator' })
   }
 
   onmessage = body => this.setState(body)

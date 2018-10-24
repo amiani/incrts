@@ -16,7 +16,7 @@ const Box = styled.div`
 
 export default class Port extends React.Component {
   dispatch = () => {
-    broker.post({ name: 'dispatch', body: { hangarId: this.props.hangar.id } })
+    broker.post({ sub: 'dispatch', body: { hangarId: this.props.hangar.id } })
   }
 
   render() {

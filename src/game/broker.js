@@ -5,21 +5,21 @@ const worker = new gameWorker()
 const listeners = {}
 
 worker.onmessage = e => {
-  const listenerList = listeners[e.data.name]
+  const listenerList = listeners[e.data.sub]
   for (let i = 0, n = listenerList.length; i !== n; i++) {
     listenerList[i].onmessage(e.data.body)
   }
 }
 
 const broker = {
-  addListener: (name, listener) => {
-    !listeners[name] && (listeners[name] = [])
-    listeners[name].push(listener)
+  addListener: (sub, listener) => {
+    !listeners[sub] && (listeners[sub] = [])
+    listeners[sub].push(listener)
   },
   
-  removeListener: (name, id) => {
+  removeListener: (sub, id) => {
     const i = listeners.findIndex(l => l.id === id)
-    delete listeners[name][i]
+    delete listeners[sub][i]
   },
 
   post: message => worker.postMessage(message),

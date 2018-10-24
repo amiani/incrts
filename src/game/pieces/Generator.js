@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Building from './Building'
-import { ModPanelFront } from '../components/mods/ModPanel'
+import { ModPanelFront } from './mods/ModPanel'
 import Button from '../components/Button'
 import { ProtoGenerator } from './prototypes'
 

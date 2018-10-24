@@ -36,7 +36,7 @@ class OrderOld {
           return acc + unitsLeft
         }, 0)
       if (totalUnitsLeft <= 0) {
-        //broker.post({ name: 'addcredits', body: 100 })
+        //broker.post({ sub: 'addcredits', body: 100 })
         this.order = null
         this.deadline = null
       }

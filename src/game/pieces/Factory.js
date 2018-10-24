@@ -5,7 +5,7 @@ import Building from './Building'
 import Button from '../components/Button'
 import BuildQueue from '../components/BuildQueue'
 import ExpandingHangar from '../components/Hangar/ExpandingHangar'
-import { ModPanelFront } from '../components/mods/ModPanel'
+import { ModPanelFront } from './mods/ModPanel'
 import Switch from '../components/Switch'
 import { ProtoFactory } from './prototypes'
 import broker from '../broker'
@@ -33,7 +33,7 @@ export default class Factory extends React.Component {
 
   enqueue = item => {
     broker.post({
-      name: 'enqueue',
+      sub: 'enqueue',
       body: { 
         buildQueueId: this.props.factory.buildQueueId, 
         item,
@@ -43,7 +43,7 @@ export default class Factory extends React.Component {
 
   handlePowerChange = e => {
     broker.post({
-      name: 'togglepower',
+      sub: 'togglepower',
       body: { buildingId: this.id }
     })
   }

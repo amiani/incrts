@@ -11,7 +11,7 @@ const Box = styled.div`
 
 export default class Battlefield extends React.Component {
   state = {
-    tanks: Array(1000000).fill({ name: 'hello', stat: 10 }),
+    tanks: Array(1000000).fill({ sub: 'hello', stat: 10 }),
   }
 
   render() {

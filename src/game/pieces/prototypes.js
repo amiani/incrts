@@ -12,6 +12,7 @@ export function ProtoFactory() {
   this.recipes = [new ProtoTank(this.id)]
   this.mods = []
   this.status = true
+  this.computed = {}
 }
 ProtoFactory.height = 300
 ProtoFactory.width = 200
@@ -24,6 +25,7 @@ export function ProtoAssembler() {
   this.mods = []
   this.recipes = [hardware, device]
   this.drain = 1
+  this.computed = {}
 }
 ProtoAssembler.width = 200
 ProtoAssembler.height = 250
@@ -33,7 +35,8 @@ export function ProtoGenerator() {
   this.type = 'generators'
   this.name = 'generator'
   this.cost = { credits: 50, fabric: 50 }
-  this.output = 0
+  this.output = 1
+  this.computed = {}
 }
 ProtoGenerator.width = 200
 ProtoGenerator.height = 200

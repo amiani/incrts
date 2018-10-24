@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Switch from '../Switch'
+import Switch from '../../components/Switch'
 
 const Box = styled.div`
 `

@@ -26,6 +26,7 @@ const data = {
   factories: {},
   assemblers: {},
   generators: {},
+  mods: {},
 
   buildQueues: {},
 
@@ -41,7 +42,7 @@ const update = () => {
   updateHangars()
   updateOrders()
   postMessage({
-    name: 'update',
+    sub: 'update',
     body: {
       resources: data.resources,
       buildQueues: data.buildQueues,
@@ -51,7 +52,7 @@ const update = () => {
 }
 
 onmessage = e => {
-  switch(e.data.name) {
+  switch(e.data.sub) {
     case 'buildfactory':
       buildFactory()
       break
@@ -86,7 +87,7 @@ onmessage = e => {
       addMod(e.data.body)
       break
     default:
-      console.log(`Received message with no listener: ${e.data.name}`)
+      console.log(`Received message with no listener: ${e.data.sub}`)
       break
   }
 }
@@ -95,10 +96,12 @@ setInterval(update, TICKRATE);
 
 const updateResources = () => {
   data.resources.energyIncome = Lazy(data.generators)
+    .pluck('computed')
     .pluck('output')
     .sum()
   data.resources.drain = Lazy(data.factories)
     .merge(data.assemblers)
+    .pluck('computed')
     .pluck('drain')
     .sum()
   let nextEnergy = data.resources.energy + data.resources.energyIncome - data.resources.drain
@@ -109,6 +112,7 @@ const updateResources = () => {
 }
 
 const updateBuilding = building => {
+  building.computed
 }
 
 const buy = want => {
@@ -219,13 +223,24 @@ const updateOrders = () => Lazy(data.orders)
 
 const addMod = ({ buildingId, type, mod }) => {
   const building = data[type][buildingId]
+  data.mods[mod.id] = mod
   building.mods.push(mod)
   postMessage({
-    name: 'buildings',
+    sub: 'buildings',
     body: {
       [type]: data[type]
     }
   })
+  postMessage({
+    sub: 'mods',
+    body: {
+      mods: data.mods
+    }
+  })
+}
+
+const updateMod = ({ modId }) => {
+  data.mods[modId]
 }
 
 const buildFactory = () => {
@@ -235,7 +250,7 @@ const buildFactory = () => {
   factory.hangarId = hangar.id
   factory.buildQueueId = buildQueue.id
   buildBuilding(factory)
-  postMessage({ name: 'buildings', body: { factories: data.factories } })
+  postMessage({ sub: 'buildings', body: { factories: data.factories } })
 }
 
 const buildAssembler = () => {
@@ -243,12 +258,12 @@ const buildAssembler = () => {
   const buildQueue = makeBuildQueue(assembler.id)
   assembler.buildQueueId = buildQueue.id
   buildBuilding(assembler)
-  postMessage({ name: 'buildings', body: { assemblers: data.assemblers } })
+  postMessage({ sub: 'buildings', body: { assemblers: data.assemblers } })
 }
 
 const buildGenerator = () => {
   buildBuilding(new ProtoGenerator())
-  postMessage({ name: 'buildings', body: { generators: data.generators } })
+  postMessage({ sub: 'buildings', body: { generators: data.generators } })
 }
 
 const buildBuilding = building => {
@@ -273,7 +288,7 @@ const makeOrder = () => {
   const hangar = makeHangar(order.id)
   order.hangarId = hangar.id
   data.orders[order.id] = order
-  postMessage({ name: 'orders', body: { orders: data.orders, hangars: data.hangars } })
+  postMessage({ sub: 'orders', body: { orders: data.orders, hangars: data.hangars } })
 }
 
 const enqueue = ({ buildQueueId, item }) => {
@@ -285,7 +300,7 @@ const enqueue = ({ buildQueueId, item }) => {
   if (item.cost) {
     spend(item.cost)
   }
-  buildQueue.items.push({ ...item })
+  buildQueue.items.push(item)
 }
 
 const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[id].loop }
@@ -294,7 +309,7 @@ const togglePower = ({ buildingId }) => {
   const factory = data.factories[buildingId]
   factory.status = !factory.status
   postMessage({
-    name: 'buildings',
+    sub: 'buildings',
     body: { [factory.id]: factory }
   })
 }

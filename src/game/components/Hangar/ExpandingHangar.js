@@ -49,7 +49,7 @@ export default class ExpandingHangar extends React.Component {
   
   setDemand = (unitType, amt) => {
     broker.post({
-      name: 'setdemand',
+      sub: 'setdemand',
       body: {
         hangarId: this.id,
         unitType,

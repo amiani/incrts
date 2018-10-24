@@ -41,7 +41,7 @@ export default class Sidebar extends React.Component {
 
   buyFabric = amt => {
     broker.post({
-      name: 'buy',
+      sub: 'buy',
       body: { fabric: amt }
     })
   }
@@ -59,9 +59,9 @@ export default class Sidebar extends React.Component {
           <ResourceInfo>Productivity: {(this.state.productivity * 100).toFixed(0)}%</ResourceInfo>
         </div>
         <Button onClick={()=>this.buyFabric(10)}>Buy 10 Fabric</Button>
-        <Button onClick={()=>broker.post({ name: 'buildfactory' })}>Build Factory</Button>
-        <Button onClick={()=>broker.post({ name: 'buildassembler' })}>Build Assembler</Button>
-        <Button onClick={()=>broker.post({ name: 'buildgenerator' })}>Build Generator</Button>
+        <Button onClick={()=>broker.post({ sub: 'buildfactory' })}>Build Factory</Button>
+        <Button onClick={()=>broker.post({ sub: 'buildassembler' })}>Build Assembler</Button>
+        <Button onClick={()=>broker.post({ sub: 'buildgenerator' })}>Build Generator</Button>
         <MessageBox message={this.state.message} />
       </Box>
     )

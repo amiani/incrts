@@ -2,7 +2,7 @@ import uuidv4 from 'uuid/v4'
 
 export const hardware = {
   id: uuidv4(),
-  name: 'Hardware',
+  sub: 'Hardware',
   icon: 'hardware.png',
   buildRate: 1,
   cost: { fabric: 2 },
