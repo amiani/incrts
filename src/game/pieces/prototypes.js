@@ -1,5 +1,5 @@
 import uuidv4 from 'uuid/v4'
-import { ProtoDeviceMod } from '../components/prototypes'
+import { ProtoDeviceMod } from './mods/prototypes.js'
 
 export function ProtoFactory() {
   this.id = uuidv4()
