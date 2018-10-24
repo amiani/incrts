@@ -31,7 +31,7 @@ export default class Assembler extends React.Component {
     name: 'enqueue',
     body: {
       buildQId: this.props.assembler.buildQueueId,
-      item
+      item: { ...item }
     }
   })
 

@@ -140,7 +140,7 @@ const updateBuildQueues = () => {
         }
         buildQ.progress = 0
       }
-      buildQ.progress += buildQ.buildRate
+      //buildQ.progress += buildQ.buildRate
     })
 }
 
@@ -266,7 +266,7 @@ const enqueue = ({ buildQId, item }) => {
   if (item.input) {
     spend(item.input)
   }
-  buildQ.items.push(item)
+  buildQ.items.push({ ...item })
 }
 
 const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[id].loop }

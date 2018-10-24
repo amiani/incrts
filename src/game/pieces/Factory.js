@@ -10,6 +10,7 @@ import { ModPanelFront } from '../components/mods/ModPanel'
 import Switch from '../components/Switch'
 import { ProtoFactory } from './prototypes'
 import broker from '../broker'
+import { RecipeSider } from '../components/recipes'
 
 const Box = styled.div`
   display: flex;
@@ -17,6 +18,7 @@ const Box = styled.div`
 `
 
 export default class Factory extends React.Component {
+  state = { showSider: true }
   constructor(props) {
     super()
     this.id = props.factory.id
@@ -30,20 +32,12 @@ export default class Factory extends React.Component {
     body[this.id] && this.setState(body[this.id])
   }
 
-  addProgress = () => {
-    this.props.store.addProgress(
-      this.props.factory.buildQueueId, 
-      50*this.props.store.productivity
-    )
-      .catch(error => console.log(error))
-  }
-
-  enqueueTank = () => {
+  enqueue = item => {
     broker.post({
       name: 'enqueue',
       body: { 
         buildQId: this.props.factory.buildQueueId, 
-        item: new ProtoTank(this.id) 
+        item,
       }
     })
   }
@@ -74,6 +68,13 @@ export default class Factory extends React.Component {
             <Switch on={status} handleChange={this.handlePowerChange} />
           }
         />
+        {this.state.showSider ? (
+          <RecipeSider
+            height={ProtoFactory.height}
+            recipes={this.props.factory.recipes}
+            enqueue={this.enqueue}
+          />
+        ) : null}
         <ExpandingHangar
           id={hangarId}
           height={ProtoFactory.height}
