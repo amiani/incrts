@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { createGlobalStyle } from 'styled-components'
 
 import Main from './game/Main'
-import './App.css'
 
 const GlobalStyle = createGlobalStyle`
   html {
