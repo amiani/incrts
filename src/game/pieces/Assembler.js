@@ -27,19 +27,6 @@ export default class Assembler extends React.Component {
 
   state = { showSider: true }
 
-  addProgress = () => {
-    this.props.store.addProgress(
-      this.props.assembler.buildQueueId,
-      50*this.props.store.productivity
-    )
-      .catch(error => this.setState({ message: error }))
-  }
-
-  enqueueHardware = () => {
-    this.props.store.enqueue(this.props.assembler.buildQueueId, new hardwareData())
-      .catch(error => this.setState({ message: error }))
-  }
-
   enqueue = item => broker.post({
     name: 'enqueue',
     body: {
