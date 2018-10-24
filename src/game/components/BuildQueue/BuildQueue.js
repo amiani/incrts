@@ -10,11 +10,13 @@ const Box = styled.div`
   justify-content: space-between;
   height: 48px;
   margin-bottom: 5px;
+  /*
   border: 3px dashed ${p => p.loop ? 'blue' : 'transparent'};
 
   :hover {
     border: 3px dashed grey;
   }
+  */
 `
 
 const QueueBox = styled.div`
@@ -29,6 +31,7 @@ const QueueItem = styled.div`
   width: 30px;
   background-image: url(images/${p => p.icon});
   background-size: 100% 100%;
+  ${p => p.curr ? 'border: solid purple 2px' : null}
 `
 
 export default class BuildQueue extends React.Component {
@@ -55,7 +58,9 @@ export default class BuildQueue extends React.Component {
     return (
       <Box onDoubleClick={this.handleDoubleClick} loop={this.state.loop}>
         <QueueBox>
-          {this.state.items.map((q, i) => <QueueItem key={q.id+i} icon={q.icon} />)}
+          {this.state.items.map((q, i) => (
+            <QueueItem key={q.id+i} icon={q.icon} curr={this.state.currItem==i} />
+          ))}
         </QueueBox>
         <ProgressBar progress={this.state.progress} />
       </Box>

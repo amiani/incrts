@@ -8,6 +8,7 @@ export function ProtoBuildQueue(ownerId) {
   this.items = []
   this.loop = true
   this.buildRate = 1
+  this.currItem = 0
 }
 
 export function ProtoHangar(ownerId, isSource) {

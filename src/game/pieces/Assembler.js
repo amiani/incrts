@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 import Building from './Building'
 import BuildQueue from '../components/BuildQueue'
-import { hardwareData } from './resources'
 import { ModPanelFront, ModPanelBack } from '../components/mods/ModPanel'
 import { ProtoAssembler } from './prototypes'
 import { RecipeSider } from '../components/recipes'
@@ -31,7 +30,7 @@ export default class Assembler extends React.Component {
   enqueue = item => broker.post({
     name: 'enqueue',
     body: {
-      buildQId: this.props.assembler.buildQueueId,
+      buildQueueId: this.props.assembler.buildQueueId,
       item: { ...item }
     }
   })
@@ -53,11 +52,11 @@ export default class Assembler extends React.Component {
           height={ProtoAssembler.height}
           message={this.state.message}
           front={
-            <div>
+            <BoxFront>
               <BuildQueue id={this.props.assembler.buildQueueId} />
               <Button onClick={this.addMod}>Add Mod</Button>
               <ModPanelFront mods={this.props.assembler.mods} />
-            </div>
+            </BoxFront>
           }
           back={
             <BoxBack>

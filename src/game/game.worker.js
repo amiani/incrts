@@ -128,9 +128,9 @@ const buy = want => {
 
 const updateBuildQueues = () => {
   Lazy(data.buildQueues)
-    .each(buildQ => {
-      if (buildQ.progress >= 100) {
-        const item = buildQ.items.shift()
+    .each(bq => {
+      if (bq.progress >= 100) {
+        const item = bq.items[bq.currItem]
         if (item) {
           if (item.isUnit) {
             const hangarId = data.factories[item.ownerId].hangarId
@@ -140,10 +140,12 @@ const updateBuildQueues = () => {
           } else {
             Lazy(item.output).each((amt, name) => data.resources[name] += amt)
           }
+          bq.currItem++
+          bq.currItem >= bq.items.length && (bq.currItem = 0)
         }
-        buildQ.progress = 0
+        bq.progress = 0
       }
-      //buildQ.progress += buildQ.buildRate
+      //bq.progress += bq.buildRate
     })
 }
 
@@ -218,7 +220,7 @@ const addMod = ({ buildingId, type, mod }) => {
   postMessage({
     name: 'buildings',
     body: {
-      [type]: { [buildingId]: building }
+      [type]: data[type]
     }
   })
 }
@@ -226,17 +228,17 @@ const addMod = ({ buildingId, type, mod }) => {
 const buildFactory = () => {
   const factory = new ProtoFactory()
   const hangar = makeHangar(factory.id, true)
-  const buildQ = makeBuildQueue(factory.id)
+  const buildQueue = makeBuildQueue(factory.id)
   factory.hangarId = hangar.id
-  factory.buildQueueId = buildQ.id
+  factory.buildQueueId = buildQueue.id
   buildBuilding(factory)
   postMessage({ name: 'buildings', body: { factories: data.factories } })
 }
 
 const buildAssembler = () => {
   const assembler = new ProtoAssembler()
-  const buildQ = makeBuildQueue(assembler.id)
-  assembler.buildQueueId = buildQ.id
+  const buildQueue = makeBuildQueue(assembler.id)
+  assembler.buildQueueId = buildQueue.id
   buildBuilding(assembler)
   postMessage({ name: 'buildings', body: { assemblers: data.assemblers } })
 }
@@ -258,9 +260,9 @@ const makeHangar = (ownerId, isSource) => {
 }
 
 const makeBuildQueue = ownerId => {
-  const buildQ = new ProtoBuildQueue(ownerId)
-  data.buildQueues[buildQ.id] = buildQ
-  return buildQ
+  const buildQueue = new ProtoBuildQueue(ownerId)
+  data.buildQueues[buildQueue.id] = buildQueue
+  return buildQueue
 }
 
 const makeOrder = () => {
@@ -271,22 +273,22 @@ const makeOrder = () => {
   postMessage({ name: 'orders', body: { orders: data.orders, hangars: data.hangars } })
 }
 
-const enqueue = ({ buildQId, item }) => {
-  const buildQ = data.buildQueues[buildQId]
-  if (buildQ.items.length >= buildQ.maxLength) {
+const enqueue = ({ buildQueueId, item }) => {
+  const buildQueue = data.buildQueues[buildQueueId]
+  if (buildQueue.items.length >= buildQueue.maxLength) {
     //respond with error
     return
   }
-  if (item.input) {
-    spend(item.input)
+  if (item.cost) {
+    spend(item.cost)
   }
-  buildQ.items.push({ ...item })
+  buildQueue.items.push({ ...item })
 }
 
 const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[id].loop }
 
 const togglePower = ({ buildingId }) => {
-  const factory = data.factories[buldingId]
+  const factory = data.factories[buildingId]
   factory.status = factory.status
   postMessage({
     name: 'buildings',

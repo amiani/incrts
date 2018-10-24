@@ -31,7 +31,7 @@ export default class Base extends React.Component {
     super()
     broker.addListener(
       'buildings',
-      { id: 'Base', onmessage: a=>this.setState(a) }
+      { id: 'Base', onmessage: body => this.setState(body) }
     )
   }
 

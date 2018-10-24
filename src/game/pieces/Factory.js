@@ -5,7 +5,6 @@ import Building from './Building'
 import Button from '../components/Button'
 import BuildQueue from '../components/BuildQueue'
 import ExpandingHangar from '../components/Hangar/ExpandingHangar'
-import { ProtoTank } from './units'
 import { ModPanelFront } from '../components/mods/ModPanel'
 import Switch from '../components/Switch'
 import { ProtoFactory } from './prototypes'
@@ -36,7 +35,7 @@ export default class Factory extends React.Component {
     broker.post({
       name: 'enqueue',
       body: { 
-        buildQId: this.props.factory.buildQueueId, 
+        buildQueueId: this.props.factory.buildQueueId, 
         item,
       }
     })

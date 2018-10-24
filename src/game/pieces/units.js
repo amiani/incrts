@@ -15,5 +15,5 @@ export function ProtoTank(ownerId) {
   this.damage = 1
   this.speed = 1
   this.shields = 0
-  this.input = { hardware: 10, }
+  this.cost = { hardware: 10, }
 }
