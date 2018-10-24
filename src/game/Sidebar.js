@@ -54,6 +54,7 @@ export default class Sidebar extends React.Component {
           <ResourceInfo>Energy: {this.state.energy.toFixed(1)}</ResourceInfo>
           <ResourceInfo>Fabric: {this.state.fabric.toFixed(0)}</ResourceInfo>
           <ResourceInfo>Hardware: {this.state.hardware.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Devices: {this.state.devices}</ResourceInfo>
           <ResourceInfo>Drain: {this.state.drain}</ResourceInfo>
           <ResourceInfo>Productivity: {(this.state.productivity * 100).toFixed(0)}%</ResourceInfo>
         </div>

@@ -263,8 +263,8 @@ const enqueue = ({ buildQId, item }) => {
     //respond with error
     return
   }
-  if (item.cost) {
-    spend(item.cost)
+  if (item.input) {
+    spend(item.input)
   }
   buildQ.items.push(item)
 }

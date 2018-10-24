@@ -19,5 +19,5 @@ export const device = {
   name: 'Device',
   icon: 'device.png',
   input: { hardware: 1, fabric: 1 },
-  output: { device: 1 }
+  output: { devices: 1 }
 }
