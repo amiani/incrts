@@ -107,7 +107,7 @@ const updateResources = () => {
     : data.resources.energyIncome / data.resources.drain
 }
 
-const updateBuilding = ({ buildingId }) => {
+const updateBuilding = building => {
 }
 
 const buy = want => {
@@ -129,9 +129,10 @@ const buy = want => {
 const updateBuildQueues = () => {
   Lazy(data.buildQueues)
     .each(bq => {
-      if (bq.progress >= 100) {
-        const item = bq.items[bq.currItem]
-        if (item) {
+      const item = bq.items[bq.currItem]
+      if (item) {
+        bq.progress += bq.buildRate * item.buildRate
+        if (bq.progress >= 100) {
           if (item.isUnit) {
             const hangarId = data.factories[item.ownerId].hangarId
             const hangar = data.hangars[hangarId]
@@ -142,10 +143,9 @@ const updateBuildQueues = () => {
           }
           bq.currItem++
           bq.currItem >= bq.items.length && (bq.currItem = 0)
+          bq.progress = 0
         }
-        bq.progress = 0
       }
-      //bq.progress += bq.buildRate
     })
 }
 
@@ -216,7 +216,7 @@ const updateOrders = () => Lazy(data.orders)
 
 const addMod = ({ buildingId, type, mod }) => {
   const building = data[type][buildingId]
-  building.mods[mod.id] = mod
+  building.mods.push(mod)
   postMessage({
     name: 'buildings',
     body: {
@@ -289,7 +289,7 @@ const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[i
 
 const togglePower = ({ buildingId }) => {
   const factory = data.factories[buildingId]
-  factory.status = factory.status
+  factory.status = !factory.status
   postMessage({
     name: 'buildings',
     body: { [factory.id]: factory }

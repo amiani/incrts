@@ -1,4 +1,5 @@
 import uuidv4 from 'uuid/v4'
+import { hardware } from '../../components/recipes'
 
 export function ProtoDeviceMod() {
   this.id = uuidv4()
@@ -10,4 +11,5 @@ export function ProtoDeviceMod() {
   this.drain = 0
   this.status = true
   this.control = 'DeviceModControl'
+  this.recipes = []
 }

@@ -23,9 +23,9 @@ export default props => {
   const rows = props.height / 50
   return (
     <Box height={props.height} rows={rows}>
-      {props.recipes.map(r => (
+      {props.recipes.map((r, i) => (
         <Recipe
-          key={r.id}
+          key={r.id+i}
           icon={r.icon}
           onClick={()=>props.enqueue(r)}
         />

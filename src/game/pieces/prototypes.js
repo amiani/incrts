@@ -10,6 +10,7 @@ export function ProtoFactory() {
   this.cost = { credits: 50, fabric: 50 }
   this.drain = 1
   this.recipes = [new ProtoTank(this.id)]
+  this.mods = []
   this.status = true
 }
 ProtoFactory.height = 300
@@ -20,7 +21,7 @@ export function ProtoAssembler() {
   this.type = 'assemblers'
   this.name = 'assembler'
   this.cost = { credits: 50, fabric: 50 }
-  this.mods = { aaa: new ProtoDeviceMod() }
+  this.mods = []
   this.recipes = [hardware, device]
   this.drain = 1
 }

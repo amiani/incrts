@@ -9,6 +9,7 @@ import { RecipeSider } from '../components/recipes'
 import Button from '../components/Button'
 import { ProtoDeviceMod } from './mods/prototypes'
 import broker from '../broker'
+import { getRecipes } from './helpers'
 
 const Box = styled.div`
   display: flex;
@@ -67,7 +68,7 @@ export default class Assembler extends React.Component {
         {this.state.showSider ? (
           <RecipeSider
             height={ProtoAssembler.height}
-            recipes={this.props.assembler.recipes}
+            recipes={getRecipes(this.props.assembler)}
             enqueue={this.enqueue}
           />
         ): null}
