@@ -21,17 +21,15 @@ export const ModPanelFront = props => (
   </Box>
 )
 
-export class ModPanelBack extends React.Component {
-  render() {
-    let Control
-    return (
-      <Box>
-        {Lazy(this.props.mods).map(m => {
-          Control = controlMap[m]
-          return <Control key={m} id={m} />
-        })
-        .toArray()}
-      </Box>
-    )
-  }
+export const ModPanelBack = props => {
+  let Control
+  return (
+    <Box>
+      {Lazy(props.mods).map(m => {
+        Control = controlMap[m]
+        return <Control key={m} id={m} />
+      })
+      .toArray()}
+    </Box>
+  )
 }
