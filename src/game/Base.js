@@ -40,7 +40,8 @@ export default class Base extends React.Component {
   state = {
     factories: {},
     assemblers: {},
-    generators: {}
+    generators: {},
+    orders: {}
   }
 
   constructor() {

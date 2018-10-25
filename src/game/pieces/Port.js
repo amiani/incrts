@@ -45,9 +45,7 @@ export default class Port extends React.Component {
     })
   }
 
-  handleChange = event => this.setState({
-    selected: this.props.orders[event.target.value]
-  })
+  handleChange = event => this.setState({ selected: event.target.value })
 
   render() {
     return (

@@ -71,23 +71,19 @@ export default class Order extends React.Component {
   constructor(props) {
     super()
     this.id = props.id
-    broker.addListener(
-      'dispatch',
-      { id: this.id, onmessage: this.onmessage }
-    )
   }
 
   onmessage = body => body[this.id] && this.setState(body[this.id])
 
   render() {
-    const timeLeft = new Date(this.state.deadline - Date.now())
-    if (this.state.want) {
+    const timeLeft = new Date(this.props.deadline - Date.now())
+    if (this.props.want) {
       return (
         <Box>
-          {Lazy(this.state.want)
+          {Lazy(this.props.want)
             .map((amt, unitType, i) => (
               <OrderItem key={unitType+i}>
-                {unitType}: {this.state.units[unitType] ? this.state.units[unitType].length : 0} / {amt}
+                {unitType}: {this.props.units[unitType] ? this.props.units[unitType].length : 0} / {amt}
               </OrderItem>
             ))
             .toArray()
