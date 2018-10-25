@@ -96,12 +96,10 @@ setInterval(update, TICKRATE);
 
 const updateResources = () => {
   data.resources.energyIncome = Lazy(data.generators)
-    .pluck('computed')
     .pluck('output')
     .sum()
   data.resources.drain = Lazy(data.factories)
     .merge(data.assemblers)
-    .pluck('computed')
     .pluck('drain')
     .sum()
   let nextEnergy = data.resources.energy + data.resources.energyIncome - data.resources.drain
@@ -112,7 +110,16 @@ const updateResources = () => {
 }
 
 const updateBuilding = building => {
-  building.computed
+  building.drain = building.baseDrain + building.mods.reduce((acc, m) => (
+    acc + (m.drain ? m.drain : 0)
+  ), 0)
+  building.recipes = building.baseRecipes.concat(
+    building.mods.reduce((acc, id) => acc.concat(data.mods[id].recipes), [])
+  )
+  postMessage({
+    sub: 'building',
+    body: building
+  })
 }
 
 const buy = want => {
@@ -225,9 +232,6 @@ const addMod = ({ buildingId, type, mod }) => {
   data.mods[mod.id] = mod
   const building = data[type][buildingId]
   building.mods.push(mod.id)
-  building.recipes = building.baseRecipes.concat(
-    building.mods.reduce((acc, id) => acc.concat(data.mods[id].recipes), [])
-  )
   postMessage({
     sub: 'controlMap',
     body: {
@@ -235,12 +239,7 @@ const addMod = ({ buildingId, type, mod }) => {
       controlName: mod.controlName
     }
   })
-  postMessage({
-    sub: 'buildings',
-    body: {
-      [type]: data[type]
-    }
-  })
+  updateBuilding(building)
   postMessage({
     sub: mod.id,
     body: mod

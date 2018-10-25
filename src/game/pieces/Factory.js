@@ -17,20 +17,12 @@ const Box = styled.div`
 `
 
 export default class Factory extends React.Component {
-  state = { showSider: true }
+  state = { showSider: false }
   constructor(props) {
     super()
     this.id = props.factory.id
-    broker.addListener(
-      'buildings',
-      { id: this.id, onmessage: this.onmessage }
-    )
   }
   
-  onmessage = body => {
-    body[this.id] && this.setState(body[this.id])
-  }
-
   enqueue = item => {
     broker.post({
       sub: 'enqueue',
@@ -48,6 +40,8 @@ export default class Factory extends React.Component {
     })
   }
 
+  toggleSider = () => this.setState({ showSider: !this.state.showSider })
+
   render() {
     const { buildQueueId, hangarId, status, mods } = this.props.factory
     return (
@@ -55,6 +49,7 @@ export default class Factory extends React.Component {
         <Building
           width={ProtoFactory.width}
           height={ProtoFactory.height}
+          showSider={this.toggleSider}
           front={
             <div>
               <BuildQueue id={buildQueueId} />
