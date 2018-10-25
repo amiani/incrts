@@ -222,8 +222,13 @@ const updateOrders = () => Lazy(data.orders)
   })
 
 const addMod = ({ buildingId, type, mod }) => {
-  data[type][buildingId].mods.push(mod.id)
   data.mods[mod.id] = mod
+  const building = data[type][buildingId]
+  building.mods.push(mod.id)
+  building.recipes = building.baseRecipes.concat(
+    building.mods.reduce((acc, id) => acc.concat(data.mods[id].recipes), [])
+  )
+  console.log(building.recipes)
   postMessage({
     sub: 'controlMap',
     body: {

@@ -71,7 +71,7 @@ export default class Assembler extends React.Component {
         {this.state.showSider ? (
           <RecipeSider
             height={ProtoAssembler.height}
-            recipes={getRecipes(this.props.assembler)}
+            recipes={this.props.assembler.recipes}
             enqueue={this.enqueue}
           />
         ): null}
