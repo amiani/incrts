@@ -1,8 +1,9 @@
 import uuidv4 from 'uuid/v4'
 import { hardware } from '../../components/recipes'
 
-export function ProtoDeviceMod() {
+export function ProtoDeviceMod(ownerId) {
   this.id = uuidv4()
+  this.ownerId = ownerId
   this.type = 'mods'
   this.name = 'Device Mod'
   this.icon = 'devicemod.png'
@@ -10,6 +11,6 @@ export function ProtoDeviceMod() {
   this.cost = { fabric: 50 }
   this.drain = 0
   this.status = true
-  this.control = 'DeviceModControl'
+  this.controlName = 'DeviceModControl'
   this.recipes = []
 }

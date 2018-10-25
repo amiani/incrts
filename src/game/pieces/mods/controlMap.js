@@ -17,6 +17,4 @@ broker.addListener(
   }
 )
 
-export default {
-  DeviceModControl,
-}
+export default controlMap

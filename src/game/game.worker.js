@@ -222,9 +222,15 @@ const updateOrders = () => Lazy(data.orders)
   })
 
 const addMod = ({ buildingId, type, mod }) => {
-  const building = data[type][buildingId]
+  data[type][buildingId].mods.push(mod.id)
   data.mods[mod.id] = mod
-  building.mods.push(mod)
+  postMessage({
+    sub: 'controlMap',
+    body: {
+      id: mod.id,
+      controlName: mod.controlName
+    }
+  })
   postMessage({
     sub: 'buildings',
     body: {
@@ -232,10 +238,8 @@ const addMod = ({ buildingId, type, mod }) => {
     }
   })
   postMessage({
-    sub: 'mods',
-    body: {
-      mods: data.mods
-    }
+    sub: mod.id,
+    body: mod
   })
 }
 

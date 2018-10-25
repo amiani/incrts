@@ -41,7 +41,7 @@ export default class Assembler extends React.Component {
     body: {
       buildingId: this.id,
       type: 'assemblers',
-      mod: new ProtoDeviceMod()
+      mod: new ProtoDeviceMod(this.id)
     }
   })
 

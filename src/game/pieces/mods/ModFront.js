@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import broker from '../../broker'
+
 const Box = styled.div`
   display: flex;
   height: 50px;
@@ -20,10 +22,22 @@ const ModIcon = styled.div`
 `
 
 export default class ModFront extends React.Component {
+  state = {}
+  constructor(props) {
+    super()
+    this.id = props.id
+    broker.addListener(
+      this.id,
+      { id: this.id, onmessage: this.onmessage }
+    )
+  }
+
+  onmessage = body => this.setState(body)
+
   render() {
     return (
       <Box>
-        <ModIcon icon={this.props.mod.icon} />
+        <ModIcon icon={this.state.icon} />
       </Box>
     )
   }
