@@ -9,7 +9,6 @@ import { RecipeSider } from '../components/recipes'
 import Button from '../components/Button'
 import { ProtoDeviceMod } from './mods/prototypes'
 import broker from '../broker'
-import { getRecipes } from './helpers'
 
 const Box = styled.div`
   display: flex;

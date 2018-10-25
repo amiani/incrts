@@ -1,11 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import Lazy from 'lazy.js'
-import uuidv4 from 'uuid/v4'
 
 import ModFront from './ModFront'
 import controlMap from './controlMap'
-import broker from '../../broker'
 
 const Box = styled.div`
   display: flex;

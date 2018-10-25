@@ -228,7 +228,6 @@ const addMod = ({ buildingId, type, mod }) => {
   building.recipes = building.baseRecipes.concat(
     building.mods.reduce((acc, id) => acc.concat(data.mods[id].recipes), [])
   )
-  console.log(building.recipes)
   postMessage({
     sub: 'controlMap',
     body: {
