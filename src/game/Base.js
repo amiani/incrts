@@ -8,16 +8,28 @@ import { ProtoAssembler, ProtoFactory, ProtoGenerator } from './pieces/prototype
 import Factory from './pieces/Factory'
 import Assembler from './pieces/Assembler'
 import Generator from './pieces/Generator'
+import { Order } from './objectives'
 
 const Box = styled.div`
-  display: flex;
+  display: grid;
+  grid:
+    "factories ports" 1fr
+    "assemblers ports" 1fr
+    "generators ports" 1fr
+    / 4fr 1fr;
   flex-direction: column;
+  height: 100vh;
 `
 
 const BuildingRow = styled.div`
   display: flex;
-  height: ${p => p.height}px;
-  margin-bottom: 10px;
+  /*height: ${p => p.height}px;*/
+  grid-area: ${p=>p.area};
+`
+const PortColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  grid-area: ports;
 `
 
 export default class Base extends React.Component {
@@ -45,12 +57,16 @@ export default class Base extends React.Component {
         }))
       }
     )
+    broker.addListener(
+      'orders',
+      { id: 'Base', onmessage: body => this.setState(body) }
+    )
   }
 
   render() {
     return (
       <Box>
-        <BuildingRow height={ProtoFactory.height+12}>
+        <BuildingRow height={ProtoFactory.height+12} area='factories'>
           {Lazy(this.state.factories).map(b => (
             <Factory
               key={b.id}
@@ -58,7 +74,7 @@ export default class Base extends React.Component {
             />
           )).toArray()}
         </BuildingRow>
-        <BuildingRow height={ProtoAssembler.height+12}>
+        <BuildingRow height={ProtoAssembler.height+12} area='assemblers'>
           {Lazy(this.state.assemblers).map(b => (
             <Assembler
               key={b.id}
@@ -66,7 +82,7 @@ export default class Base extends React.Component {
             />
           )).toArray()}
         </BuildingRow>
-        <BuildingRow height={ProtoGenerator.height+12}>
+        <BuildingRow height={ProtoGenerator.height+12} area='generators'>
           {Lazy(this.state.generators).map(b => (
             <Generator
               key={b.id}
@@ -74,6 +90,12 @@ export default class Base extends React.Component {
             />
           )).toArray()}
         </BuildingRow>
+        <PortColumn>
+          {Lazy(this.state.orders).map(o => (
+            <Order key={o.id} {...o} />
+          ))
+          .toArray()}
+        </PortColumn>
       </Box>
     )
   }

@@ -316,8 +316,8 @@ const togglePower = ({ buildingId }) => {
   const factory = data.factories[buildingId]
   factory.status = !factory.status
   postMessage({
-    sub: 'buildings',
-    body: { [factory.id]: factory }
+    sub: 'building',
+    body: factory
   })
 }
 
