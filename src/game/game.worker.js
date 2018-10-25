@@ -2,7 +2,12 @@ import Lazy from 'lazy.js'
 import uuidv4 from 'uuid/v4'
 
 import { TICKRATE } from './constants'
-import { ProtoFactory, ProtoAssembler, ProtoGenerator } from './pieces/prototypes'
+import {
+  ProtoFactory,
+  ProtoAssembler,
+  ProtoGenerator,
+  ProtoPort
+} from './pieces/prototypes'
 import { ProtoBuildQueue, ProtoHangar, ProtoDeviceMod } from  './components/prototypes'
 import { ProtoOrder } from './objectives/prototypes'
 
@@ -33,6 +38,7 @@ const data = {
   hangars: {},
   unitQueues: { tanks: [], },
 
+  ports: {},
   orders: {},
 }
 
@@ -76,6 +82,9 @@ onmessage = e => {
       break
     case 'dispatch':
       dispatch(e.data.body)
+      break
+    case 'buildport':
+      buildPort()
       break
     case 'makeorder':
       makeOrder(e.data.body)
@@ -257,7 +266,6 @@ const buildFactory = () => {
   factory.hangarId = hangar.id
   factory.buildQueueId = buildQueue.id
   buildBuilding(factory)
-  postMessage({ sub: 'buildings', body: { factories: data.factories } })
 }
 
 const buildAssembler = () => {
@@ -265,17 +273,23 @@ const buildAssembler = () => {
   const buildQueue = makeBuildQueue(assembler.id)
   assembler.buildQueueId = buildQueue.id
   buildBuilding(assembler)
-  postMessage({ sub: 'buildings', body: { assemblers: data.assemblers } })
 }
 
 const buildGenerator = () => {
   buildBuilding(new ProtoGenerator())
-  postMessage({ sub: 'buildings', body: { generators: data.generators } })
+}
+
+const buildPort = () => {
+  const port = new ProtoPort()
+  const hangar = makeHangar(port.id, false)
+  port.hangarId = hangar.id
+  buildBuilding(port)
 }
 
 const buildBuilding = building => {
   spend(building.cost)
   data[building.type][building.id] = building
+  postMessage({ sub: 'buildings', body: { [building.type]: data[building.type] } })
 }
 
 const makeHangar = (ownerId, isSource) => {

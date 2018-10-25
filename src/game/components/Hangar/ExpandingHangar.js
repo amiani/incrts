@@ -77,6 +77,7 @@ export default class ExpandingHangar extends React.Component {
             <DemandControl
               demand={this.state.demand}
               setDemand={this.setDemand}
+              height={this.props.height}
             />
           ) : null}
         </Box>

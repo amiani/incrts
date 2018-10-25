@@ -1,17 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import Lazy from 'lazy.js'
 
 import Sidebar from './Sidebar'
 import Base from './Base'
-import Port from './Port'
-import Order from './objectives/Order'
 import broker from './broker'
 
 const Box = styled.div`
   display: flex;
+  width: 100vw;
 `
-
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -20,6 +17,7 @@ export default class Main extends React.Component {
   }
 
   initialize = () => {
+    broker.post({ sub: 'buildport' })
     broker.post({ sub: 'makeorder' })
     broker.post({ sub: 'buildfactory' })
     broker.post({ sub: 'buildassembler' })

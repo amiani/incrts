@@ -1,18 +1,18 @@
-import React from 'react';
-import styled from 'styled-components';
-import Lazy from 'lazy.js';
+import React from 'react'
+import styled from 'styled-components'
+import Lazy from 'lazy.js'
 
-import NumberControl from './NumberControl';
+import NumberControl from './NumberControl'
 
 const Box = styled.div`
-  height: 200px;
+  height: ${p=>p.height}px;
   display: flex;
   flex-direction: column;
   border: solid 1px black;
-`;
+`
 
 export default props => (
-  <Box>
+  <Box height={props.height}>
     {Lazy(props.demand)
       .map((amt, unitType, i) => (
         <NumberControl
@@ -25,4 +25,4 @@ export default props => (
       .toArray()
     }
   </Box>
-);
+)

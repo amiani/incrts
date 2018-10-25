@@ -9,6 +9,7 @@ import Factory from './pieces/Factory'
 import Assembler from './pieces/Assembler'
 import Generator from './pieces/Generator'
 import { Order } from './objectives'
+import Port from './pieces/Port'
 
 const Box = styled.div`
   display: grid;
@@ -25,6 +26,7 @@ const BuildingRow = styled.div`
   display: flex;
   /*height: ${p => p.height}px;*/
   grid-area: ${p=>p.area};
+  align-self: center;
 `
 const PortColumn = styled.div`
   display: flex;
@@ -91,8 +93,8 @@ export default class Base extends React.Component {
           )).toArray()}
         </BuildingRow>
         <PortColumn>
-          {Lazy(this.state.orders).map(o => (
-            <Order key={o.id} {...o} />
+          {Lazy(this.state.orders).map(p => (
+            <Port key={p.id} {...p} />
           ))
           .toArray()}
         </PortColumn>

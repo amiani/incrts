@@ -42,3 +42,13 @@ export function ProtoGenerator() {
 }
 ProtoGenerator.width = 200
 ProtoGenerator.height = 200
+
+export function ProtoPort() {
+  this.id = uuidv4()
+  this.type = 'ports'
+  this.name = 'port'
+  this.cost = { credits: 100, fabric: 50 }
+  this.destination = null
+}
+ProtoPort.width = 200
+ProtoPort.height = 150
