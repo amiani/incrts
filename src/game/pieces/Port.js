@@ -29,32 +29,24 @@ const OrderSelect = styled.select`
 `
 
 export default class Port extends React.Component {
-  state = {
-    orders: {},
-    selected: ''
-  }
+  state = { selected: '' }
   constructor(props) {
     super()
     this.id = props.id
-    broker.addListener(
-      'orders',
-      { id: this.id, onmessage: this.onmessage }
-    )
   }
-
-  onmessage = body => this.setState({ orders: body })
 
   dispatch = () => {
     !!this.state.selected && broker.post({
       sub: 'dispatch',
       body: {
-        hangarId: this.props.hangarId
+        hangarId: this.props.hangarId,
+        orderId: this.state.selected
       }
     })
   }
 
   handleChange = event => this.setState({
-    selected: this.state.orders[event.target.value]
+    selected: this.props.orders[event.target.value]
   })
 
   render() {
@@ -66,10 +58,10 @@ export default class Port extends React.Component {
           withControl={true}
         />
         <Dispatch onClick={this.dispatch}>Dispatch</Dispatch>
-        {!!this.state.selected && <Order {...this.state.orders[this.state.selected]} />}
+        {!!this.state.selected && <Order {...this.props.orders[this.state.selected]} />}
         <OrderSelect value={this.state.selected} onChange={this.handleChange}>
-          <option disabled selected value=''>select an order</option>
-          {Lazy(this.state.orders)
+          <option disabled value=''>select an order</option>
+          {Lazy(this.props.orders)
             .map(o => <option key={o.id} value={o.id}>{o.id.slice(0,8)}</option>)
             .toArray()
           }

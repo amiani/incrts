@@ -54,16 +54,13 @@ export default class Base extends React.Component {
       {
         id: 'Base',
         onmessage: b => this.setState((prev, _) => ({
-          [b.type]: {
-            ...prev[b.type],
-            [b.id]: b
-          }
+          [b.type]: { ...prev[b.type], [b.id]: b }
         }))
       }
     )
     broker.addListener(
       'orders',
-      { id: 'Base', onmessage: body => this.setState(body) }
+      { id: 'Base', onmessage: orders => this.setState({ orders }) }
     )
   }
 
@@ -96,7 +93,7 @@ export default class Base extends React.Component {
         </BuildingRow>
         <PortColumn>
           {Lazy(this.state.ports).map(p => (
-            <Port key={p.id} {...p} />
+            <Port key={p.id} {...p} orders={this.state.orders} />
           ))
           .toArray()}
         </PortColumn>

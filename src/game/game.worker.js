@@ -46,7 +46,7 @@ const update = () => {
   updateResources()
   updateBuildQueues()
   updateHangars()
-  updateOrders()
+  //updateOrders()
   postMessage({
     sub: 'update',
     body: {
@@ -172,12 +172,17 @@ const updateBuildQueues = () => {
     })
 }
 
-const dispatch = ({ hangarId }) => {
+const dispatch = ({ hangarId, orderId }) => {
   const hangar = data.hangars[hangarId]
-  data.orders[hangar.ownerId] = Lazy(data.orders[hangar.ownerId].units)
+  const order = data.orders[orderId]
+  order.units = Lazy(order.units)
     .merge(hangar.units)
     .toObject()
   hangar.units = { tanks: [] }
+  postMessage({
+    sub: 'order',
+    body: order
+  })
 }
 
 const setDemand = ({ hangarId, unitType, amt }) => {

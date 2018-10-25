@@ -64,6 +64,7 @@ export default class Sidebar extends React.Component {
         <Button onClick={()=>broker.post({ sub: 'buildfactory' })}>Build Factory</Button>
         <Button onClick={()=>broker.post({ sub: 'buildassembler' })}>Build Assembler</Button>
         <Button onClick={()=>broker.post({ sub: 'buildgenerator' })}>Build Generator</Button>
+        <Button onClick={()=>broker.post({ sub: 'buildport' })}>Build Port</Button>
         <MessageBox message={this.state.message} />
       </Box>
     )
