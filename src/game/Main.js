@@ -17,11 +17,11 @@ export default class Main extends React.Component {
   }
 
   initialize = () => {
-    broker.post({ sub: 'buildport' })
-    broker.post({ sub: 'makeorder' })
     broker.post({ sub: 'buildfactory' })
     broker.post({ sub: 'buildassembler' })
+    broker.post({ sub: 'buildport' })
     broker.post({ sub: 'buildgenerator' })
+    broker.post({ sub: 'makeorder' })
   }
 
 

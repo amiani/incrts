@@ -8,6 +8,8 @@ import MessageBox from './components/MessageBox'
 const Box = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 5px;
+  flex-shrink: 0;
 `
 
 const ResourceInfo = styled.p`

@@ -309,7 +309,7 @@ const makeOrder = () => {
   const hangar = makeHangar(order.id)
   order.hangarId = hangar.id
   data.orders[order.id] = order
-  postMessage({ sub: 'orders', body: { orders: data.orders, hangars: data.hangars } })
+  postMessage({ sub: 'orders', body: data.orders })
 }
 
 const enqueue = ({ buildQueueId, item }) => {

@@ -9,7 +9,7 @@ import broker from '../../broker'
 const EDGELENGTH = 5
 
 const Box = styled.div`
-  height: ${p => p.height}px;
+  height: 100%;
   width: ${p => p.width}px;
   padding: 5px;
   display: flex;
@@ -25,7 +25,6 @@ const Dot = styled.div`
 const DotGrid = styled.div`
   display: grid;
   grid-template-columns: ${p => ` ${EDGELENGTH+2}px`.repeat(p.numCols)};
-  width: 100%;
 `
 
 export default class ExpandingHangar extends React.Component {
@@ -61,10 +60,16 @@ export default class ExpandingHangar extends React.Component {
   render() {
     const numCols = Math.floor(this.props.width / (EDGELENGTH + 2))
     if (this.state.expanded) {
-      return <p>Expanded!</p>;
+      return <p>Expanded!</p>
     } else {
       return (
-        <Box height={this.props.height} width={this.props.width}>
+        <Box width={this.props.width}>
+          {this.props.withControl ? (
+            <DemandControl
+              demand={this.state.demand}
+              setDemand={this.setDemand}
+            />
+          ) : null}
           <DotGrid numCols={numCols}>
             {Lazy(this.state.units)
               .values()
@@ -73,13 +78,6 @@ export default class ExpandingHangar extends React.Component {
               .toArray()
             }
           </DotGrid>
-          {this.props.withControl ? (
-            <DemandControl
-              demand={this.state.demand}
-              setDemand={this.setDemand}
-              height={this.props.height}
-            />
-          ) : null}
         </Box>
       )
     }

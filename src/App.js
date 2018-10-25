@@ -6,6 +6,7 @@ import Main from './game/Main'
 const GlobalStyle = createGlobalStyle`
   html {
     box-sizing: border-box;
+    margin: 0;
   }
 
   *, *:before, *:after {
@@ -14,6 +15,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     user-select: none;
+    margin: 0;
   }
 `
 

@@ -57,6 +57,7 @@ class OrderOld {
 
 const Box = styled.div`
   display: flex;
+  border: dashed black 1px;
 `
 
 const Timer = styled.div`

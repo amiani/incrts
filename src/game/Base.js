@@ -18,8 +18,8 @@ const Box = styled.div`
     "assemblers ports" 1fr
     "generators ports" 1fr
     / 4fr 1fr;
-  flex-direction: column;
   height: 100vh;
+  padding: 5px;
 `
 
 const BuildingRow = styled.div`
@@ -27,11 +27,13 @@ const BuildingRow = styled.div`
   /*height: ${p => p.height}px;*/
   grid-area: ${p=>p.area};
   align-self: center;
+  overflow: auto;
 `
 const PortColumn = styled.div`
   display: flex;
   flex-direction: column;
   grid-area: ports;
+  overflow: auto;
 `
 
 export default class Base extends React.Component {
@@ -93,7 +95,7 @@ export default class Base extends React.Component {
           )).toArray()}
         </BuildingRow>
         <PortColumn>
-          {Lazy(this.state.orders).map(p => (
+          {Lazy(this.state.ports).map(p => (
             <Port key={p.id} {...p} />
           ))
           .toArray()}

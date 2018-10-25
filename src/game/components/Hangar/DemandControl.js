@@ -5,14 +5,15 @@ import Lazy from 'lazy.js'
 import NumberControl from './NumberControl'
 
 const Box = styled.div`
-  height: ${p=>p.height}px;
   display: flex;
   flex-direction: column;
-  border: solid 1px black;
+  height: 100%;
+  width: 50%;
+  border: dashed 1px black;
 `
 
 export default props => (
-  <Box height={props.height}>
+  <Box>
     {Lazy(props.demand)
       .map((amt, unitType, i) => (
         <NumberControl

@@ -8,10 +8,9 @@ const Box = styled.div`
   border: solid 2px #4B2C97;
   border-radius: 3px;
   margin: 1px;
-  padding: 1px 3px 0px 3px;
+  padding: 1px 3px 1px 3px;
   font-size: 12px;
   text-align: center;
-  min-width: 28px;
   background-color: #EBE4FE;
 
   :hover {
@@ -21,7 +20,7 @@ const Box = styled.div`
 `
 
 export default props => (
-  <Box onClick={props.onClick}>
+  <Box onClick={props.onClick} className={props.className}>
     {props.children}
   </Box>
 )

@@ -11,11 +11,17 @@ const Box = styled.div`
   font-size: 13px;
 `
 
+const IncButton = styled(Button)`
+  font-size: 10px;
+  height: 15px;
+  min-width: 25px;
+`
+
 export default props => (
   <Box>
     {props.label}
-    <Button onClick={()=>props.set(props.amt-1)}>-1</Button>
+    <IncButton onClick={()=>props.set(props.amt-1)}>-1</IncButton>
     {props.amt}
-    <Button onClick={()=>props.set(props.amt+1)}>+1</Button>
+    <IncButton onClick={()=>props.set(props.amt+1)}>+1</IncButton>
   </Box>
 )

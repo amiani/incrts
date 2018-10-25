@@ -50,5 +50,5 @@ export function ProtoPort() {
   this.cost = { credits: 100, fabric: 50 }
   this.destination = null
 }
-ProtoPort.width = 200
+ProtoPort.width = 350
 ProtoPort.height = 150
