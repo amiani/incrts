@@ -1,107 +1,58 @@
 import React from 'react'
 import styled from 'styled-components'
-import uuidv4 from 'uuid/v4'
 import Lazy from 'lazy.js'
 
-import broker from '../broker'
+const TimerBox = styled.div`
+  font-size: 10px;
+`
 
-class OrderOld {
-  constructor() {
-    this.setDeadline(20000)
+class Timer extends React.Component {
+  componentDidMount() {
+    this.handle = setInterval(()=>this.forceUpdate(), 1000)
   }
 
-  id = uuidv4()
-  units = {}
-  deadline = null
-  order = { tanks: 5 }
-
-  getProps = () => ({
-    deadline: this.deadline,
-    order: this.order,
-    units: this.units,
-  })
-
-  dispatch = shipment => {
-    this.units = Lazy(this.units)
-      .merge(shipment)
-      .toObject()
+  componentWillUnmount() {
+    clearInterval(this.handle)
   }
 
-  update = () => {
-    if (this.order) {
-      const totalUnitsLeft = Lazy(this.order)
-        .reduce((acc, curr, currType) => {
-          let unitsLeft = curr - (this.units[currType] ? this.units[currType].length : 0)
-          unitsLeft = unitsLeft >= 0 ? unitsLeft : 0
-          return acc + unitsLeft
-        }, 0)
-      if (totalUnitsLeft <= 0) {
-        //broker.post({ sub: 'addcredits', body: 100 })
-        this.order = null
-        this.deadline = null
-      }
-    }
-  }
-
-  setDeadline = milliseconds => {
-    this.deadline = new Date(Date.now() + milliseconds)
-    setTimeout(this.checkDeadline, milliseconds)
-  }
-
-  checkDeadline = () => {
-    if (this.deadline && Date.now() >= this.deadline) {
-      this.order = null
-    }
+  render() {
+    const timeLeft = new Date(this.props.deadline - Date.now())
+    return <TimerBox>
+      Time Left: {timeLeft.getMinutes()}: {timeLeft.getSeconds()}
+    </TimerBox>
+      
   }
 }
-
-const Box = styled.div`
-  display: flex;
-  border: dashed black 1px;
-`
-
-const Timer = styled.div`
-`
 
 const OrderItem = styled.div`
 `
 
-export default class Order extends React.Component {
-  state = { units: {}, deadline: null, want: null }
-  constructor(props) {
-    super()
-    this.id = props.id
-  }
+const Box = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: dashed black 1px;
+`
 
-  onmessage = body => body[this.id] && this.setState(body[this.id])
-
-  render() {
-    const timeLeft = new Date(this.props.deadline - Date.now())
-    if (this.props.want) {
-      return (
-        <Box>
-          {Lazy(this.props.want)
-            .map((amt, unitType, i) => (
-              <OrderItem key={unitType+i}>
-                {unitType}: {this.props.units[unitType] ? this.props.units[unitType].length : 0} / {amt}
-              </OrderItem>
-            ))
-            .toArray()
-          }
-          <Timer>
-            Time Left:  
-            {timeLeft.getMinutes()}
-            :
-            {timeLeft.getSeconds()}
-          </Timer>
-        </Box>
-      )
-    } else {
-      return (
-        <Box>
-          Deadline passed!
-        </Box>
-      )
-    }
+export default props => {
+  if (props.want) {
+    return (
+      <Box>
+        <Timer deadline={props.deadline} />
+        {Lazy(props.want)
+          .map((amt, unitType, i) => (
+            <OrderItem key={unitType+i}>
+              {unitType}: {props.units[unitType] ? props.units[unitType].length : 0} / {amt}
+            </OrderItem>
+          ))
+          .toArray()
+        }
+      </Box>
+    )
+  } else {
+    return (
+      <Box>
+        Deadline passed!
+      </Box>
+    )
   }
 }

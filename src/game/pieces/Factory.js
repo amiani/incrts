@@ -17,7 +17,7 @@ const Box = styled.div`
 `
 
 export default class Factory extends React.Component {
-  state = { showSider: false }
+  state = { showSider: true }
   constructor(props) {
     super()
     this.id = props.factory.id

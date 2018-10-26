@@ -25,6 +25,7 @@ const Dot = styled.div`
 const DotGrid = styled.div`
   display: grid;
   grid-template-columns: ${p => ` ${EDGELENGTH+2}px`.repeat(p.numCols)};
+  grid-auto-rows: ${EDGELENGTH+2}px;
 `
 
 export default class ExpandingHangar extends React.Component {

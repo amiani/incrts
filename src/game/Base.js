@@ -8,7 +8,6 @@ import { ProtoAssembler, ProtoFactory, ProtoGenerator } from './pieces/prototype
 import Factory from './pieces/Factory'
 import Assembler from './pieces/Assembler'
 import Generator from './pieces/Generator'
-import { Order } from './objectives'
 import Port from './pieces/Port'
 
 const Box = styled.div`
@@ -62,6 +61,15 @@ export default class Base extends React.Component {
     broker.addListener(
       'orders',
       { id: 'Base', onmessage: orders => this.setState({ orders }) }
+    )
+    broker.addListener(
+      'order',
+      {
+        id: 'Base',
+        onmessage: order => this.setState((prev, _) => ({
+          orders: { ...prev.orders, [order.id]: order }
+        }))
+      }
     )
   }
 

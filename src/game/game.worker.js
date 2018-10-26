@@ -152,7 +152,7 @@ const updateBuildQueues = () => {
     .each(bq => {
       const item = bq.items[bq.currItem]
       if (item) {
-        bq.progress += bq.buildRate * item.buildRate
+        bq.progress += bq.buildRate * item.buildRate + 2
         if (bq.progress >= 100) {
           if (item.isUnit) {
             const unit = { ...item }
@@ -175,10 +175,15 @@ const updateBuildQueues = () => {
 const dispatch = ({ hangarId, orderId }) => {
   const hangar = data.hangars[hangarId]
   const order = data.orders[orderId]
-  order.units = Lazy(order.units)
-    .merge(hangar.units)
-    .toObject()
-  hangar.units = { tanks: [] }
+  Lazy(order.want)
+    .each((numWanted, unitType) => {
+      !order.units[unitType] && (order.units[unitType] = [])
+      const orderUnits = order.units[unitType]
+      const hangarUnits = hangar.units[unitType] || []
+      const numNeeded = numWanted - (orderUnits ? orderUnits.length : 0)
+      const numTaking = numNeeded > hangarUnits ? hangarUnits : numNeeded
+      order.units[unitType] = orderUnits.concat(hangarUnits.splice(0, numTaking))
+    })
   postMessage({
     sub: 'order',
     body: order

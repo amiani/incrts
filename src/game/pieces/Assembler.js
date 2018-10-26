@@ -21,7 +21,7 @@ const BoxBack = styled.div`
 `
 
 export default class Assembler extends React.Component {
-  state = { showSider: false }
+  state = { showSider: true }
   constructor(props) {
     super()
     this.id = props.assembler.id
