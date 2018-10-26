@@ -42,11 +42,11 @@ const data = {
   orders: {},
 }
 
+let tick = 0
 const update = () => {
   updateResources()
   updateBuildQueues()
   updateHangars()
-  //updateOrders()
   postMessage({
     sub: 'update',
     body: {
@@ -55,6 +55,8 @@ const update = () => {
       hangars: data.hangars,
     }
   })
+  tick % 10 == 0 && updateOrders()
+  tick++
 }
 
 onmessage = e => {
@@ -101,7 +103,7 @@ onmessage = e => {
   }
 }
 
-setInterval(update, TICKRATE);
+setInterval(update, TICKRATE)
 
 const updateResources = () => {
   data.resources.energyIncome = Lazy(data.generators)
@@ -152,7 +154,7 @@ const updateBuildQueues = () => {
     .each(bq => {
       const item = bq.items[bq.currItem]
       if (item) {
-        bq.progress += bq.buildRate * item.buildRate + 2
+        bq.progress += bq.buildRate * item.buildRate + 10
         if (bq.progress >= 100) {
           if (item.isUnit) {
             const unit = { ...item }
@@ -243,6 +245,14 @@ const updateOrders = () => Lazy(data.orders)
         data.credits += 100
         o.order = null
         o.deadline = null
+        postMessage({
+          name: 'order',
+          body: order
+        })
+        setTimeout(postMessage({
+          name: 'orders',
+          body: data.orders
+        }), 5000)
       }
     }
   })

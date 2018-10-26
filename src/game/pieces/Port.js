@@ -30,10 +30,6 @@ const OrderSelect = styled.select`
 
 export default class Port extends React.Component {
   state = { selected: '' }
-  constructor(props) {
-    super()
-    this.id = props.id
-  }
 
   dispatch = () => {
     !!this.state.selected && broker.post({
@@ -53,6 +49,7 @@ export default class Port extends React.Component {
         <ExpandingHangar
           id={this.props.hangarId}
           width={ProtoPort.width/2}
+          height={ProtoPort.height}
           withControl={true}
         />
         <Dispatch onClick={this.dispatch}>Dispatch</Dispatch>
