@@ -4,7 +4,7 @@ import Lazy from 'lazy.js'
 
 import broker from './broker'
 import { ProtoAssembler, ProtoFactory, ProtoGenerator } from './pieces/prototypes'
-
+import OrderViewer from './objectives/Order/OrderViewer'
 import Factory from './pieces/Factory'
 import Assembler from './pieces/Assembler'
 import Generator from './pieces/Generator'
@@ -101,6 +101,7 @@ export default class Base extends React.Component {
           )).toArray()}
         </BuildingRow>
         <PortColumn>
+          <OrderViewer orders={this.state.orders} />
           {Lazy(this.state.ports).map(p => (
             <Port key={p.id} {...p} orders={this.state.orders} />
           ))

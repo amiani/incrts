@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const Box = styled.div`
   color: red;
-  height: 10px;
+  height: ${p=>p.height}px;
   flex-shrink: 0;
   font-size: 10px;
 `
@@ -27,7 +27,7 @@ export default class MessageBox extends React.Component {
 
   render() {
     return (
-      <Box>
+      <Box height={this.props.height}>
         <Message key={this.state.key}>
           {this.props.message}
         </Message>

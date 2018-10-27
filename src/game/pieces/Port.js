@@ -6,7 +6,7 @@ import { ExpandingHangar } from '../components/Hangar'
 import Button from '../components/Button'
 import { ProtoPort } from './prototypes'
 import broker from '../broker'
-import { Order } from '../objectives'
+import Order from '../objectives/Order'
 
 const Box = styled.div`
   border: solid black 1px;

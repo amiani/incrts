@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
+import { ProtoPort } from '../../pieces/prototypes'
+
 const TimerBox = styled.div`
   font-size: 10px;
 `
@@ -31,6 +33,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   border: dashed black 1px;
+  height: ${ProtoPort.height}px;
 `
 
 export default props => {
