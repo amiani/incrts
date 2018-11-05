@@ -246,11 +246,11 @@ const updateOrders = () => Lazy(data.orders)
         o.order = null
         o.deadline = null
         postMessage({
-          name: 'order',
-          body: order
+          sub: 'order',
+          body: o
         })
         setTimeout(postMessage({
-          name: 'orders',
+          sub: 'orders',
           body: data.orders
         }), 5000)
       }
@@ -324,12 +324,18 @@ const makeBuildQueue = ownerId => {
   return buildQueue
 }
 
+let orderNumber = 1
 const makeOrder = () => {
-  const order = new ProtoOrder({ tanks: 10 }, new Date(Date.now() + 20000))
+  const order = new ProtoOrder(
+    orderNumber,
+    { tanks: 10 },
+    new Date(Date.now() + 20000)
+  )
   const hangar = makeHangar(order.id)
   order.hangarId = hangar.id
   data.orders[order.id] = order
   postMessage({ sub: 'orders', body: data.orders })
+  orderNumber++
 }
 
 const enqueue = ({ buildQueueId, item }) => {

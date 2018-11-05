@@ -33,6 +33,10 @@ const PortColumn = styled.div`
   flex-direction: column;
   grid-area: ports;
   overflow: auto;
+
+  * {
+    margin-bottom: 5px;
+  }
 `
 
 export default class Base extends React.Component {

@@ -27,24 +27,37 @@ class Timer extends React.Component {
 }
 
 const OrderItem = styled.div`
+  font-size: 14px;
 `
 
 const Box = styled.div`
   display: flex;
   flex-direction: column;
-  border: dashed black 1px;
+  width: 105px;
+  border: solid black 1px;
   height: ${ProtoPort.height}px;
+  padding: 3px 1px 0 1px;
+
+  * {
+    padding-bottom: 2px;
+  }
+`
+
+const Title = styled.div`
+  font-size: 10px;
+  color: blue;
 `
 
 export default props => {
   if (props.want) {
     return (
       <Box>
+        <Title>{`${props.orderNumber}: ${props.customer}`}</Title>
         <Timer deadline={props.deadline} />
         {Lazy(props.want)
           .map((amt, unitType, i) => (
             <OrderItem key={unitType+i}>
-              {unitType}: {props.units[unitType] ? props.units[unitType].length : 0} / {amt}
+              {unitType[0].toUpperCase()+unitType.slice(1)}: {props.units[unitType] ? props.units[unitType].length : 0} / {amt}
             </OrderItem>
           ))
           .toArray()

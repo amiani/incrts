@@ -9,7 +9,7 @@ import broker from '../broker'
 import Order from '../objectives/Order'
 
 const Box = styled.div`
-  border: solid black 1px;
+  border: solid black 2px;
   background-color: #e6f3f7;
   display: grid;
   grid:
@@ -49,7 +49,7 @@ export default class Port extends React.Component {
         <ExpandingHangar
           id={this.props.hangarId}
           width={ProtoPort.width/2}
-          height={ProtoPort.height}
+          height={ProtoPort.height-20}
           withControl={true}
         />
         <Dispatch onClick={this.dispatch}>Dispatch</Dispatch>

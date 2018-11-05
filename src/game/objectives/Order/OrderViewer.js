@@ -8,7 +8,7 @@ import { ProtoPort } from '../../pieces/prototypes'
 
 const Box = styled.div`
   width: ${ProtoPort.width}px;
-  border: dashed black 1px;
+  border: solid black 2px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -22,7 +22,6 @@ const Box = styled.div`
 
 const OrderBox = styled.div`
   display: flex;
-  border: dashed black 1px;
   overflow: auto;
 `
 
