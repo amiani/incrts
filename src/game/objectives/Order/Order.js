@@ -35,10 +35,10 @@ const Box = styled.div`
   flex-direction: column;
   width: 105px;
   border: solid black 1px;
-  height: ${ProtoPort.height}px;
+  height: ${ProtoPort.height-26}px;
   padding: 3px 1px 0 1px;
 
-  * {
+  & > * {
     padding-bottom: 2px;
   }
 `

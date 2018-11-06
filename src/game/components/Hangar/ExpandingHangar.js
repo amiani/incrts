@@ -7,11 +7,12 @@ import DemandControl from './DemandControl'
 import broker from '../../broker'
 
 const EDGELENGTH = 5
+const PADDING = 5
 
 const Box = styled.div`
   height: 100%;
   width: ${p => p.width}px;
-  padding: 5px;
+  padding: ${PADDING}px;
   display: flex;
 `
 
@@ -84,14 +85,14 @@ export default class ExpandingHangar extends React.Component {
     } else {
       return (
         <Box width={this.props.width}>
-          {this.props.withControl ? (
+          {this.props.withControl &&
             <DemandControl
               demand={this.state.demand}
               setDemand={this.setDemand}
             />
-          ) : null}
+          }
           <DotGrid 
-            width={this.props.width}
+            width={this.props.width - 2*PADDING - (this.props.withControl ? 80 : 0)}
             height={this.props.height}
             dots={Lazy(this.state.units)
               .values()

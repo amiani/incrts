@@ -12,17 +12,17 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  * {
-    margin-left: 2px;
-    margin-right: 2px;
-    flex-shrink: 0;
-  }
 `
 
 const OrderBox = styled.div`
   display: flex;
   overflow: auto;
+
+  & > * {
+    margin-left: 2px;
+    margin-right: 2px;
+    flex-shrink: 0;
+  }
 `
 
 export default class OrderViewer extends React.Component {

@@ -5,10 +5,10 @@ import Button from '../Button'
 
 const Box = styled.div`
   width: 100px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   font-size: 13px;
+`
+
+const Label = styled.div`
 `
 
 const IncButton = styled(Button)`
@@ -19,7 +19,7 @@ const IncButton = styled(Button)`
 
 export default props => (
   <Box>
-    {props.label}
+    <Label>{props.label[0].toUpperCase()+props.label.slice(1)}</Label>
     <IncButton onClick={()=>props.set(props.amt-1)}>-1</IncButton>
     {props.amt}
     <IncButton onClick={()=>props.set(props.amt+1)}>+1</IncButton>

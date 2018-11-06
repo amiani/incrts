@@ -9,7 +9,6 @@ const Box = styled.div`
   flex-direction: column;
   height: 100%;
   width: 50%;
-  border: dashed 1px black;
 `
 
 export default props => (

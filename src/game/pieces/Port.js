@@ -14,7 +14,7 @@ const Box = styled.div`
   display: grid;
   grid:
     "hangar dest" auto
-    "dispatch select" 20px
+    "dispatch select" 22px
     / 2fr 1fr;
   width: ${ProtoPort.width}px;
   height: ${ProtoPort.height}px;
@@ -48,8 +48,8 @@ export default class Port extends React.Component {
       <Box>
         <ExpandingHangar
           id={this.props.hangarId}
-          width={ProtoPort.width/2}
-          height={ProtoPort.height-20}
+          width={ProtoPort.width/2 - 10}
+          height={ProtoPort.height-36}
           withControl={true}
         />
         <Dispatch onClick={this.dispatch}>Dispatch</Dispatch>

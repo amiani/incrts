@@ -32,9 +32,10 @@ const PortColumn = styled.div`
   display: flex;
   flex-direction: column;
   grid-area: ports;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: visible;
 
-  * {
+  & > * {
     margin-bottom: 5px;
   }
 `
