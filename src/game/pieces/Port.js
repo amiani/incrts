@@ -57,7 +57,7 @@ export default class Port extends React.Component {
         <OrderSelect value={this.state.selected} onChange={this.handleChange}>
           <option disabled value=''>select an order</option>
           {Lazy(this.props.orders)
-            .map(o => <option key={o.id} value={o.id}>{o.id.slice(0,8)}</option>)
+            .map(o => <option key={o.id} value={o.id}>{o.orderNumber}: {o.customer}</option>)
             .toArray()
           }
         </OrderSelect>

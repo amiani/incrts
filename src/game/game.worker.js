@@ -91,6 +91,9 @@ onmessage = e => {
     case 'makeorder':
       makeOrder(e.data.body)
       break
+    case 'cancelorder':
+      cancelOrder(e.data.body)
+      break
     case 'setdemand':
       setDemand(e.data.body)
       break
@@ -336,6 +339,11 @@ const makeOrder = () => {
   data.orders[order.id] = order
   postMessage({ sub: 'orders', body: data.orders })
   orderNumber++
+}
+
+const cancelOrder = orderId => {
+  delete data.orders[orderId]
+  postMessage({ sub: 'orders', body: data.orders })
 }
 
 const enqueue = ({ buildQueueId, item }) => {

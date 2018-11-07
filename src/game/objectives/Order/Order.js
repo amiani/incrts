@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
 import { ProtoPort } from '../../pieces/prototypes'
+import Button from '../../components/Button'
+import broker from '../../broker'
 
 const TimerBox = styled.div`
   font-size: 10px;
@@ -43,16 +45,32 @@ const Box = styled.div`
   }
 `
 
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const CancelOrder = styled(Button)`
+  font-size: 7px;
+  height: 11px;
+  margin: 0;
+  padding: 0 1px 2px 1px;
+`
 const Title = styled.div`
   font-size: 10px;
   color: blue;
 `
 
+const cancel = id => broker.post({ sub: 'cancelorder', body: id })
+
 export default props => {
   if (props.want) {
     return (
       <Box>
-        <Title>{`${props.orderNumber}: ${props.customer}`}</Title>
+        <Header>
+          <Title>{`${props.orderNumber}: ${props.customer}`}</Title>
+          <CancelOrder onClick={()=>cancel(props.id)}>X</CancelOrder>
+        </Header>
         <Timer deadline={props.deadline} />
         {Lazy(props.want)
           .map((amt, unitType, i) => (
