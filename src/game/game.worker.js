@@ -100,6 +100,9 @@ onmessage = e => {
     case 'addmod':
       addMod(e.data.body)
       break
+    case 'updatemod':
+      updateMod(e.data.body)
+      break
     default:
       console.log(`Received message with no listener: ${e.data.sub}`)
       break
@@ -278,8 +281,15 @@ const addMod = ({ buildingId, type, mod }) => {
   })
 }
 
-const updateMod = ({ modId }) => {
-  data.mods[modId]
+const updateMod = body => {
+  const mod = data.mods[body.modId]
+  mod.testknobvalue = body.testknobvalue
+  if (mod.testknobvalue > 100) mod.testknobvalue = 100
+  if (mod.testknobvalue < 0) mod.testknobvalue = 0
+  postMessage({
+    sub: mod.id,
+    body: mod
+  })
 }
 
 const buildFactory = () => {

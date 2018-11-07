@@ -40,7 +40,7 @@ const Face = styled.div`
   backface-visibility: hidden;
   transform-style: preserve-3d;
   transition: transform ease 500ms;
-  border: black solid 2px;
+  border: white solid 2px;
   padding: 2px;
   box-shadow: 2px 2px 1px 0px;
 `
@@ -53,7 +53,7 @@ const Front = styled(Face)`
 
 const Back = styled(Face)`
   transform: rotateY(${p => p.flipped ? 0 : -180}deg);
-  background: linear-gradient(#fff2f4, white);
+  background-color: black;
 `
 
 export default class Building extends React.Component {
