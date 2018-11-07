@@ -15,7 +15,7 @@ const Box = styled.div`
   grid:
     "hangar dest" auto
     "dispatch select" 22px
-    / 2fr 1fr;
+    / auto 105px;
   width: ${ProtoPort.width}px;
   height: ${ProtoPort.height}px;
 `
@@ -26,6 +26,7 @@ const Dispatch = styled(Button)`
 
 const OrderSelect = styled.select`
   grid-area: select;
+  font-size: 10px;
 `
 
 export default class Port extends React.Component {

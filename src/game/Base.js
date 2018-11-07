@@ -16,8 +16,9 @@ const Box = styled.div`
     "factories ports" 1fr
     "assemblers ports" 1fr
     "generators ports" 1fr
-    / 4fr 1fr;
+    / 1fr 350px;
   height: 100vh;
+  width: 100%;
   padding: 5px;
 `
 
@@ -33,7 +34,6 @@ const PortColumn = styled.div`
   flex-direction: column;
   grid-area: ports;
   overflow-y: auto;
-  overflow-x: visible;
 
   & > * {
     margin-bottom: 5px;
