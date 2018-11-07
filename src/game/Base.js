@@ -37,6 +37,7 @@ const PortColumn = styled.div`
 
   & > * {
     margin-bottom: 5px;
+    flex-shrink: 0;
   }
 `
 

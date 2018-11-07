@@ -46,7 +46,7 @@ const Face = styled.div`
 `
 
 const Front = styled(Face)`
-  z-index: 2;
+  z-index: 3;
   transform: rotateY(${p => p.flipped ? 180 : 0}deg);
   background: linear-gradient(to bottom right, #eafeea, white);
 `

@@ -62,7 +62,7 @@ export default class BuildQueue extends React.Component {
             <QueueItem
               key={item.id+i}
               icon={item.icon}
-              curr={this.state.currItem==i}
+              curr={this.state.currItem===i}
             />
           ))}
         </QueueBox>

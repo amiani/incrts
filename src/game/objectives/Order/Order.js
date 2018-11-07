@@ -45,9 +45,14 @@ const Box = styled.div`
   }
 `
 
-const Header = styled.div`
+const HeaderBox = styled.div`
   display: flex;
   justify-content: space-between;
+`
+
+const Title = styled.div`
+  font-size: 10px;
+  color: blue;
 `
 
 const CancelOrder = styled(Button)`
@@ -56,21 +61,21 @@ const CancelOrder = styled(Button)`
   margin: 0;
   padding: 0 1px 2px 1px;
 `
-const Title = styled.div`
-  font-size: 10px;
-  color: blue;
-`
 
 const cancel = id => broker.post({ sub: 'cancelorder', body: id })
+
+const Header = props => (
+  <HeaderBox>
+    <Title>{`${props.orderNumber}: ${props.customer}`}</Title>
+    <CancelOrder onClick={()=>cancel(props.id)}>X</CancelOrder>
+  </HeaderBox>
+)
 
 export default props => {
   if (props.want) {
     return (
       <Box>
-        <Header>
-          <Title>{`${props.orderNumber}: ${props.customer}`}</Title>
-          <CancelOrder onClick={()=>cancel(props.id)}>X</CancelOrder>
-        </Header>
+        <Header {...props} />
         <Timer deadline={props.deadline} />
         {Lazy(props.want)
           .map((amt, unitType, i) => (
@@ -85,6 +90,7 @@ export default props => {
   } else {
     return (
       <Box>
+        <Header {...props} />
         Deadline passed!
       </Box>
     )

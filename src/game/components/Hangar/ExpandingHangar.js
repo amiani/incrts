@@ -16,13 +16,6 @@ const Box = styled.div`
   display: flex;
 `
 
-const Dot = styled.div`
-  width: ${EDGELENGTH}px;
-  height: ${EDGELENGTH}px;
-  background-color: ${p => p.color};
-  margin: 1px;
-`
-
 class DotGrid extends React.Component {
   constructor(props) {
     super()

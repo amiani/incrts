@@ -22,7 +22,7 @@ export default class Main extends React.Component {
     broker.post({ sub: 'buildport' })
     broker.post({ sub: 'buildgenerator' })
 
-    for (let i = 0; i != 6; i++)
+    for (let i = 0; i <= 6; i++)
       broker.post({ sub: 'makeorder' })
   }
 
