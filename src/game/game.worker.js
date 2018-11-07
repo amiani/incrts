@@ -235,30 +235,30 @@ const updateHangars = () => {
     )
 }
 
-const updateOrders = () => Lazy(data.orders)
-  .each(o => {
-    if (o.want) {
-      const totalUnitsLeft = Lazy(o.want)
-        .reduce((acc, curr, currType) => {
-          let unitsLeft = curr - (o.units[currType] ? o.units[currType].length : 0)
-          unitsLeft = unitsLeft >= 0 ? unitsLeft : 0
-          return acc + unitsLeft
-        }, 0)
-      if (totalUnitsLeft <= 0) {
-        data.credits += 100
-        o.order = null
-        o.deadline = null
+const updateOrders = () => {
+  const now = Date.now()
+  Lazy(data.orders)
+    .each(o => {
+      if (o.want) {
+        const totalUnitsLeft = Lazy(o.want)
+          .reduce((acc, curr, currType) => {
+            let unitsLeft = curr - (o.units[currType] ? o.units[currType].length : 0)
+            unitsLeft = unitsLeft >= 0 ? unitsLeft : 0
+            return acc + unitsLeft
+          }, 0)
+        if (o.deadline.valueOf() - now <= 0) {
+          o.want = null
+        } else if (totalUnitsLeft <= 0) {
+          data.credits += 100
+          o.deadline = null
+        }
         postMessage({
-          sub: 'order',
-          body: o
-        })
-        setTimeout(postMessage({
           sub: 'orders',
           body: data.orders
-        }), 5000)
+        })
       }
-    }
-  })
+    })
+}
 
 const addMod = ({ buildingId, type, mod }) => {
   data.mods[mod.id] = mod
@@ -332,7 +332,7 @@ const makeOrder = () => {
   const order = new ProtoOrder(
     orderNumber,
     { tanks: 10 },
-    new Date(Date.now() + 20000)
+    new Date(Date.now() + 5000)
   )
   const hangar = makeHangar(order.id)
   order.hangarId = hangar.id
