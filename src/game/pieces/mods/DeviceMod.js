@@ -25,8 +25,8 @@ export default class DeviceModControl extends React.Component {
   handlePowerChange = () => {
   }
 
-  handleWheel = event => {
-    const amt = event.deltaY < 0 ? 10 : -10
+
+  handleChange = amt => {
     broker.post({
       sub: 'updatemod',
       body: {
@@ -35,7 +35,7 @@ export default class DeviceModControl extends React.Component {
       }
     })
   }
-
+  
   render() {
     return (
       <Box>
@@ -43,7 +43,7 @@ export default class DeviceModControl extends React.Component {
         <Knob
           value={this.state.testknobvalue}
           size={50}
-          handleWheel={this.handleWheel}
+          handleChange={this.handleChange}
         />
       </Box>
     )
