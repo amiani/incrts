@@ -49,10 +49,12 @@ export default class Knob extends React.Component {
 
   handleMouseDown = event => {
     this.startPosition = event.screenY;
+    document.body.style['pointer-events'] = 'none'
     document.addEventListener('mousemove', this.handleMouseMove)
     document.addEventListener('mouseup', this.handleMouseUp)
   }
   handleMouseUp = () => {
+    document.body.style['pointer-events'] = 'auto'
     document.removeEventListener('mousemove', this.handleMouseMove)
     document.removeEventListener('mouseup', this.handleMouseUp)
   }
