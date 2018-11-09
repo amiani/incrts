@@ -3,7 +3,7 @@ import { ProtoDeviceMod } from './mods/prototypes.js'
 import { hardware, device } from '../components/recipes'
 import { ProtoTank } from './units'
 
-export function ProtoFactory() {
+export function ProtoAssembler() {
   this.id = uuidv4()
   this.type = 'factories'
   this.name = 'factory'
@@ -15,10 +15,10 @@ export function ProtoFactory() {
   this.baseDrain = 1
   this.drain = 1
 }
-ProtoFactory.height = 300
-ProtoFactory.width = 200
+ProtoAssembler.height = 300
+ProtoAssembler.width = 200
 
-export function ProtoAssembler() {
+export function ProtoCrucible() {
   this.id = uuidv4()
   this.type = 'assemblers'
   this.name = 'assembler'
@@ -29,8 +29,8 @@ export function ProtoAssembler() {
   this.baseDrain = 1
   this.drain = 1
 }
-ProtoAssembler.width = 200
-ProtoAssembler.height = 250
+ProtoCrucible.width = 200
+ProtoCrucible.height = 250
 
 export function ProtoGenerator() {
   this.id = uuidv4()
