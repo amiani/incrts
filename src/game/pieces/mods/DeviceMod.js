@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import broker from '../../broker'
 import Switch from '../../components/Switch'
+import FlipSwitch from '../../components/FlipSwitch'
 import Knob from  '../../components/Knob'
 
 const Box = styled.div`
@@ -10,7 +11,7 @@ const Box = styled.div`
 `
 
 export default class DeviceModControl extends React.Component {
-  state = { testknobvalue: 50 }
+  state = { testknobvalue: 50, status: true }
   constructor(props) {
     super()
     this.id = props.id
@@ -22,9 +23,7 @@ export default class DeviceModControl extends React.Component {
 
   onmessage = body => this.setState(body)
 
-  handlePowerChange = () => {
-  }
-
+  handleClick = () => this.setState({ status: !this.state.status })
 
   handleChange = amt => {
     broker.post({
@@ -39,7 +38,7 @@ export default class DeviceModControl extends React.Component {
   render() {
     return (
       <Box>
-        <Switch on={this.state.status} handleChange={this.handlePowerChange} />
+        <FlipSwitch on={this.state.status} handleClick={this.handleClick} />
         <Knob
           value={this.state.testknobvalue}
           size={50}

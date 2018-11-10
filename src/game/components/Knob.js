@@ -14,7 +14,7 @@ export default class Knob extends React.Component {
     const { size } = this.props
     const center = size/2
     const radius = .4*size
-    const lineWidth = .2*radius
+    const lineWidth = .15*radius
     ctx.clearRect(0, 0, size, size)
     
     ctx.beginPath()
@@ -29,6 +29,13 @@ export default class Knob extends React.Component {
     ctx.lineWidth = lineWidth
     ctx.strokeStyle = 'yellow'
     ctx.stroke()
+
+    ctx.beginPath()
+    const x = (radius-5)*Math.cos(angle) + this.props.size/2
+    const y = (radius-5)*Math.sin(angle) + this.props.size/2
+    ctx.arc(x, y, 2, 0, 2*Math.PI)
+    ctx.fillStyle = 'white'
+    ctx.fill()
 
     ctx.font = '10px sans-serif'
     ctx.fillStyle = 'yellow'
