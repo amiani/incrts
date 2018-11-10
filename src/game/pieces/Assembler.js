@@ -2,78 +2,76 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Building from './Building'
-import BuildQueue from '../components/BuildQueue'
-import { ModPanelFront, ModPanelBack } from './mods/ModPanel'
-import { ProtoAssembler } from './prototypes'
-import { RecipeSider } from '../components/recipes'
 import Button from '../components/Button'
-import { ProtoDeviceMod } from './mods/prototypes'
+import BuildQueue from '../components/BuildQueue'
+import ExpandingHangar from '../components/Hangar/ExpandingHangar'
+import { ModPanelFront } from './mods/ModPanel'
+import Switch from '../components/Switch'
+import { ProtoAssembler } from './prototypes'
 import broker from '../broker'
+import { RecipeSider } from '../components/recipes'
 
 const Box = styled.div`
   display: flex;
-`
-
-const BoxFront = styled.div`
-`
-
-const BoxBack = styled.div`
+  justify-content: space-evenly;
 `
 
 export default class Assembler extends React.Component {
   state = { showSider: true }
   constructor(props) {
     super()
-    this.id = props.assembler.id
+    this.id = props.factory.id
+  }
+  
+  enqueue = item => {
+    broker.post({
+      sub: 'enqueue',
+      body: { 
+        buildQueueId: this.props.factory.buildQueueId, 
+        item,
+      }
+    })
   }
 
-  enqueue = item => broker.post({
-    sub: 'enqueue',
-    body: {
-      buildQueueId: this.props.assembler.buildQueueId,
-      item
-    }
-  })
-
-  addMod = () => broker.post({
-    sub: 'addmod',
-    body: {
-      buildingId: this.id,
-      type: 'assemblers',
-      mod: new ProtoDeviceMod(this.id)
-    }
-  })
+  handlePowerChange = e => {
+    broker.post({
+      sub: 'togglepower',
+      body: { buildingId: this.id }
+    })
+  }
 
   toggleSider = () => this.setState({ showSider: !this.state.showSider })
 
   render() {
+    const { buildQueueId, hangarId, status, mods } = this.props.factory
     return (
       <Box>
-        <Building 
+        <Building
           width={ProtoAssembler.width}
           height={ProtoAssembler.height}
-          message={this.state.message}
           showSider={this.toggleSider}
           front={
-            <BoxFront>
-              <BuildQueue id={this.props.assembler.buildQueueId} />
-              <Button onClick={this.addMod}>Add Mod</Button>
-              <ModPanelFront mods={this.props.assembler.mods} />
-            </BoxFront>
+            <div>
+              <BuildQueue id={buildQueueId} />
+              <ModPanelFront mods={mods} />
+            </div>
           }
           back={
-            <BoxBack>
-              <ModPanelBack mods={this.props.assembler.mods} />
-            </BoxBack>
+            <Switch on={status} handleChange={this.handlePowerChange} />
           }
         />
         {this.state.showSider ? (
           <RecipeSider
             height={ProtoAssembler.height}
-            recipes={this.props.assembler.recipes}
+            recipes={this.props.factory.recipes}
             enqueue={this.enqueue}
           />
-        ): null}
+        ) : null}
+        <ExpandingHangar
+          id={hangarId}
+          height={ProtoAssembler.height}
+          width={50}
+        />
       </Box>
     )
   }

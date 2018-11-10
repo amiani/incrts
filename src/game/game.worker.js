@@ -3,8 +3,8 @@ import uuidv4 from 'uuid/v4'
 
 import { TICKRATE } from './constants'
 import {
-  ProtoFactory,
   ProtoAssembler,
+  ProtoCrucible,
   ProtoGenerator,
   ProtoPort
 } from './pieces/prototypes'
@@ -62,10 +62,10 @@ const update = () => {
 onmessage = e => {
   switch(e.data.sub) {
     case 'buildfactory':
-      buildFactory()
+      buildAssembler()
       break
     case 'buildassembler':
-      buildAssembler()
+      buildCrucible()
       break
     case 'buildgenerator':
       buildGenerator()
@@ -292,8 +292,8 @@ const updateMod = body => {
   })
 }
 
-const buildFactory = () => {
-  const factory = new ProtoFactory()
+const buildAssembler = () => {
+  const factory = new ProtoAssembler()
   const hangar = makeHangar(factory.id, true)
   const buildQueue = makeBuildQueue(factory.id)
   factory.hangarId = hangar.id
@@ -301,8 +301,8 @@ const buildFactory = () => {
   buildBuilding(factory)
 }
 
-const buildAssembler = () => {
-  const assembler = new ProtoAssembler()
+const buildCrucible = () => {
+  const assembler = new ProtoCrucible()
   const buildQueue = makeBuildQueue(assembler.id)
   assembler.buildQueueId = buildQueue.id
   buildBuilding(assembler)

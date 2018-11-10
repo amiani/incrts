@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
 import broker from './broker'
-import { ProtoAssembler, ProtoFactory, ProtoGenerator } from './pieces/prototypes'
+import { ProtoCrucible, ProtoAssembler, ProtoGenerator } from './pieces/prototypes'
 import OrderViewer from './objectives/Order/OrderViewer'
-import Factory from './pieces/Factory'
 import Assembler from './pieces/Assembler'
+import Crucible from './pieces/Crucible'
 import Generator from './pieces/Generator'
 import Port from './pieces/Port'
 
@@ -82,17 +82,17 @@ export default class Base extends React.Component {
   render() {
     return (
       <Box>
-        <BuildingRow height={ProtoFactory.height+12} area='factories'>
+        <BuildingRow height={ProtoAssembler.height+12} area='factories'>
           {Lazy(this.state.factories).map(b => (
-            <Factory
+            <Assembler
               key={b.id}
               factory={b}
             />
           )).toArray()}
         </BuildingRow>
-        <BuildingRow height={ProtoAssembler.height+12} area='assemblers'>
+        <BuildingRow height={ProtoCrucible.height+12} area='assemblers'>
           {Lazy(this.state.assemblers).map(b => (
-            <Assembler
+            <Crucible
               key={b.id}
               assembler={b}
             />
