@@ -10,12 +10,13 @@ const Box = styled.div`
   flex-direction: column;
   padding: 5px;
   flex-shrink: 0;
+  height: 100%;
 `
 
 const ResourceInfo = styled.p`
 `
 
-export default class Sidebar extends React.Component {
+export default class LeftSider extends React.Component {
   state = {
     credits: 3200,
     creditIncome: 0,
@@ -61,8 +62,8 @@ export default class Sidebar extends React.Component {
           <ResourceInfo>Productivity: {(this.state.productivity * 100).toFixed(0)}%</ResourceInfo>
         </div>
         <Button onClick={()=>this.buyFabric(10)}>Buy 10 Fabric</Button>
-        <Button onClick={()=>broker.post({ sub: 'buildfactory' })}>Build Assembler</Button>
-        <Button onClick={()=>broker.post({ sub: 'buildassembler' })}>Build Crucible</Button>
+        <Button onClick={()=>broker.post({ sub: 'buildassembler' })}>Build Assembler</Button>
+        <Button onClick={()=>broker.post({ sub: 'buildcrucible' })}>Build Crucible</Button>
         <Button onClick={()=>broker.post({ sub: 'buildgenerator' })}>Build Generator</Button>
         <Button onClick={()=>broker.post({ sub: 'buildport' })}>Build Port</Button>
         <MessageBox message={this.state.message} />

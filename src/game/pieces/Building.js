@@ -7,12 +7,12 @@ import MessageBox from '../components/MessageBox'
 const Box = styled.div`
   width: ${p=>p.width}px;
   height: ${p=>p.height}px;
-  margin-left: 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: ${p => p.color};
   perspective: 1000px;
+  border-top: 1px solid #f8f5f3;
+  border-left: 1px solid #f8f5f3;
 `
 
 const Header = styled.div`
@@ -43,17 +43,16 @@ const Face = styled.div`
   border: white solid 2px;
   padding: 2px;
   box-shadow: 2px 2px 1px 0px;
+  background-color: white;
 `
 
 const Front = styled(Face)`
   z-index: 3;
   transform: rotateY(${p => p.flipped ? 180 : 0}deg);
-  background: linear-gradient(to bottom right, #eafeea, white);
 `
 
 const Back = styled(Face)`
   transform: rotateY(${p => p.flipped ? 0 : -180}deg);
-  background-color: black;
 `
 
 export default class Building extends React.Component {
@@ -68,19 +67,23 @@ export default class Building extends React.Component {
   }
 
   render() {
+    const head = (
+      <Header>
+        <Button onClick={this.flip}>Flip</Button>
+        {this.props.showSider &&
+          <Button onClick={this.props.showSider}>Recipes</Button>
+        }
+      </Header>
+    )
     return (
       <Box {...this.props} onMouseUp={this.handleMouseUp}>
-        <Header>
-          <Button onClick={this.flip}>Flip</Button>
-          {this.props.showSider &&
-            <Button onClick={this.props.showSider}>Recipes</Button>
-          }
-        </Header>
         <Flipper>
           <Front flipped={this.state.flipped}>
+            {head}
             {this.props.front}
           </Front>
           <Back flipped={this.state.flipped}>
+            {head}
             {this.props.back}
           </Back>
         </Flipper>

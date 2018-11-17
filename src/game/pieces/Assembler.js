@@ -20,14 +20,14 @@ export default class Assembler extends React.Component {
   state = { showSider: true }
   constructor(props) {
     super()
-    this.id = props.factory.id
+    this.id = props.assembler.id
   }
   
   enqueue = item => {
     broker.post({
       sub: 'enqueue',
       body: { 
-        buildQueueId: this.props.factory.buildQueueId, 
+        buildQueueId: this.props.assembler.buildQueueId, 
         item,
       }
     })
@@ -43,7 +43,7 @@ export default class Assembler extends React.Component {
   toggleSider = () => this.setState({ showSider: !this.state.showSider })
 
   render() {
-    const { buildQueueId, hangarId, status, mods } = this.props.factory
+    const { buildQueueId, hangarId, status, mods } = this.props.assembler
     return (
       <Box>
         <Building
@@ -63,7 +63,7 @@ export default class Assembler extends React.Component {
         {this.state.showSider ? (
           <RecipeSider
             height={ProtoAssembler.height}
-            recipes={this.props.factory.recipes}
+            recipes={this.props.assembler.recipes}
             enqueue={this.enqueue}
           />
         ) : null}

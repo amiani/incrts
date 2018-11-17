@@ -28,8 +28,8 @@ const data = {
     productivity: 1,
   },
 
-  factories: {},
   assemblers: {},
+  crucibles: {},
   generators: {},
   mods: {},
 
@@ -61,10 +61,10 @@ const update = () => {
 
 onmessage = e => {
   switch(e.data.sub) {
-    case 'buildfactory':
+    case 'buildassembler':
       buildAssembler()
       break
-    case 'buildassembler':
+    case 'buildcrucible':
       buildCrucible()
       break
     case 'buildgenerator':
@@ -115,7 +115,7 @@ const updateResources = () => {
   data.resources.energyIncome = Lazy(data.generators)
     .pluck('output')
     .sum()
-  data.resources.drain = Lazy(data.factories)
+  data.resources.drain = Lazy(data.assemblers)
     .merge(data.assemblers)
     .pluck('drain')
     .sum()
@@ -165,7 +165,7 @@ const updateBuildQueues = () => {
           if (item.isUnit) {
             const unit = { ...item }
             unit.id = uuidv4()
-            const hangarId = data.factories[unit.ownerId].hangarId
+            const hangarId = data.assemblers[unit.ownerId].hangarId
             const hangar = data.hangars[hangarId]
             !hangar.units[unit.type] && (hangar.units[unit.type] = [])
             hangar.units[unit.type].push(unit)
@@ -293,12 +293,12 @@ const updateMod = body => {
 }
 
 const buildAssembler = () => {
-  const factory = new ProtoAssembler()
-  const hangar = makeHangar(factory.id, true)
-  const buildQueue = makeBuildQueue(factory.id)
-  factory.hangarId = hangar.id
-  factory.buildQueueId = buildQueue.id
-  buildBuilding(factory)
+  const assembler = new ProtoAssembler()
+  const hangar = makeHangar(assembler.id, true)
+  const buildQueue = makeBuildQueue(assembler.id)
+  assembler.hangarId = hangar.id
+  assembler.buildQueueId = buildQueue.id
+  buildBuilding(assembler)
 }
 
 const buildCrucible = () => {
@@ -371,11 +371,11 @@ const enqueue = ({ buildQueueId, item }) => {
 const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[id].loop }
 
 const togglePower = ({ buildingId }) => {
-  const factory = data.factories[buildingId]
-  factory.status = !factory.status
+  const assembler = data.assemblers[buildingId]
+  assembler.status = !assembler.status
   postMessage({
     sub: 'building',
-    body: factory
+    body: assembler
   })
 }
 

@@ -5,8 +5,8 @@ import { ProtoTank } from './units'
 
 export function ProtoAssembler() {
   this.id = uuidv4()
-  this.type = 'factories'
-  this.name = 'factory'
+  this.type = 'assemblers'
+  this.name = 'assembler'
   this.cost = { credits: 50, fabric: 50 }
   this.baseRecipes = [new ProtoTank(this.id)]
   this.recipes = [new ProtoTank(this.id)]

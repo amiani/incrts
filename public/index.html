@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style='box-sizing:border-box; margin: 0'>
   <head>
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
@@ -15,6 +14,22 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <style type="text/css">
+      html {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+
+      body {
+        user-select: none;
+        margin: 0;
+        background-color: #f8f2f2;
+      }
+    </style>
     <title>Incremental RTS</title>
   </head>
   <body>

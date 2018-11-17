@@ -4,47 +4,39 @@ import Lazy from 'lazy.js'
 
 import broker from './broker'
 import { ProtoCrucible, ProtoAssembler, ProtoGenerator } from './pieces/prototypes'
-import OrderViewer from './objectives/Order/OrderViewer'
 import Assembler from './pieces/Assembler'
 import Crucible from './pieces/Crucible'
 import Generator from './pieces/Generator'
-import Port from './pieces/Port'
 
 const Box = styled.div`
-  display: grid;
-  grid:
-    "factories ports" 1fr
-    "assemblers ports" 1fr
-    "generators ports" 1fr
-    / 1fr 350px;
-  height: 100vh;
-  width: 100%;
+  height: 100%;
   padding: 5px;
+  /*perspective: 1000px;*/
+  /*transform: rotate3d(1, 0, 0, 35deg);*/
+`
+
+const Board = styled.div`
+  display: grid;
+  --cols: ${p=>p.cols};
+  grid:
+    "repeat(var(--cols), assemblers)" ${ProtoAssembler.height}
+    "repeat(var(--cols), crucibles)" ${ProtoCrucible.height}
+    "repeat(var(--cols), generators)" ${ProtoGenerator.height} \
+    repeat(var(--cols), ${ProtoAssembler.width}";
 `
 
 const BuildingRow = styled.div`
   display: flex;
-  /*height: ${p => p.height}px;*/
   grid-area: ${p=>p.area};
   align-self: center;
   overflow: auto;
-`
-const PortColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  grid-area: ports;
-  overflow-y: auto;
-
-  & > * {
-    margin-bottom: 5px;
-    flex-shrink: 0;
-  }
+  transform-style: preserve-3d;
 `
 
 export default class Base extends React.Component {
   state = {
-    factories: {},
     assemblers: {},
+    crucibles: {},
     generators: {},
     orders: {}
   }
@@ -64,55 +56,36 @@ export default class Base extends React.Component {
         }))
       }
     )
-    broker.addListener(
-      'orders',
-      { id: 'Base', onmessage: orders => this.setState({ orders }) }
-    )
-    broker.addListener(
-      'order',
-      {
-        id: 'Base',
-        onmessage: order => this.setState((prev, _) => ({
-          orders: { ...prev.orders, [order.id]: order }
-        }))
-      }
-    )
   }
 
   render() {
+    const cols = Math.max(
+      Object.keys(this.state.assemblers).length,
+      Object.keys(this.state.crucibles).length,
+      Object.keys(this.state.generators).length,
+    )
     return (
       <Box>
-        <BuildingRow height={ProtoAssembler.height+12} area='factories'>
-          {Lazy(this.state.factories).map(b => (
+        <Board cols={cols}>
+          {Lazy(this.state.assemblers).map(a => (
             <Assembler
-              key={b.id}
-              factory={b}
+              key={a.id}
+              assembler={a}
             />
           )).toArray()}
-        </BuildingRow>
-        <BuildingRow height={ProtoCrucible.height+12} area='assemblers'>
-          {Lazy(this.state.assemblers).map(b => (
+          {Lazy(this.state.crucibles).map(b => (
             <Crucible
               key={b.id}
               assembler={b}
             />
           )).toArray()}
-        </BuildingRow>
-        <BuildingRow height={ProtoGenerator.height+12} area='generators'>
           {Lazy(this.state.generators).map(b => (
             <Generator
               key={b.id}
               generator={b}
             />
           )).toArray()}
-        </BuildingRow>
-        <PortColumn>
-          <OrderViewer orders={this.state.orders} />
-          {Lazy(this.state.ports).map(p => (
-            <Port key={p.id} {...p} orders={this.state.orders} />
-          ))
-          .toArray()}
-        </PortColumn>
+        </Board>
       </Box>
     )
   }

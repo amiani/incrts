@@ -15,6 +15,7 @@ const Flipper = styled.div`
   width: 100%;
   transform: translateZ(-10px) rotateX(${p => p.on ? 0 : 90}deg);
   transition: transform 350ms;
+  background-color: white;
 `
 
 const Face = styled.div`
@@ -22,6 +23,7 @@ const Face = styled.div`
   height: 100%;
   position: absolute;
   font-size: 12px;
+  opacity: .6;
 `
 
 const On = styled(Face)`
