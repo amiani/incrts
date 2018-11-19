@@ -6,11 +6,15 @@ import Button from './components/Button'
 import MessageBox from './components/MessageBox'
 
 const Box = styled.div`
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   padding: 5px;
   flex-shrink: 0;
   height: 100%;
+  background-color: #002836;
+  box-shadow: 3px 0px 5px 0px #000;
 `
 
 const ResourceInfo = styled.p`

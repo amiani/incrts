@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { BOARDANGLE } from '../constants'
 import Button from '../components/Button.js'
 import MessageBox from '../components/MessageBox'
 
@@ -11,6 +12,7 @@ const Box = styled.div`
   flex-direction: column;
   justify-content: space-between;
   perspective: 1000px;
+  transform-style: preserve-3d;
 `
 
 const Header = styled.div`
@@ -22,9 +24,17 @@ const Header = styled.div`
   margin-bottom: 2px;
 `
 
+const HOVERDIST = 20;
 const Flipper = styled.div`
-  transform-style: preserve-3d;
   height: 100%;
+  transform-style: preserve-3d;
+  :hover {
+    transform: translate3d(
+      0, 
+      ${HOVERDIST*Math.asin(BOARDANGLE)}px, 
+      ${HOVERDIST*Math.acos(BOARDANGLE)}px
+    );
+  }
 `
 
 const Face = styled.div`
@@ -38,17 +48,32 @@ const Face = styled.div`
   backface-visibility: hidden;
   transform-style: preserve-3d;
   transition: transform ease 500ms;
-  border: solid #858900 2px;
+  border: solid #ee855e 2px;
   padding: 2px;
-  box-shadow: 2px 2px 1px 0px;
+  //box-shadow: 2px 2px 1px 0px;
+
 `
 
 const Front = styled(Face)`
   z-index: 3;
   transform: rotateY(${p => p.flipped ? 180 : 0}deg);
+  ::before {
+    //background-color: #ee855e;
+    backdrop-filter: blur(5px);
+    display: block;
+    content: ' ';
+    opacity: .25;
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
 `
 
 const Back = styled(Face)`
+  z-index: 2;
   transform: rotateY(${p => p.flipped ? 0 : -180}deg);
 `
 

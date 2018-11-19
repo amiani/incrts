@@ -12,6 +12,7 @@ const Box = styled.div`
   height: 100%;
   background-color: red;
   width: 200px;
+  background-color: #002836;
 `
 
 const PortColumn = styled.div`
