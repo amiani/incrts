@@ -12,7 +12,7 @@ import broker from '../broker'
 
 const Box = styled.div`
   display: flex;
-  grid-area: crucibles;
+  grid-row: 2;
 `
 
 const BoxFront = styled.div`

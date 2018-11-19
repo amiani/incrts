@@ -14,7 +14,7 @@ import { RecipeSider } from '../components/recipes'
 const Box = styled.div`
   display: flex;
   justify-content: space-evenly;
-  grid-area: assemblers;
+  grid-row: 1;
 `
 
 export default class Assembler extends React.Component {

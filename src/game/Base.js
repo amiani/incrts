@@ -12,7 +12,8 @@ const Box = styled.div`
   height: 100%;
   padding: 5px;
   width: 100%;
-  background-color: #002836;
+  //background-color: #221d31;
+  background-color: #1e3145;
   color: white;
   perspective: 1000px;
   overflow: hidden;
@@ -20,12 +21,13 @@ const Box = styled.div`
 
 const Board = styled.div`
   display: grid;
+  justify-content: center;
   transform: translate3d(0, ${p => -p.t*Math.acos(p.p)}px, ${p => -p.t*Math.asin(p.p)}px) rotate3d(1, 0, 0, ${p=>p.p}rad);
   transform-style: preserve-3d;
   grid:
-    "${p => 'assemblers '.repeat(p.cols)}" ${ProtoAssembler.height}px
-    "${p => 'crucibles '.repeat(p.cols)}" ${ProtoCrucible.height}px
-    "${p => 'generators '.repeat(p.cols)}" ${ProtoGenerator.height}px /
+    ${ProtoAssembler.height}px
+    ${ProtoCrucible.height}px
+    ${ProtoGenerator.height}px /
     ${p => '200px '.repeat(p.cols)}
 `
 
