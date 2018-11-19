@@ -7,10 +7,13 @@ import MessageBox from './components/MessageBox'
 
 const Box = styled.div`
   display: flex;
+  position: relative;
+  z-index: 10;
   flex-direction: column;
   padding: 5px;
   flex-shrink: 0;
   height: 100%;
+  transform: translate3d(0,0,0);
 `
 
 const ResourceInfo = styled.p`
@@ -66,7 +69,6 @@ export default class LeftSider extends React.Component {
         <Button onClick={()=>broker.post({ sub: 'buildcrucible' })}>Build Crucible</Button>
         <Button onClick={()=>broker.post({ sub: 'buildgenerator' })}>Build Generator</Button>
         <Button onClick={()=>broker.post({ sub: 'buildport' })}>Build Port</Button>
-        <MessageBox message={this.state.message} />
       </Box>
     )
   }

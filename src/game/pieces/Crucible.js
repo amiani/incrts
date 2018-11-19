@@ -12,6 +12,7 @@ import broker from '../broker'
 
 const Box = styled.div`
   display: flex;
+  grid-area: crucibles;
 `
 
 const BoxFront = styled.div`
@@ -24,13 +25,13 @@ export default class Crucible extends React.Component {
   state = { showSider: true }
   constructor(props) {
     super()
-    this.id = props.assembler.id
+    this.id = props.crucible.id
   }
 
   enqueue = item => broker.post({
     sub: 'enqueue',
     body: {
-      buildQueueId: this.props.assembler.buildQueueId,
+      buildQueueId: this.props.crucible.buildQueueId,
       item
     }
   })
@@ -39,7 +40,7 @@ export default class Crucible extends React.Component {
     sub: 'addmod',
     body: {
       buildingId: this.id,
-      type: 'assemblers',
+      type: 'crucibles',
       mod: new ProtoDeviceMod(this.id)
     }
   })
@@ -56,21 +57,21 @@ export default class Crucible extends React.Component {
           showSider={this.toggleSider}
           front={
             <BoxFront>
-              <BuildQueue id={this.props.assembler.buildQueueId} />
+              <BuildQueue id={this.props.crucible.buildQueueId} />
               <Button onClick={this.addMod}>Add Mod</Button>
-              <ModPanelFront mods={this.props.assembler.mods} />
+              <ModPanelFront mods={this.props.crucible.mods} />
             </BoxFront>
           }
           back={
             <BoxBack>
-              <ModPanelBack mods={this.props.assembler.mods} />
+              <ModPanelBack mods={this.props.crucible.mods} />
             </BoxBack>
           }
         />
         {this.state.showSider ? (
           <RecipeSider
             height={ProtoCrucible.height}
-            recipes={this.props.assembler.recipes}
+            recipes={this.props.crucible.recipes}
             enqueue={this.enqueue}
           />
         ): null}

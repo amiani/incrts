@@ -9,15 +9,20 @@ import Crucible from './pieces/Crucible'
 import Generator from './pieces/Generator'
 
 const Box = styled.div`
+  position: relative;
+  z-index: 0;
   height: 100%;
   padding: 5px;
   width: 100%;
   background-color: #002836;
+  color: white;
+  perspective: 1000px;
+  overflow: hidden;
 `
 
 const Board = styled.div`
   display: grid;
-  transform: rotate3d(1, 0, 0, 45deg);
+  transform: translate3d(0, 0, ${p=>p.t}px) rotate3d(1, 0, 0, ${p=>p.p}deg);
   grid:
     "${p => 'assemblers '.repeat(p.cols)}" ${ProtoAssembler.height}px
     "${p => 'crucibles '.repeat(p.cols)}" ${ProtoCrucible.height}px
@@ -30,7 +35,10 @@ export default class Base extends React.Component {
     assemblers: {},
     crucibles: {},
     generators: {},
-    orders: {}
+    orders: {},
+
+    perspective: 30,
+    translation: 0
   }
 
   constructor() {
@@ -50,6 +58,11 @@ export default class Base extends React.Component {
     )
   }
 
+
+  handlePerspectiveChange = event => this.setState({ perspective: event.target.value })
+
+  handleTranslationChange = event => this.setState({ translation: event.target.value })
+
   render() {
     const cols = Math.max(
       Object.keys(this.state.assemblers).length,
@@ -58,23 +71,41 @@ export default class Base extends React.Component {
     )
     return (
       <Box>
-        <Board cols={cols}>
+        {this.state.perspective}
+        <input
+          type='range'
+          min='0'
+          max='180'
+          value={this.state.perspective}
+          onChange={this.handlePerspectiveChange}
+        />
+        <div style={{minWidth: '35px', display: 'inline-block'}}>{this.state.translation}</div>
+        <input
+          type='range'
+          min='-500'
+          max='500'
+          value={this.state.translation}
+          onChange={this.handleTranslationChange}
+        />
+        <Board cols={cols} p={this.state.perspective} t={this.state.translation}>
           {Lazy(this.state.assemblers).map(a => (
             <Assembler
               key={a.id}
               assembler={a}
             />
           )).toArray()}
-          {Lazy(this.state.crucibles).map(b => (
+          {Lazy(this.state.crucibles).map(c => (
             <Crucible
-              key={b.id}
-              assembler={b}
+              key={c.id}
+              crucible={c}
+              grid-area='crucibles'
             />
           )).toArray()}
-          {Lazy(this.state.generators).map(b => (
+          {Lazy(this.state.generators).map(g => (
             <Generator
-              key={b.id}
-              generator={b}
+              key={g.id}
+              generator={g}
+              grid-area='generators'
             />
           )).toArray()}
         </Board>

@@ -1,9 +1,17 @@
 import React from 'react'
+import styled from 'styled-components'
 
 import LeftSider from './LeftSider'
 import RightSider from './RightSider'
 import Base from './Base'
 import broker from './broker'
+
+const Box = styled.div`
+  display: flex;
+  justify-content: space-between;
+  height: 100vh;
+  width: 100vw;
+`
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -21,20 +29,13 @@ export default class Main extends React.Component {
       broker.post({ sub: 'makeorder' })
   }
 
-  divStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    height: '100vh',
-    width: '100vw'
-  }
-
   render() {
     return (
-      <div style={this.divStyle}>
+      <Box>
         <LeftSider />
         <Base />
         <RightSider />
-      </div>
+      </Box>
     )
   }
 }
