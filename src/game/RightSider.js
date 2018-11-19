@@ -8,8 +8,6 @@ import Port from './pieces/Port'
 
 const Box = styled.div`
   display: flex;
-  position: relative;
-  z-index: 10;
   flex-direction: column;
   height: 100%;
   background-color: red;

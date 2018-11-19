@@ -9,8 +9,6 @@ import Crucible from './pieces/Crucible'
 import Generator from './pieces/Generator'
 
 const Box = styled.div`
-  position: relative;
-  z-index: 0;
   height: 100%;
   padding: 5px;
   width: 100%;
@@ -23,6 +21,7 @@ const Box = styled.div`
 const Board = styled.div`
   display: grid;
   transform: translate3d(0, 0, ${p=>p.t}px) rotate3d(1, 0, 0, ${p=>p.p}deg);
+  transform-style: preserve-3d;
   grid:
     "${p => 'assemblers '.repeat(p.cols)}" ${ProtoAssembler.height}px
     "${p => 'crucibles '.repeat(p.cols)}" ${ProtoCrucible.height}px
