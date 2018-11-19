@@ -116,7 +116,7 @@ const updateResources = () => {
     .pluck('output')
     .sum()
   data.resources.drain = Lazy(data.assemblers)
-    .merge(data.assemblers)
+    .merge(data.crucibles)
     .pluck('drain')
     .sum()
   let nextEnergy = data.resources.energy + data.resources.energyIncome - data.resources.drain
