@@ -50,8 +50,6 @@ const Face = styled.div`
   transition: transform ease 500ms;
   border: solid #ee855e 2px;
   padding: 2px;
-  //box-shadow: 2px 2px 1px 0px;
-
 `
 
 const Front = styled(Face)`
@@ -62,7 +60,7 @@ const Front = styled(Face)`
     backdrop-filter: blur(5px);
     display: block;
     content: ' ';
-    opacity: .25;
+    opacity: .5;
     z-index: -1;
     position: absolute;
     top: 0;
