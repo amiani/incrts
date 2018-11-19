@@ -302,10 +302,10 @@ const buildAssembler = () => {
 }
 
 const buildCrucible = () => {
-  const assembler = new ProtoCrucible()
-  const buildQueue = makeBuildQueue(assembler.id)
-  assembler.buildQueueId = buildQueue.id
-  buildBuilding(assembler)
+  const crucible = new ProtoCrucible()
+  const buildQueue = makeBuildQueue(crucible.id)
+  crucible.buildQueueId = buildQueue.id
+  buildBuilding(crucible)
 }
 
 const buildGenerator = () => {

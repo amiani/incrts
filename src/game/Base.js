@@ -11,26 +11,18 @@ import Generator from './pieces/Generator'
 const Box = styled.div`
   height: 100%;
   padding: 5px;
-  /*perspective: 1000px;*/
-  /*transform: rotate3d(1, 0, 0, 35deg);*/
+  width: 100%;
+  background-color: #002836;
 `
 
 const Board = styled.div`
   display: grid;
-  --cols: ${p=>p.cols};
+  transform: rotate3d(1, 0, 0, 45deg);
   grid:
-    "repeat(var(--cols), assemblers)" ${ProtoAssembler.height}
-    "repeat(var(--cols), crucibles)" ${ProtoCrucible.height}
-    "repeat(var(--cols), generators)" ${ProtoGenerator.height} \
-    repeat(var(--cols), ${ProtoAssembler.width}";
-`
-
-const BuildingRow = styled.div`
-  display: flex;
-  grid-area: ${p=>p.area};
-  align-self: center;
-  overflow: auto;
-  transform-style: preserve-3d;
+    "${p => 'assemblers '.repeat(p.cols)}" ${ProtoAssembler.height}px
+    "${p => 'crucibles '.repeat(p.cols)}" ${ProtoCrucible.height}px
+    "${p => 'generators '.repeat(p.cols)}" ${ProtoGenerator.height}px /
+    ${p => '200px '.repeat(p.cols)}
 `
 
 export default class Base extends React.Component {

@@ -20,8 +20,8 @@ ProtoAssembler.width = 200
 
 export function ProtoCrucible() {
   this.id = uuidv4()
-  this.type = 'assemblers'
-  this.name = 'assembler'
+  this.type = 'crucibles'
+  this.name = 'crucible'
   this.cost = { credits: 50, fabric: 50 }
   this.mods = []
   this.baseRecipes = [hardware, device]

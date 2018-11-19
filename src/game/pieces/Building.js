@@ -11,8 +11,6 @@ const Box = styled.div`
   flex-direction: column;
   justify-content: space-between;
   perspective: 1000px;
-  border-top: 1px solid #f8f5f3;
-  border-left: 1px solid #f8f5f3;
 `
 
 const Header = styled.div`
@@ -40,10 +38,9 @@ const Face = styled.div`
   backface-visibility: hidden;
   transform-style: preserve-3d;
   transition: transform ease 500ms;
-  border: white solid 2px;
+  border: solid #858900 2px;
   padding: 2px;
   box-shadow: 2px 2px 1px 0px;
-  background-color: white;
 `
 
 const Front = styled(Face)`
