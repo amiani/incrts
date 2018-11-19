@@ -20,7 +20,7 @@ const Box = styled.div`
 
 const Board = styled.div`
   display: grid;
-  transform: translate3d(0, 0, ${p=>p.t}px) rotate3d(1, 0, 0, ${p=>p.p}deg);
+  transform: translate3d(0, ${p => -p.t*Math.acos(p.p)}px, ${p => -p.t*Math.asin(p.p)}px) rotate3d(1, 0, 0, ${p=>p.p}rad);
   transform-style: preserve-3d;
   grid:
     "${p => 'assemblers '.repeat(p.cols)}" ${ProtoAssembler.height}px
@@ -36,7 +36,7 @@ export default class Base extends React.Component {
     generators: {},
     orders: {},
 
-    perspective: 30,
+    perspective: 0,
     translation: 0
   }
 
@@ -70,13 +70,14 @@ export default class Base extends React.Component {
     )
     return (
       <Box>
-        {this.state.perspective}
+        <p>{Math.PI/this.state.perspective}</p>
         <input
           type='range'
           min='0'
-          max='180'
+          max={Math.PI/2}
           value={this.state.perspective}
           onChange={this.handlePerspectiveChange}
+          step={Math.PI/32}
         />
         <div style={{minWidth: '35px', display: 'inline-block'}}>{this.state.translation}</div>
         <input
