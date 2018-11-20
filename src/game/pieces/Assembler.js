@@ -14,7 +14,7 @@ import { RecipeSider } from '../components/recipes'
 const Box = styled.div`
   display: flex;
   justify-content: space-evenly;
-  grid-row: 1;
+  grid-row: 3;
 `
 
 export default class Assembler extends React.Component {
@@ -60,18 +60,6 @@ export default class Assembler extends React.Component {
           back={
             <Switch on={status} handleChange={this.handlePowerChange} />
           }
-        />
-        {this.state.showSider ? (
-          <RecipeSider
-            height={ProtoAssembler.height}
-            recipes={this.props.assembler.recipes}
-            enqueue={this.enqueue}
-          />
-        ) : null}
-        <ExpandingHangar
-          id={hangarId}
-          height={ProtoAssembler.height}
-          width={50}
         />
       </Box>
     )

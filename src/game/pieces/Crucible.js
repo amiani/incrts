@@ -68,13 +68,6 @@ export default class Crucible extends React.Component {
             </BoxBack>
           }
         />
-        {this.state.showSider ? (
-          <RecipeSider
-            height={ProtoCrucible.height}
-            recipes={this.props.crucible.recipes}
-            enqueue={this.enqueue}
-          />
-        ): null}
       </Box>
     )
   }

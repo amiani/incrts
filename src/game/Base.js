@@ -25,9 +25,9 @@ const Board = styled.div`
   transform: translate3d(0, ${p => -p.t*Math.acos(p.p)}px, ${p => -p.t*Math.asin(p.p)}px) rotate3d(1, 0, 0, ${p=>p.p}rad);
   transform-style: preserve-3d;
   grid:
-    ${ProtoAssembler.height}px
+    ${ProtoGenerator.height}px
     ${ProtoCrucible.height}px
-    ${ProtoGenerator.height}px /
+    ${ProtoAssembler.height}px /
     ${p => '200px '.repeat(p.cols)}
 `
 

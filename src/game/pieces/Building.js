@@ -28,14 +28,16 @@ const HOVERDIST = 20;
 const Flipper = styled.div`
   height: 100%;
   transform-style: preserve-3d;
+  transform-origin: bottom;
   :hover {
-    transform: translate3d(
-      0, 
-      ${HOVERDIST*Math.asin(BOARDANGLE)}px, 
-      ${HOVERDIST*Math.acos(BOARDANGLE)}px
-    );
-
-
+    transform:
+      translate3d(
+        0, 
+        ${HOVERDIST*Math.asin(BOARDANGLE)}px, 
+        ${HOVERDIST*Math.acos(BOARDANGLE)}px
+      )
+      rotate3d(1, 0, 0, -5deg)
+    ;
   }
 `
 

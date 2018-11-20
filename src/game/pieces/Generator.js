@@ -7,7 +7,7 @@ import Button from '../components/Button'
 import { ProtoGenerator } from './prototypes'
 
 const Box = styled.div`
-  grid-row: 3;
+  grid-row: 1;
 `
 
 const BoxFront = styled.div`
