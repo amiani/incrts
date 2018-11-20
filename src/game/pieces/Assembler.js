@@ -9,7 +9,7 @@ import { ModPanelFront } from './mods/ModPanel'
 import Switch from '../components/Switch'
 import { ProtoAssembler } from './prototypes'
 import broker from '../broker'
-import { RecipeSider } from '../components/recipes'
+import { ProcedureSider } from '../components/procedures'
 
 const Box = styled.div`
   display: flex;

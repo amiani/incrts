@@ -97,7 +97,7 @@ export default class Building extends React.Component {
       <Header>
         <Button onClick={this.flip}>Flip</Button>
         {this.props.showSider &&
-          <Button onClick={this.props.showSider}>Recipes</Button>
+          <Button onClick={this.props.showSider}>Procedures</Button>
         }
       </Header>
     )

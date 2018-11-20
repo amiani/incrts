@@ -1,6 +1,6 @@
 import uuidv4 from 'uuid/v4'
 import { ProtoDeviceMod } from './mods/prototypes.js'
-import { hardware, device } from '../components/recipes'
+import { hardware, device } from '../components/procedures'
 import { ProtoTank } from './units'
 
 export function ProtoAssembler() {
@@ -8,8 +8,8 @@ export function ProtoAssembler() {
   this.type = 'assemblers'
   this.name = 'assembler'
   this.cost = { credits: 50, fabric: 50 }
-  this.baseRecipes = [new ProtoTank(this.id)]
-  this.recipes = [new ProtoTank(this.id)]
+  this.baseProcedures = [new ProtoTank(this.id)]
+  this.procedures = [new ProtoTank(this.id)]
   this.mods = []
   this.status = true
   this.baseDrain = 1
@@ -24,8 +24,8 @@ export function ProtoCrucible() {
   this.name = 'crucible'
   this.cost = { credits: 50, fabric: 50 }
   this.mods = []
-  this.baseRecipes = [hardware, device]
-  this.recipes = [hardware, device]
+  this.baseProcedures = [hardware, device]
+  this.procedures = [hardware, device]
   this.baseDrain = 1
   this.drain = 1
 }

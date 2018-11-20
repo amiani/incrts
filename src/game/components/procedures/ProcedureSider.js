@@ -8,7 +8,7 @@ const Box = styled.div`
   grid-auto-flow: column;
 `
 
-const Recipe = styled.div`
+const Procedure = styled.div`
   height: 50px
   width: 50px;
   background-image: url(images/${p=>p.icon});
@@ -23,8 +23,8 @@ export default props => {
   const rows = props.height / 50
   return (
     <Box height={props.height} rows={rows}>
-      {props.recipes.map((r, i) => (
-        <Recipe
+      {props.procedures.map((r, i) => (
+        <Procedure
           key={r.id+i}
           icon={r.icon}
           onClick={()=>props.enqueue(r)}

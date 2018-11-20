@@ -146,8 +146,8 @@ const updateBuilding = building => {
   building.drain = building.baseDrain + building.mods.reduce((acc, m) => (
     acc + (m.drain ? m.drain : 0)
   ), 0)
-  building.recipes = building.baseRecipes.concat(
-    building.mods.reduce((acc, id) => acc.concat(data.mods[id].recipes), [])
+  building.procedures = building.baseProcedures.concat(
+    building.mods.reduce((acc, id) => acc.concat(data.mods[id].procedures), [])
   )
   postMessage({
     sub: 'building',
