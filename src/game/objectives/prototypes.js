@@ -9,9 +9,9 @@ export function ProtoOrder(orderNumber, want, deadline) {
   this.orderNumber = orderNumber
 }
 
-export function ProtoBattlefield(hangarId) {
+export function ProtoBattlefield(bufferId) {
   this.id = uuidv4()
   this.component = 'Battlefield'
-  this.hangarId = hangarId
+  this.bufferId = bufferId
   this.enroute = []
 }

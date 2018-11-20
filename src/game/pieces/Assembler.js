@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Building from './Building'
 import Button from '../components/Button'
 import BuildQueue from '../components/BuildQueue'
-import ExpandingHangar from '../components/Hangar/ExpandingHangar'
+import ExpandingBuffer from '../components/Buffer/ExpandingBuffer'
 import { ModPanelFront } from './mods/ModPanel'
 import Switch from '../components/Switch'
 import { ProtoAssembler } from './prototypes'
@@ -44,7 +44,7 @@ export default class Assembler extends React.Component {
   toggleSider = () => this.setState({ showSider: !this.state.showSider })
 
   render() {
-    const { buildQueueId, hangarId, status, mods } = this.props.assembler
+    const { buildQueueId, bufferId, status, mods } = this.props.assembler
     return (
       <Box>
         <Building

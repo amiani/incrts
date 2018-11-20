@@ -17,6 +17,9 @@ const Box = styled.div`
   color: white;
   perspective: 1000px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 
 const Board = styled.div`
@@ -72,23 +75,25 @@ export default class Base extends React.Component {
     )
     return (
       <Box>
-        <p>{Math.PI/this.state.perspective}</p>
-        <input
-          type='range'
-          min='0'
-          max={Math.PI/2}
-          value={this.state.perspective}
-          onChange={this.handlePerspectiveChange}
-          step={Math.PI/32}
-        />
-        <div style={{minWidth: '35px', display: 'inline-block'}}>{this.state.translation}</div>
-        <input
-          type='range'
-          min='-500'
-          max='500'
-          value={this.state.translation}
-          onChange={this.handleTranslationChange}
-        />
+        <div style={{display: 'flex'}}>
+          <p>{Math.round(Math.PI/this.state.perspective, 2)}</p>
+          <input
+            type='range'
+            min='0'
+            max={Math.PI/2}
+            value={this.state.perspective}
+            onChange={this.handlePerspectiveChange}
+            step={Math.PI/32}
+          />
+          <div style={{minWidth: '35px', display: 'inline-block'}}>{this.state.translation}</div>
+          <input
+            type='range'
+            min='-500'
+            max='500'
+            value={this.state.translation}
+            onChange={this.handleTranslationChange}
+          />
+        </div>
         <Board cols={cols} p={this.state.perspective} t={this.state.translation}>
           {Lazy(this.state.assemblers).map(a => (
             <Assembler

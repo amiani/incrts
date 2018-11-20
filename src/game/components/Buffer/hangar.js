@@ -1,6 +1,6 @@
 import uuidv4 from 'uuid/v4'
 
-export default function ProtoHangar(ownerId, isSource) {
+export default function ProtoBuffer(ownerId, isSource) {
   this.id = uuidv4()
   this.ownerId = ownerId
   this.capacity = 10

@@ -9,7 +9,7 @@ import {
   ProtoGenerator,
   ProtoPort
 } from './pieces/prototypes'
-import { ProtoBuildQueue, ProtoHangar, ProtoDeviceMod } from  './components/prototypes'
+import { ProtoBuildQueue, ProtoBuffer, ProtoDeviceMod } from  './components/prototypes'
 import { ProtoOrder } from './objectives/prototypes'
 
 const data = {
@@ -37,7 +37,7 @@ const data = {
 
   buildQueues: {},
 
-  hangars: {},
+  buffers: {},
   unitQueues: { tanks: [], },
 
   ports: {},
@@ -101,13 +101,13 @@ let tick = 0
 const update = () => {
   updateResources()
   updateBuildQueues()
-  updateHangars()
+  updateBuffers()
   postMessage({
     sub: 'update',
     body: {
       resources: data.resources,
       buildQueues: data.buildQueues,
-      hangars: data.hangars,
+      buffers: data.buffers,
     }
   })
   tick % 10 == 0 && updateOrders()
@@ -181,10 +181,10 @@ const updateBuildQueues = () => {
           if (item.isUnit) {
             const unit = { ...item }
             unit.id = uuidv4()
-            const hangarId = data.assemblers[unit.ownerId].hangarId
-            const hangar = data.hangars[hangarId]
-            !hangar.units[unit.type] && (hangar.units[unit.type] = [])
-            hangar.units[unit.type].push(unit)
+            const bufferId = data.assemblers[unit.ownerId].bufferId
+            const buffer = data.buffers[bufferId]
+            !buffer.units[unit.type] && (buffer.units[unit.type] = [])
+            buffer.units[unit.type].push(unit)
           } else {
             Lazy(item.output).each((amt, name) => data.resources[name] += amt)
           }
@@ -196,17 +196,17 @@ const updateBuildQueues = () => {
     })
 }
 
-const dispatch = ({ hangarId, orderId }) => {
-  const hangar = data.hangars[hangarId]
+const dispatch = ({ bufferId, orderId }) => {
+  const buffer = data.buffers[bufferId]
   const order = data.orders[orderId]
   Lazy(order.want)
     .each((numWanted, unitType) => {
       !order.units[unitType] && (order.units[unitType] = [])
       const orderUnits = order.units[unitType]
-      const hangarUnits = hangar.units[unitType] || []
+      const bufferUnits = buffer.units[unitType] || []
       const numNeeded = numWanted - (orderUnits ? orderUnits.length : 0)
-      const numTaking = numNeeded > hangarUnits ? hangarUnits : numNeeded
-      order.units[unitType] = orderUnits.concat(hangarUnits.splice(0, numTaking))
+      const numTaking = numNeeded > bufferUnits ? bufferUnits : numNeeded
+      order.units[unitType] = orderUnits.concat(bufferUnits.splice(0, numTaking))
     })
   postMessage({
     sub: 'order',
@@ -214,25 +214,25 @@ const dispatch = ({ hangarId, orderId }) => {
   })
 }
 
-const setDemand = ({ hangarId, unitType, amt }) => {
-  const hangar = data.hangars[hangarId]
+const setDemand = ({ bufferId, unitType, amt }) => {
+  const buffer = data.buffers[bufferId]
   const nextAmt = amt < 0 ? 0 : amt
-  const prevAmt = hangar.demand[unitType]
-  hangar.demand[unitType] = nextAmt
-  if (hangar.units[unitType].length < nextAmt) {
-    if (!data.unitQueues[unitType].includes(hangarId))
-      data.unitQueues[unitType].push(hangarId)
+  const prevAmt = buffer.demand[unitType]
+  buffer.demand[unitType] = nextAmt
+  if (buffer.units[unitType].length < nextAmt) {
+    if (!data.unitQueues[unitType].includes(bufferId))
+      data.unitQueues[unitType].push(bufferId)
   }
   if (prevAmt > 0 && nextAmt <= 0) {
     const queue = Lazy(data.unitQueues[unitType])
-      .reject(h => h === hangarId)
+      .reject(h => h === bufferId)
       .toArray()
     data.unitQueues[unitType] = queue
   }
 }
 
-const updateHangars = () => {
-  Lazy(data.hangars)
+const updateBuffers = () => {
+  Lazy(data.buffers)
     .where({ isSource: true })
     .pluck('units')
     .each(units => Lazy(units)
@@ -242,12 +242,12 @@ const updateHangars = () => {
         const actualQueue = data.unitQueues[unitType]
         if (actualQueue.length > 0) {
           const unit = unitArr.shift()
-          const firstHangar = data.hangars[actualQueue.shift()]
-          unit.ownerId = firstHangar.ownerId
-          !firstHangar.units[unitType] && (firstHangar.units[unitType] = [])
-          firstHangar.units[unitType].push(unit)
-          if (firstHangar.units[unitType].length < firstHangar.demand[unitType]) {
-            actualQueue.push(firstHangar.id)
+          const firstBuffer = data.buffers[actualQueue.shift()]
+          unit.ownerId = firstBuffer.ownerId
+          !firstBuffer.units[unitType] && (firstBuffer.units[unitType] = [])
+          firstBuffer.units[unitType].push(unit)
+          if (firstBuffer.units[unitType].length < firstBuffer.demand[unitType]) {
+            actualQueue.push(firstBuffer.id)
           }
         }
       })
@@ -310,9 +310,9 @@ const updateMod = body => {
 
 const buildAssembler = () => {
   const assembler = new ProtoAssembler()
-  const hangar = makeHangar(assembler.id, true)
+  const buffer = makeBuffer(assembler.id, true)
   const buildQueue = makeBuildQueue(assembler.id)
-  assembler.hangarId = hangar.id
+  assembler.bufferId = buffer.id
   assembler.buildQueueId = buildQueue.id
   buildBuilding(assembler)
 }
@@ -330,8 +330,8 @@ const buildGenerator = () => {
 
 const buildPort = () => {
   const port = new ProtoPort()
-  const hangar = makeHangar(port.id, false)
-  port.hangarId = hangar.id
+  const buffer = makeBuffer(port.id, false)
+  port.bufferId = buffer.id
   buildBuilding(port)
 }
 
@@ -341,10 +341,10 @@ const buildBuilding = building => {
   postMessage({ sub: 'buildings', body: { [building.type]: data[building.type] } })
 }
 
-const makeHangar = (ownerId, isSource) => {
-  const hangar = new ProtoHangar(ownerId, isSource)
-  data.hangars[hangar.id] = hangar
-  return hangar
+const makeBuffer = (ownerId, isSource) => {
+  const buffer = new ProtoBuffer(ownerId, isSource)
+  data.buffers[buffer.id] = buffer
+  return buffer
 }
 
 const makeBuildQueue = ownerId => {
@@ -360,8 +360,8 @@ const makeOrder = () => {
     { tanks: 10 },
     new Date(Date.now() + 5000)
   )
-  const hangar = makeHangar(order.id)
-  order.hangarId = hangar.id
+  const buffer = makeBuffer(order.id)
+  order.bufferId = buffer.id
   data.orders[order.id] = order
   postMessage({ sub: 'orders', body: data.orders })
   orderNumber++

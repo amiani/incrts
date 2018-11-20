@@ -42,7 +42,7 @@ class DotGrid extends React.Component {
   }
 }
 
-export default class ExpandingHangar extends React.Component {
+export default class ExpandingBuffer extends React.Component {
   state = {
     units: {},
     expanded: false,
@@ -58,14 +58,14 @@ export default class ExpandingHangar extends React.Component {
   }
 
   onmessage = body => {
-    body.hangars[this.id] && this.setState(body.hangars[this.id])
+    body.buffers[this.id] && this.setState(body.buffers[this.id])
   }
   
   setDemand = (unitType, amt) => {
     broker.post({
       sub: 'setdemand',
       body: {
-        hangarId: this.id,
+        bufferId: this.id,
         unitType,
         amt
       }

@@ -11,7 +11,7 @@ export function ProtoBuildQueue(ownerId) {
   this.currItem = 0
 }
 
-export function ProtoHangar(ownerId, isSource) {
+export function ProtoBuffer(ownerId, isSource) {
   this.id = uuidv4()
   this.ownerId = ownerId
   this.capacity = 10

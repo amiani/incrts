@@ -2,7 +2,7 @@ import React from 'react'
 import Lazy from 'lazy.js'
 import styled from 'styled-components'
 
-import { ExpandingHangar } from '../components/Hangar'
+import { ExpandingBuffer } from '../components/Buffer'
 import Button from '../components/Button'
 import { ProtoPort } from './prototypes'
 import broker from '../broker'
@@ -13,7 +13,7 @@ const Box = styled.div`
   background-color: #e6f3f7;
   display: grid;
   grid:
-    "hangar dest" auto
+    "buffer dest" auto
     "dispatch select" 22px
     / auto 105px;
   width: ${ProtoPort.width}px;
@@ -36,7 +36,7 @@ export default class Port extends React.Component {
     !!this.state.selected && broker.post({
       sub: 'dispatch',
       body: {
-        hangarId: this.props.hangarId,
+        bufferId: this.props.bufferId,
         orderId: this.state.selected
       }
     })
@@ -47,8 +47,8 @@ export default class Port extends React.Component {
   render() {
     return (
       <Box>
-        <ExpandingHangar
-          id={this.props.hangarId}
+        <ExpandingBuffer
+          id={this.props.bufferId}
           width={ProtoPort.width/2 - 10}
           height={ProtoPort.height-36}
           withControl={true}
