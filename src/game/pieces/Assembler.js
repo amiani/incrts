@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Building from './Building'
+import Apparatus from './Apparatus'
 import Button from '../components/Button'
 import BuildQueue from '../components/BuildQueue'
 import ExpandingBuffer from '../components/Buffer/ExpandingBuffer'
@@ -37,7 +37,7 @@ export default class Assembler extends React.Component {
   handlePowerChange = e => {
     broker.post({
       sub: 'togglepower',
-      body: { buildingId: this.id }
+      body: { apparatusId: this.id }
     })
   }
 
@@ -47,7 +47,7 @@ export default class Assembler extends React.Component {
     const { buildQueueId, bufferId, status, mods } = this.props.assembler
     return (
       <Box>
-        <Building
+        <Apparatus
           width={ProtoAssembler.width}
           height={ProtoAssembler.height}
           showSider={this.toggleSider}

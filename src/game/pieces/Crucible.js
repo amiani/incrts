@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Building from './Building'
+import Apparatus from './Apparatus'
 import BuildQueue from '../components/BuildQueue'
 import { ModPanelFront, ModPanelBack } from './mods/ModPanel'
 import { ProtoCrucible } from './prototypes'
@@ -39,7 +39,7 @@ export default class Crucible extends React.Component {
   addMod = () => broker.post({
     sub: 'addmod',
     body: {
-      buildingId: this.id,
+      apparatusId: this.id,
       type: 'crucibles',
       mod: new ProtoDeviceMod(this.id)
     }
@@ -50,7 +50,7 @@ export default class Crucible extends React.Component {
   render() {
     return (
       <Box>
-        <Building 
+        <Apparatus 
           width={ProtoCrucible.width}
           height={ProtoCrucible.height}
           message={this.state.message}

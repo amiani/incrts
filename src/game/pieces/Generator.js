@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Building from './Building'
+import Apparatus from './Apparatus'
 import { ModPanelFront } from './mods/ModPanel'
 import Button from '../components/Button'
 import { ProtoGenerator } from './prototypes'
@@ -15,7 +15,7 @@ const BoxFront = styled.div`
 
 export default props => (
   <Box>
-    <Building
+    <Apparatus
       width={ProtoGenerator.width}
       height={ProtoGenerator.height}
       front={

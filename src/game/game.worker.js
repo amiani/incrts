@@ -142,16 +142,16 @@ const setFabricRate = ({ rate }) => {
   data.resources.fabricRate = clamp(rate, 0, data.resources.maxFabricRate)
 }
 
-const updateBuilding = building => {
-  building.drain = building.baseDrain + building.mods.reduce((acc, m) => (
+const updateApparatus = apparatus => {
+  apparatus.drain = apparatus.baseDrain + apparatus.mods.reduce((acc, m) => (
     acc + (m.drain ? m.drain : 0)
   ), 0)
-  building.procedures = building.baseProcedures.concat(
-    building.mods.reduce((acc, id) => acc.concat(data.mods[id].procedures), [])
+  apparatus.procedures = apparatus.baseProcedures.concat(
+    apparatus.mods.reduce((acc, id) => acc.concat(data.mods[id].procedures), [])
   )
   postMessage({
-    sub: 'building',
-    body: building
+    sub: 'apparatus',
+    body: apparatus
   })
 }
 
@@ -279,10 +279,10 @@ const updateOrders = () => {
     })
 }
 
-const addMod = ({ buildingId, type, mod }) => {
+const addMod = ({ apparatusId, type, mod }) => {
   data.mods[mod.id] = mod
-  const building = data[type][buildingId]
-  building.mods.push(mod.id)
+  const apparatus = data[type][apparatusId]
+  apparatus.mods.push(mod.id)
   postMessage({
     sub: 'controlMap',
     body: {
@@ -290,7 +290,7 @@ const addMod = ({ buildingId, type, mod }) => {
       controlName: mod.controlName
     }
   })
-  updateBuilding(building)
+  updateApparatus(apparatus)
   postMessage({
     sub: mod.id,
     body: mod
@@ -314,31 +314,31 @@ const buildAssembler = () => {
   const buildQueue = makeBuildQueue(assembler.id)
   assembler.bufferId = buffer.id
   assembler.buildQueueId = buildQueue.id
-  buildBuilding(assembler)
+  buildApparatus(assembler)
 }
 
 const buildCrucible = () => {
   const crucible = new ProtoCrucible()
   const buildQueue = makeBuildQueue(crucible.id)
   crucible.buildQueueId = buildQueue.id
-  buildBuilding(crucible)
+  buildApparatus(crucible)
 }
 
 const buildGenerator = () => {
-  buildBuilding(new ProtoGenerator())
+  buildApparatus(new ProtoGenerator())
 }
 
 const buildPort = () => {
   const port = new ProtoPort()
   const buffer = makeBuffer(port.id, false)
   port.bufferId = buffer.id
-  buildBuilding(port)
+  buildApparatus(port)
 }
 
-const buildBuilding = building => {
-  spend(building.cost)
-  data[building.type][building.id] = building
-  postMessage({ sub: 'buildings', body: { [building.type]: data[building.type] } })
+const buildApparatus = apparatus => {
+  spend(apparatus.cost)
+  data[apparatus.type][apparatus.id] = apparatus
+  postMessage({ sub: 'apparati', body: { [apparatus.type]: data[apparatus.type] } })
 }
 
 const makeBuffer = (ownerId, isSource) => {
@@ -386,11 +386,11 @@ const enqueue = ({ buildQueueId, item }) => {
 
 const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[id].loop }
 
-const togglePower = ({ buildingId }) => {
-  const assembler = data.assemblers[buildingId]
+const togglePower = ({ apparatusId }) => {
+  const assembler = data.assemblers[apparatusId]
   assembler.status = !assembler.status
   postMessage({
-    sub: 'building',
+    sub: 'apparatus',
     body: assembler
   })
 }

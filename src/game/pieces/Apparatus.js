@@ -81,7 +81,7 @@ const Back = styled(Face)`
   transform: rotateY(${p => p.flipped ? 0 : -180}deg);
 `
 
-export default class Building extends React.Component {
+export default class Apparatus extends React.Component {
   state = {
     flipped: false,
   }
