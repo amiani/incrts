@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import Knob from './components/Knob'
 import broker from './broker'
 import Button from './components/Button'
 import MessageBox from './components/MessageBox'
@@ -18,6 +19,7 @@ const Box = styled.div`
 `
 
 const ResourceInfo = styled.p`
+  margin-top: 10px;
 `
 
 export default class LeftSider extends React.Component {
@@ -25,7 +27,6 @@ export default class LeftSider extends React.Component {
     credits: 3200,
     creditIncome: 0,
     fabric: 3200,
-    fabricIncome: 0,
     hardware: 1000,
     hardwareIncome: 0,
     devices: 0,
@@ -34,6 +35,7 @@ export default class LeftSider extends React.Component {
     energyIncome: 0,
     drain: 0,
     productivity: 1,
+    fabricRate: 0,
   }
 
   constructor() {
@@ -53,19 +55,33 @@ export default class LeftSider extends React.Component {
     })
   }
 
+  fabricRateChange = amt => {
+    broker.post({
+      sub: 'setfabricrate',
+      body: { rate: this.state.fabricRate + amt }
+    })
+  }
+
   render() {
     return (
       <Box>
         <div>
           <ResourceInfo>Credits: {this.state.credits.toFixed(0)}</ResourceInfo>
-          <ResourceInfo>Energy: {this.state.energy.toFixed(1)}</ResourceInfo>
+          <Knob
+            size={120}
+            value={this.state.fabricRate}
+            handleChange={this.fabricRateChange}
+            min={0}
+            max={this.state.maxFabricRate}
+            step={1}
+          />
           <ResourceInfo>Fabric: {this.state.fabric.toFixed(0)}</ResourceInfo>
+          <ResourceInfo>Energy: {this.state.energy.toFixed(1)}</ResourceInfo>
           <ResourceInfo>Hardware: {this.state.hardware.toFixed(0)}</ResourceInfo>
           <ResourceInfo>Devices: {this.state.devices}</ResourceInfo>
           <ResourceInfo>Drain: {this.state.drain}</ResourceInfo>
           <ResourceInfo>Productivity: {(this.state.productivity * 100).toFixed(0)}%</ResourceInfo>
         </div>
-        <Button onClick={()=>this.buyFabric(10)}>Buy 10 Fabric</Button>
         <Button onClick={()=>broker.post({ sub: 'buildassembler' })}>Build Assembler</Button>
         <Button onClick={()=>broker.post({ sub: 'buildcrucible' })}>Build Crucible</Button>
         <Button onClick={()=>broker.post({ sub: 'buildgenerator' })}>Build Generator</Button>

@@ -11,7 +11,7 @@ export default class Knob extends React.Component {
 
   draw() {
     const ctx = this.canvas.current.getContext('2d')
-    const { size } = this.props
+    const { size, value, max, min } = this.props
     const center = size/2
     const radius = .4*size
     const lineWidth = .15*radius
@@ -24,7 +24,7 @@ export default class Knob extends React.Component {
     ctx.stroke()
 
     ctx.beginPath()
-    const angle = 3*Math.PI/4*(this.props.value/50 + 1)
+    const angle = 3*Math.PI/2*( value/(max - min) + 1/2 )
     ctx.arc(center, center, radius, 3/4*Math.PI, angle)
     ctx.lineWidth = lineWidth
     ctx.strokeStyle = 'yellow'
@@ -41,7 +41,7 @@ export default class Knob extends React.Component {
     ctx.fillStyle = 'yellow'
     ctx.textAlign = 'center'
     ctx.textBaseLine = 'middle'
-    ctx.fillText(this.props.value, center, center)
+    ctx.fillText(value, center, center)
   }
 
   componentDidMount() {
@@ -52,7 +52,7 @@ export default class Knob extends React.Component {
     this.draw()
   }
 
-  handleWheel = event => this.props.handleChange(event.deltaY < 0 ? 10 : -10)
+  handleWheel = event => this.props.handleChange(event.deltaY < 0 ? this.props.step : -this.props.step)
 
   handleMouseDown = event => {
     this.startPosition = event.screenY;
@@ -66,7 +66,7 @@ export default class Knob extends React.Component {
     document.removeEventListener('mouseup', this.handleMouseUp)
   }
   handleMouseMove = event => {
-    const amt = this.startPosition - event.screenY
+    const amt = Math.round(this.props.step*(this.startPosition - event.screenY) / 3)
     this.props.handleChange(amt)
     this.startPosition = event.screenY
   }

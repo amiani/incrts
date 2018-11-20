@@ -34,6 +34,8 @@ const Flipper = styled.div`
       ${HOVERDIST*Math.asin(BOARDANGLE)}px, 
       ${HOVERDIST*Math.acos(BOARDANGLE)}px
     );
+
+
   }
 `
 
@@ -55,18 +57,20 @@ const Face = styled.div`
 const Front = styled(Face)`
   z-index: 3;
   transform: rotateY(${p => p.flipped ? 180 : 0}deg);
-  ::before {
-    //background-color: #ee855e;
-    backdrop-filter: blur(5px);
-    display: block;
-    content: ' ';
-    opacity: .5;
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+  ${Flipper}:hover & {
+    ::before {
+      //background-color: #ee855e;
+      backdrop-filter: blur(5px);
+      display: block;
+      content: ' ';
+      opacity: .5;
+      z-index: -1;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
   }
 `
 

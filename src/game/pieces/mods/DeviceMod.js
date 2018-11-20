@@ -41,6 +41,9 @@ export default class DeviceModControl extends React.Component {
         <FlipSwitch on={this.state.status} handleClick={this.handleClick} />
         <Knob
           value={this.state.testknobvalue}
+          min={0}
+          max={100}
+          step={10}
           size={50}
           handleChange={this.handleChange}
         />

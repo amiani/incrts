@@ -1,6 +1,7 @@
 import Lazy from 'lazy.js'
 import uuidv4 from 'uuid/v4'
 
+import { clamp } from './helpers'
 import { TICKRATE } from './constants'
 import {
   ProtoAssembler,
@@ -16,8 +17,9 @@ const data = {
     credits: 3200,
     creditIncome: 0,
     fabric: 3200,
-    fabricIncome: 0,
-    fabricPrice: { credits: 10 },
+    fabricRate: 0,
+    maxFabricRate: 10,
+    fabricPrice: 10,
     hardware: 1000,
     hardwareIncome: 0,
     devices: 0,
@@ -40,23 +42,6 @@ const data = {
 
   ports: {},
   orders: {},
-}
-
-let tick = 0
-const update = () => {
-  updateResources()
-  updateBuildQueues()
-  updateHangars()
-  postMessage({
-    sub: 'update',
-    body: {
-      resources: data.resources,
-      buildQueues: data.buildQueues,
-      hangars: data.hangars,
-    }
-  })
-  tick % 10 == 0 && updateOrders()
-  tick++
 }
 
 onmessage = e => {
@@ -103,27 +88,58 @@ onmessage = e => {
     case 'updatemod':
       updateMod(e.data.body)
       break
+    case 'setfabricrate':
+      setFabricRate(e.data.body)
+      break
     default:
       console.log(`Received message with no listener: ${e.data.sub}`)
       break
   }
 }
 
+let tick = 0
+const update = () => {
+  updateResources()
+  updateBuildQueues()
+  updateHangars()
+  postMessage({
+    sub: 'update',
+    body: {
+      resources: data.resources,
+      buildQueues: data.buildQueues,
+      hangars: data.hangars,
+    }
+  })
+  tick % 10 == 0 && updateOrders()
+  tick++
+}
+
 setInterval(update, TICKRATE)
 
 const updateResources = () => {
-  data.resources.energyIncome = Lazy(data.generators)
+  const res = data.resources
+  res.credits -= res.fabricRate * res.fabricPrice
+  if (res.credits < 0) {
+    res.credits = 0
+  } else {
+    res.fabric += res.fabricRate
+  }
+  res.energyIncome = Lazy(data.generators)
     .pluck('output')
     .sum()
-  data.resources.drain = Lazy(data.assemblers)
+  res.drain = Lazy(data.assemblers)
     .merge(data.crucibles)
     .pluck('drain')
     .sum()
-  let nextEnergy = data.resources.energy + data.resources.energyIncome - data.resources.drain
-  data.resources.energy = nextEnergy > 0 ? nextEnergy : 0
-  data.resources.productivity = data.resources.energy > data.resources.drain || !data.resources.drain
+  let nextEnergy = res.energy + res.energyIncome - res.drain
+  res.energy = nextEnergy > 0 ? nextEnergy : 0
+  res.productivity = res.energy > res.drain || !res.drain
     ? 1
-    : data.resources.energyIncome / data.resources.drain
+    : res.energyIncome / res.drain
+}
+
+const setFabricRate = ({ rate }) => {
+  data.resources.fabricRate = clamp(rate, 0, data.resources.maxFabricRate)
 }
 
 const updateBuilding = building => {
