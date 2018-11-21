@@ -19,7 +19,6 @@ const Header = styled.div`
   display: flex;
   flex-shrink: 0;
   flex-direction: row;
-  border: solid black 2px;
   padding: 1px;
   margin-bottom: 2px;
 `
@@ -39,6 +38,7 @@ const Flipper = styled.div`
       rotate3d(1, 0, 0, -5deg)
     ;
   }
+  transition: transform ease 200ms;
 `
 
 const Face = styled.div`
@@ -53,6 +53,7 @@ const Face = styled.div`
   transform-style: preserve-3d;
   transition: transform ease 500ms;
   border: solid #ee855e 2px;
+  background-color: rgba(238, 133, 93, .025);
   padding: 2px;
 `
 
@@ -96,7 +97,7 @@ export default class Apparatus extends React.Component {
     const head = (
       <Header>
         <Button onClick={this.flip}>Flip</Button>
-        {this.props.showSider &&
+        {this.props.showDrawer &&
           <Button onClick={this.props.showSider}>Procedures</Button>
         }
       </Header>

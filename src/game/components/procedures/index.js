@@ -1,8 +1,6 @@
 import ProcedureSider from './ProcedureSider'
-import { hardware, device, synthetics } from './procedures'
+import procedures from './procedures'
+export default procedures
 export {
   ProcedureSider,
-  hardware,
-  device,
-  synthetics,
 }

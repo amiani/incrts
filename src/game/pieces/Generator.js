@@ -25,7 +25,7 @@ export default props => (
         </BoxFront>
       }
       back={
-          <p>This is the back of the Generator</p>
+        <p>This is the back of the Generator</p>
       }
     />
   </Box>

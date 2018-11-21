@@ -9,8 +9,17 @@ import {
   ProtoGenerator,
   ProtoPort
 } from './pieces/prototypes'
-import { ProtoBuildQueue, ProtoBuffer, ProtoDeviceMod } from  './components/prototypes'
+import { ProtoBuildQueue, ProtoStack, ProtoBuffer, ProtoDeviceMod } from  './components/prototypes'
 import { ProtoOrder } from './objectives/prototypes'
+import procs from './components/procedures'
+
+
+const allProcedures = Lazy(procs)
+  .map(p => {
+    p.id = uuidv4()
+    return [p.id, p]
+  })
+  .toObject()
 
 const data = {
   resources: {
@@ -35,7 +44,11 @@ const data = {
   generators: {},
   mods: {},
 
+  procedures: allProcedures,
+  allProcedures: allProcedures,
+
   buildQueues: {},
+  stacks: {},
 
   buffers: {},
   unitQueues: { tanks: [], },
@@ -57,6 +70,9 @@ onmessage = e => {
       break
     case 'enqueue':
       enqueue(e.data.body)
+      break
+    case 'enstack':
+      enstack(e.data.body)
       break
     case 'buy':
       buy(e.data.body)
@@ -91,6 +107,9 @@ onmessage = e => {
     case 'setfabricrate':
       setFabricRate(e.data.body)
       break
+    case 'addprocedure':
+      addProcedure(e.data.body)
+      break
     default:
       console.log(`Received message with no listener: ${e.data.sub}`)
       break
@@ -101,12 +120,14 @@ let tick = 0
 const update = () => {
   updateResources()
   updateBuildQueues()
+  updateStacks
   updateBuffers()
   postMessage({
     sub: 'update',
     body: {
       resources: data.resources,
       buildQueues: data.buildQueues,
+      stacks: data.stacks,
       buffers: data.buffers,
     }
   })
@@ -118,11 +139,11 @@ setInterval(update, TICKRATE)
 
 const updateResources = () => {
   const res = data.resources
-  res.credits -= res.fabricRate * res.fabricPrice
+  res.credits -= res.fabricRate/TICKRATE * res.fabricPrice
   if (res.credits < 0) {
     res.credits = 0
   } else {
-    res.fabric += res.fabricRate
+    res.fabric += res.fabricRate/TICKRATE
   }
   res.energyIncome = Lazy(data.generators)
     .pluck('output')
@@ -194,6 +215,10 @@ const updateBuildQueues = () => {
         }
       }
     })
+}
+
+const updateStacks = () => {
+  //TODO; implement this
 }
 
 const dispatch = ({ bufferId, orderId }) => {
@@ -311,9 +336,9 @@ const updateMod = body => {
 const buildAssembler = () => {
   const assembler = new ProtoAssembler()
   const buffer = makeBuffer(assembler.id, true)
-  const buildQueue = makeBuildQueue(assembler.id)
+  const stack = makeStack(assembler.id)
   assembler.bufferId = buffer.id
-  assembler.buildQueueId = buildQueue.id
+  assembler.stackId = stack.id
   buildApparatus(assembler)
 }
 
@@ -353,6 +378,16 @@ const makeBuildQueue = ownerId => {
   return buildQueue
 }
 
+const makeStack = ownerId => {
+  const stack = new ProtoStack(ownerId)
+  data.stacks[stack.id] = stack
+  return stack
+}
+
+const addProcedure = procId => {
+  postMessage({ sub: 'procedures', body: data.procedures })
+}
+
 let orderNumber = 1
 const makeOrder = () => {
   const order = new ProtoOrder(
@@ -382,6 +417,22 @@ const enqueue = ({ buildQueueId, item }) => {
     spend(item.cost)
   }
   buildQueue.items.push(item)
+}
+
+const enstack = ({ stackId, procId }) => {
+  const stack = data.stacks[stackId]
+  if (stack.procedures.length >= stack.maxLength) {
+    //respond with error
+    return
+  }
+  const procedure = Lazy(data.procedures[procId])
+    .map((v, k) => [k, v])
+    .toObject()
+  const lazyProcedures = Lazy(stack.procedures)
+  const sumPriorities = lazyProcedures.sum('priority') + 10
+  lazyProcedures.each(p => p.priority = 100*p.priority/sumPriorities)
+  procedure.priority = 1000/sumPriorities
+  stack.procedures[procId] = procedure
 }
 
 const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[id].loop }

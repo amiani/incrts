@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import Apparatus from './Apparatus'
 import Button from '../components/Button'
-import BuildQueue from '../components/BuildQueue'
+import Stack from '../components/Stack'
 import ExpandingBuffer from '../components/Buffer/ExpandingBuffer'
 import { ModPanelFront } from './mods/ModPanel'
 import Switch from '../components/Switch'
@@ -44,7 +44,7 @@ export default class Assembler extends React.Component {
   toggleSider = () => this.setState({ showSider: !this.state.showSider })
 
   render() {
-    const { buildQueueId, bufferId, status, mods } = this.props.assembler
+    const { stackId, bufferId, status, mods } = this.props.assembler
     return (
       <Box>
         <Apparatus
@@ -53,7 +53,7 @@ export default class Assembler extends React.Component {
           showSider={this.toggleSider}
           front={
             <div>
-              <BuildQueue id={buildQueueId} />
+              <Stack id={stackId} />
               <ModPanelFront mods={mods} />
             </div>
           }

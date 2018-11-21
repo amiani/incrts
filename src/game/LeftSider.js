@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import ProcedureMenu from './components/procedures/ProcedureMenu'
 import Knob from './components/Knob'
 import broker from './broker'
 import Button from './components/Button'
@@ -36,17 +37,24 @@ export default class LeftSider extends React.Component {
     drain: 0,
     productivity: 1,
     fabricRate: 0,
+    maxFabricRate: 2,
+    procedures: {},
   }
 
   constructor() {
     super()
     broker.addListener(
       'update',
-      { id: 'sidebar', onmessage: this.onmessage }
+      { id: 'sidebar', onmessage: this.onUpdate }
+    )
+    broker.addListener(
+      'procedures',
+      { id: 'sidebar', onmessage: this.onProcedures }
     )
   }
 
-  onmessage = ({ resources }) => this.setState(resources)
+  onUpdate = ({ resources }) => this.setState(resources)
+  onProcedures = procedures => this.setState({ procedures })
 
   buyFabric = amt => {
     broker.post({
@@ -74,6 +82,7 @@ export default class LeftSider extends React.Component {
             min={0}
             max={this.state.maxFabricRate}
             step={1}
+            units='f/10s'
           />
           <ResourceInfo>Fabric: {this.state.fabric.toFixed(0)}</ResourceInfo>
           <ResourceInfo>Energy: {this.state.energy.toFixed(1)}</ResourceInfo>
@@ -86,6 +95,7 @@ export default class LeftSider extends React.Component {
         <Button onClick={()=>broker.post({ sub: 'buildcrucible' })}>Build Crucible</Button>
         <Button onClick={()=>broker.post({ sub: 'buildgenerator' })}>Build Generator</Button>
         <Button onClick={()=>broker.post({ sub: 'buildport' })}>Build Port</Button>
+        <ProcedureMenu procedures={this.state.procedures} />
       </Box>
     )
   }

@@ -25,13 +25,16 @@ const Box = styled.div`
 const Board = styled.div`
   display: grid;
   justify-content: center;
-  transform: translate3d(0, ${p => -p.t*Math.acos(p.p)}px, ${p => -p.t*Math.asin(p.p)}px) rotate3d(1, 0, 0, ${p=>p.p}rad);
+  transform:
+    translate3d(0, ${p => -p.t*Math.acos(p.angle)}px, ${p => -p.t*Math.asin(p.angle)}px)
+    rotate3d(1, 0, 0, ${p=>p.angle}rad)
+  ;
   transform-style: preserve-3d;
   grid:
     ${ProtoGenerator.height}px
     ${ProtoCrucible.height}px
     ${ProtoAssembler.height}px /
-    ${p => '200px '.repeat(p.cols)}
+    ${p => '250px '.repeat(p.cols)}
 `
 
 export default class Base extends React.Component {
@@ -75,26 +78,7 @@ export default class Base extends React.Component {
     )
     return (
       <Box>
-        <div style={{display: 'flex'}}>
-          <p>{Math.round(Math.PI/this.state.perspective, 2)}</p>
-          <input
-            type='range'
-            min='0'
-            max={Math.PI/2}
-            value={this.state.perspective}
-            onChange={this.handlePerspectiveChange}
-            step={Math.PI/32}
-          />
-          <div style={{minWidth: '35px', display: 'inline-block'}}>{this.state.translation}</div>
-          <input
-            type='range'
-            min='-500'
-            max='500'
-            value={this.state.translation}
-            onChange={this.handleTranslationChange}
-          />
-        </div>
-        <Board cols={cols} p={this.state.perspective} t={this.state.translation}>
+        <Board cols={cols} angle={Math.PI/4} t={this.state.translation}>
           {Lazy(this.state.assemblers).map(a => (
             <Assembler
               key={a.id}

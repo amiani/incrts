@@ -1,6 +1,6 @@
 import uuidv4 from 'uuid/v4'
 import { ProtoDeviceMod } from './mods/prototypes.js'
-import { hardware, device } from '../components/procedures'
+import procedures from '../components/procedures'
 import { ProtoTank } from './units'
 
 export function ProtoAssembler() {
@@ -15,8 +15,8 @@ export function ProtoAssembler() {
   this.baseDrain = 1
   this.drain = 1
 }
-ProtoAssembler.height = 300
-ProtoAssembler.width = 200
+ProtoAssembler.width = 250
+ProtoAssembler.height = 400
 
 export function ProtoCrucible() {
   this.id = uuidv4()
@@ -24,13 +24,13 @@ export function ProtoCrucible() {
   this.name = 'crucible'
   this.cost = { credits: 50, fabric: 50 }
   this.mods = []
-  this.baseProcedures = [hardware, device]
-  this.procedures = [hardware, device]
+  this.baseProcedures = [procedures.hardware, procedures.device]
+  this.procedures = [procedures.hardware, procedures.device]
   this.baseDrain = 1
   this.drain = 1
 }
-ProtoCrucible.width = 200
-ProtoCrucible.height = 250
+ProtoCrucible.width = 250
+ProtoCrucible.height = 300
 
 export function ProtoGenerator() {
   this.id = uuidv4()
@@ -40,7 +40,7 @@ export function ProtoGenerator() {
   this.baseOutput = 1
   this.output = 1
 }
-ProtoGenerator.width = 200
+ProtoGenerator.width = 250
 ProtoGenerator.height = 200
 
 export function ProtoPort() {

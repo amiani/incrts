@@ -37,11 +37,11 @@ export default class Knob extends React.Component {
     ctx.fillStyle = 'white'
     ctx.fill()
 
-    ctx.font = '10px sans-serif'
+    ctx.font = `${size/5}px sans-serif`
     ctx.fillStyle = 'yellow'
     ctx.textAlign = 'center'
     ctx.textBaseLine = 'middle'
-    ctx.fillText(value, center, center)
+    ctx.fillText(Math.round(value), center, center)
   }
 
   componentDidMount() {

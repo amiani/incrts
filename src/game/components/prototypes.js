@@ -11,6 +11,13 @@ export function ProtoBuildQueue(ownerId) {
   this.currItem = 0
 }
 
+export function ProtoStack(ownerId) {
+  this.id = uuidv4()
+  this.ownerId = ownerId
+  this.procedures = {}
+  this.progress = 0
+}
+
 export function ProtoBuffer(ownerId, isSource) {
   this.id = uuidv4()
   this.ownerId = ownerId

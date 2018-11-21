@@ -1,5 +1,4 @@
 import uuidv4 from 'uuid/v4'
-import { hardware } from '../../components/procedures'
 
 export function ProtoDeviceMod(ownerId) {
   this.id = uuidv4()
