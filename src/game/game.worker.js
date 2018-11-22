@@ -53,7 +53,6 @@ const data = {
   buffers: {},
   unitQueues: { tanks: [], },
 
-  ports: {},
   orders: {},
 }
 
@@ -85,9 +84,6 @@ onmessage = e => {
       break
     case 'dispatch':
       dispatch(e.data.body)
-      break
-    case 'buildport':
-      buildPort()
       break
     case 'makeorder':
       makeOrder(e.data.body)

@@ -15,6 +15,7 @@ const Box = styled.div`
   background-color: #002836;
 `
 
+/*
 const PortColumn = styled.div`
   display: flex;
   flex-direction: column;
@@ -26,6 +27,7 @@ const PortColumn = styled.div`
     flex-shrink: 0;
   }
 `
+*/
 
 export default class RightSider extends React.Component {
   state = {
@@ -51,13 +53,7 @@ export default class RightSider extends React.Component {
 
   render() {
     return (
-      <PortColumn>
-        <OrderViewer orders={this.state.orders} />
-        {Lazy(this.state.ports).map(p => (
-          <Port key={p.id} {...p} orders={this.state.orders} />
-        ))
-        .toArray()}
-      </PortColumn>
+      <React.Fragment />
     )
   }
 }

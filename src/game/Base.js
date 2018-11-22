@@ -3,13 +3,13 @@ import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
 import broker from './broker'
-import { ProtoCrucible, ProtoAssembler, ProtoGenerator } from './pieces/prototypes'
+import { ProtoCrucible, ProtoAssembler, ProtoGenerator, appWidth } from './pieces/prototypes'
 import Assembler from './pieces/Assembler'
 import Crucible from './pieces/Crucible'
 import Generator from './pieces/Generator'
+import { BOARDANGLE } from './constants'
 
 const Box = styled.div`
-  height: 100%;
   padding: 5px;
   width: 100%;
   //background-color: #221d31;
@@ -19,22 +19,20 @@ const Box = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
 `
 
 const Board = styled.div`
   display: grid;
   justify-content: center;
-  transform:
-    translate3d(0, ${p => -p.t*Math.acos(p.angle)}px, ${p => -p.t*Math.asin(p.angle)}px)
-    rotate3d(1, 0, 0, ${p=>p.angle}rad)
-  ;
+  transform-origin: bottom;
+  transform: rotate3d(1, 0, 0, ${BOARDANGLE}rad);
   transform-style: preserve-3d;
   grid:
-    ${ProtoGenerator.height}px
-    ${ProtoCrucible.height}px
-    ${ProtoAssembler.height}px /
-    ${p => '250px '.repeat(p.cols)}
+    ${ProtoGenerator.height}vh
+    ${ProtoCrucible.height}vh
+    ${ProtoAssembler.height}vh /
+    ${p => '${appWidth}px  '.repeat(p.cols)}
 `
 
 export default class Base extends React.Component {
@@ -44,8 +42,7 @@ export default class Base extends React.Component {
     generators: {},
     orders: {},
 
-    perspective: 0,
-    translation: 0
+    value: 0,
   }
 
   constructor() {
@@ -78,11 +75,12 @@ export default class Base extends React.Component {
     )
     return (
       <Box>
-        <Board cols={cols} angle={Math.PI/4} t={this.state.translation}>
-          {Lazy(this.state.assemblers).map(a => (
-            <Assembler
-              key={a.id}
-              assembler={a}
+        <Board cols={cols} angle={BOARDANGLE}>
+          {Lazy(this.state.generators).map(g => (
+            <Generator
+              key={g.id}
+              generator={g}
+              grid-area='generators'
             />
           )).toArray()}
           {Lazy(this.state.crucibles).map(c => (
@@ -92,11 +90,10 @@ export default class Base extends React.Component {
               grid-area='crucibles'
             />
           )).toArray()}
-          {Lazy(this.state.generators).map(g => (
-            <Generator
-              key={g.id}
-              generator={g}
-              grid-area='generators'
+          {Lazy(this.state.assemblers).map(a => (
+            <Assembler
+              key={a.id}
+              assembler={a}
             />
           )).toArray()}
         </Board>

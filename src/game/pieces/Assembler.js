@@ -11,10 +11,17 @@ import { ProtoAssembler } from './prototypes'
 import broker from '../broker'
 import { ProcedureSider } from '../components/procedures'
 
+const HOVERDIST = 20;
 const Box = styled.div`
-  display: flex;
-  justify-content: space-evenly;
   grid-row: 3;
+  transform-origin: bottom;
+  transition: transform ease 200ms;
+  :hover {
+    transform:
+      translate3d(0, ${-HOVERDIST}px, 0)
+      rotate3d(1, 0, 0, -5deg)
+    ;
+  }
 `
 
 export default class Assembler extends React.Component {

@@ -9,10 +9,19 @@ import { ProcedureSider } from '../components/procedures'
 import Button from '../components/Button'
 import { ProtoDeviceMod } from './mods/prototypes'
 import broker from '../broker'
+import { BOARDANGLE } from '../constants'
 
 const Box = styled.div`
-  display: flex;
   grid-row: 2;
+  transform-origin: bottom;
+  transition: transform ease 200ms;
+  transform: rotate3d(1, 0, 0, ${-BOARDANGLE/2}rad);
+
+  :hover {
+    transform:
+      translateZ(50px)
+      rotate3d(1, 0, 0, ${-3*BOARDANGLE/4}rad)
+  }
 `
 
 const BoxFront = styled.div`

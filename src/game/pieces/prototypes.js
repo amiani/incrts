@@ -2,6 +2,7 @@ import uuidv4 from 'uuid/v4'
 import { ProtoDeviceMod } from './mods/prototypes.js'
 import procedures from '../components/procedures'
 import { ProtoTank } from './units'
+import { ASSMODS, CRUCIBLEMODS, GENMODS, MODHEIGHT } from '../constants'
 
 export function ProtoAssembler() {
   this.id = uuidv4()
@@ -15,8 +16,11 @@ export function ProtoAssembler() {
   this.baseDrain = 1
   this.drain = 1
 }
-ProtoAssembler.width = 250
-ProtoAssembler.height = 400
+ProtoAssembler.mods = ASSMODS
+ProtoAssembler.height = 4*MODHEIGHT
+export const appWidth = 420
+ProtoAssembler.width = appWidth
+console.log('protoa height: ', ProtoAssembler.height)
 
 export function ProtoCrucible() {
   this.id = uuidv4()
@@ -29,8 +33,9 @@ export function ProtoCrucible() {
   this.baseDrain = 1
   this.drain = 1
 }
-ProtoCrucible.width = 250
-ProtoCrucible.height = 300
+ProtoCrucible.mods = CRUCIBLEMODS
+ProtoCrucible.height = 3*MODHEIGHT
+ProtoCrucible.width = appWidth
 
 export function ProtoGenerator() {
   this.id = uuidv4()
@@ -40,8 +45,9 @@ export function ProtoGenerator() {
   this.baseOutput = 1
   this.output = 1
 }
-ProtoGenerator.width = 250
-ProtoGenerator.height = 200
+ProtoGenerator.width = appWidth
+ProtoGenerator.mods = GENMODS
+ProtoGenerator.height = 2*MODHEIGHT
 
 export function ProtoPort() {
   this.id = uuidv4()
