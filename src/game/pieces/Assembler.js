@@ -10,6 +10,7 @@ import Switch from '../components/Switch'
 import { ProtoAssembler } from './prototypes'
 import broker from '../broker'
 import { ProcedureSider } from '../components/procedures'
+import { BOARDANGLE } from '../constants'
 
 const HOVERDIST = 20;
 const Box = styled.div`
@@ -18,8 +19,12 @@ const Box = styled.div`
   transition: transform ease 200ms;
   :hover {
     transform:
-      translate3d(0, ${-HOVERDIST}px, 0)
       rotate3d(1, 0, 0, -5deg)
+      translate3d(
+        0,
+        ${-HOVERDIST*Math.cos(BOARDANGLE)}px,
+        ${HOVERDIST*Math.sin(BOARDANGLE)}px
+      )
     ;
   }
 `

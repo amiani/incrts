@@ -11,6 +11,7 @@ import { ProtoDeviceMod } from './mods/prototypes'
 import broker from '../broker'
 import { BOARDANGLE } from '../constants'
 
+const HOVERDIST = 40;
 const Box = styled.div`
   grid-row: 2;
   transform-origin: bottom;
@@ -19,8 +20,12 @@ const Box = styled.div`
 
   :hover {
     transform:
-      translateZ(50px)
       rotate3d(1, 0, 0, ${-3*BOARDANGLE/4}rad)
+      translate3d(
+        0,
+        ${HOVERDIST*Math.cos(BOARDANGLE)}px, 
+        ${HOVERDIST*Math.sin(BOARDANGLE)}px
+      )
   }
 `
 

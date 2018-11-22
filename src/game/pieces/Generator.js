@@ -9,6 +9,7 @@ import { BOARDANGLE } from '../constants'
 
 const translationDist = 2*ProtoCrucible.height*Math.cos(Math.PI/2 - BOARDANGLE/4)
 const translationAngle = Math.PI/2 - 3*BOARDANGLE/4
+const HOVERDIST = 80
 const Box = styled.div`
   grid-row: 1;
   transform-origin: bottom;
@@ -23,7 +24,12 @@ const Box = styled.div`
 
   :hover {
     transform:
-      translate3d(0, 0, 80px)
+      rotate3d(1, 0, 0, ${-Math.PI/16}rad)
+      translate3d(
+        0,
+        ${HOVERDIST*Math.cos(BOARDANGLE)}px,
+        ${HOVERDIST*Math.cos(BOARDANGLE)}px
+      )
       rotate3d(1, 0, 0, ${-BOARDANGLE}rad)
       translate3d(
         0,

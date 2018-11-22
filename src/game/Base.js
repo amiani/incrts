@@ -10,7 +10,7 @@ import Generator from './pieces/Generator'
 import { BOARDANGLE } from './constants'
 
 const Box = styled.div`
-  padding: 5px;
+  padding: 10px;
   width: 100%;
   //background-color: #221d31;
   background-color: #1e3145;
@@ -20,6 +20,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  transform-style: preserve-3d;
 `
 
 const Board = styled.div`
