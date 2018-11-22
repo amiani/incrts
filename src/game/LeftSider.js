@@ -94,7 +94,6 @@ export default class LeftSider extends React.Component {
         <Button onClick={()=>broker.post({ sub: 'buildassembler' })}>Build Assembler</Button>
         <Button onClick={()=>broker.post({ sub: 'buildcrucible' })}>Build Crucible</Button>
         <Button onClick={()=>broker.post({ sub: 'buildgenerator' })}>Build Generator</Button>
-        <Button onClick={()=>broker.post({ sub: 'buildport' })}>Build Port</Button>
         <ProcedureMenu procedures={this.state.procedures} />
       </Box>
     )
