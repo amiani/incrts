@@ -24,6 +24,7 @@ const Header = styled.div`
 
 const Flipper = styled.div`
   height: 100%;
+  transform-style: preserve-3d;
 `
 
 const Face = styled.div`
@@ -36,19 +37,19 @@ const Face = styled.div`
   width: 100%;
   backface-visibility: hidden;
   transform-style: preserve-3d;
-  transition: transform ease 500ms, opacity 40ms 250ms;
+  transition: transform ease 500ms, opacity 0ms 300ms;
   border: solid #ee855e 2px;
   background-color: rgba(238, 133, 93, .025);
   padding: 2px;
 `
 
 const Front = styled(Face)`
-  z-index: 3;
+  z-index: ${p => p.flipped ? 3 : 2};
   transform: rotateY(${p => p.flipped ? 180 : 0}deg);
-  opacity: ${p => p.flipped ? 0 : 1};
+  //opacity: ${p => p.flipped ? 0 : 1};
   ${Flipper}:hover & {
     ::before {
-      background-color: rgba(30, 49, 69, .9);
+      //background-color: rgba(30, 49, 69, .9);
       @supports ((-webkit-backdrop-filter: blur(5px)) or (backdrop-filter: blur(5px))) {
         //background-color: #ee855e;
         backdrop-filter: blur(5px);
@@ -67,9 +68,9 @@ const Front = styled(Face)`
 `
 
 const Back = styled(Face)`
-  z-index: 2;
+  z-index: ${p => p.flipped ? 2 : 3};
   transform: rotateY(${p => p.flipped ? 0 : -180}deg);
-  opacity: ${p => p.flipped ? 1 : 0};
+  //opacity: ${p => p.flipped ? 1 : 0};
 `
 
 export default class Apparatus extends React.Component {

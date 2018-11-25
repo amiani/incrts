@@ -8,7 +8,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 48px;
+  height: 25%;
   margin-bottom: 5px;
   /*
   border: 3px dashed ${p => p.loop ? 'blue' : 'transparent'};
@@ -21,14 +21,14 @@ const Box = styled.div`
 
 const QueueBox = styled.div`
   display: flex;
-  height: 32px;
+  height: 75%;
   border: 2px red;
   border-style: none none groove groove;
 `
 
 const QueueItem = styled.div`
   height: 30px;
-  width: 30px;
+  width: 90%;
   background-image: url(images/${p => p.icon});
   background-size: 100% 100%;
   ${p => p.curr ? 'border: solid purple 2px' : null}

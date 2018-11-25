@@ -13,6 +13,7 @@ const HOVERDIST = 80
 const Box = styled.div`
   grid-row: 1;
   transform-origin: bottom;
+  transform-style: preserve-3d;
   transition: transform ease 200ms;
   transform:
     rotate3d(1, 0, 0, ${-BOARDANGLE}rad)

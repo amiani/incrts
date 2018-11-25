@@ -17,6 +17,7 @@ const Box = styled.div`
   grid-row: 3;
   transform-origin: bottom;
   transition: transform ease 200ms;
+  transform-style: preserve-3d;
   :hover {
     transform:
       rotate3d(1, 0, 0, -5deg)
