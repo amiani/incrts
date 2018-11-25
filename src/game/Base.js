@@ -12,7 +12,6 @@ import { BOARDANGLE } from './constants'
 const Box = styled.div`
   padding: 10px;
   width: 100%;
-  //background-color: #221d31;
   background-color: #1e3145;
   color: white;
   perspective: 1000px;

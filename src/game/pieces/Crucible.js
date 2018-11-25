@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Apparatus from './Apparatus'
-import BuildQueue from '../components/BuildQueue'
+import Stack from '../components/Stack'
 import { ModPanelFront, ModPanelBack } from './mods/ModPanel'
 import { ProtoCrucible } from './prototypes'
 import { ProcedureSider } from '../components/procedures'
@@ -46,7 +46,7 @@ export default class Crucible extends React.Component {
   enqueue = item => broker.post({
     sub: 'enqueue',
     body: {
-      buildQueueId: this.props.crucible.buildQueueId,
+      queueId: this.props.crucible.queueId,
       item
     }
   })
@@ -71,11 +71,11 @@ export default class Crucible extends React.Component {
           message={this.state.message}
           showSider={this.toggleSider}
           front={
-            <BoxFront>
-              <BuildQueue id={this.props.crucible.buildQueueId} />
+            <React.Fragment>
+              <Stack id={this.props.crucible.stackId} />
               <Button onClick={this.addMod}>Add Mod</Button>
               <ModPanelFront mods={this.props.crucible.mods} />
-            </BoxFront>
+            </React.Fragment>
           }
           back={
             <BoxBack>

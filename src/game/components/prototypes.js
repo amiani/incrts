@@ -1,14 +1,13 @@
 import uuidv4 from 'uuid/v4'
 
-export function ProtoBuildQueue(ownerId) {
+export function ProtoQueue(ownerId) {
   this.id = uuidv4()
   this.ownerId = ownerId
   this.progress = 0
   this.maxLength = 2
-  this.items = []
-  this.loop = true
+  this.procedures = []
   this.buildRate = 1
-  this.currItem = 0
+  this.currProc = 0
 }
 
 export function ProtoStack(ownerId) {

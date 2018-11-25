@@ -34,10 +34,9 @@ const QueueItem = styled.div`
   ${p => p.curr ? 'border: solid purple 2px' : null}
 `
 
-export default class BuildQueue extends React.Component {
+export default class Queue extends React.Component {
   state = {
-    items: [],
-    loop: true,
+    procedures: [],
     progress: 0
   }
   
@@ -50,19 +49,36 @@ export default class BuildQueue extends React.Component {
     )
   }
 
-  onmessage = body => this.setState(body.buildQueues[this.id])
+  onmessage = body => this.setState(body.queues[this.id])
 
-  handleDoubleClick = () => broker.post({ sub: 'toggleloop', body: { id: this.id } })
+  handleDragOver = event => {
+    event.preventDefault()
+    //select owner apparatus component and apply css hover state
+  }
+
+  handleDrop = event => {
+    const procId = event.dataTransfer.getData('procId')
+    broker.post({
+      sub: 'enqueue',
+      body: {
+        queueId: this.id,
+        procId
+      }
+    })
+  }
 
   render() {
     return (
-      <Box onDoubleClick={this.handleDoubleClick} loop={this.state.loop}>
+      <Box
+        onDragOver={this.handleDragOver}
+        onDrop={this.handleDrop}
+      >
         <QueueBox>
-          {this.state.items.map((item, i) => (
+          {this.state.procedures.map((proc, i) => (
             <QueueItem
-              key={item.id+i}
-              icon={item.icon}
-              curr={this.state.currItem===i}
+              key={proc.id+i}
+              icon={proc.icon}
+              curr={this.state.currProc===i}
             />
           ))}
         </QueueBox>

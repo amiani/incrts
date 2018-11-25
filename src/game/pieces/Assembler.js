@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import Apparatus from './Apparatus'
 import Button from '../components/Button'
-import Stack from '../components/Stack'
+import Queue from '../components/Queue'
 import ExpandingBuffer from '../components/Buffer/ExpandingBuffer'
 import { ModPanelFront } from './mods/ModPanel'
 import Switch from '../components/Switch'
@@ -41,7 +41,7 @@ export default class Assembler extends React.Component {
     broker.post({
       sub: 'enqueue',
       body: { 
-        buildQueueId: this.props.assembler.buildQueueId, 
+        queueId: this.props.assembler.queueId, 
         item,
       }
     })
@@ -57,7 +57,7 @@ export default class Assembler extends React.Component {
   toggleSider = () => this.setState({ showSider: !this.state.showSider })
 
   render() {
-    const { stackId, bufferId, status, mods } = this.props.assembler
+    const { queueId, bufferId, status, mods } = this.props.assembler
     return (
       <Box>
         <Apparatus
@@ -65,10 +65,10 @@ export default class Assembler extends React.Component {
           height={ProtoAssembler.height}
           showSider={this.toggleSider}
           front={
-            <div>
-              <Stack id={stackId} />
+            <React.Fragment>
+              <Queue id={queueId} />
               <ModPanelFront mods={mods} />
-            </div>
+            </React.Fragment>
           }
           back={
             <Switch on={status} handleChange={this.handlePowerChange} />

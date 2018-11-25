@@ -47,7 +47,7 @@ export default class Stack extends React.Component {
   }
 
   handleDrop = event => {
-    const procId = event.dataTransfer.getData('id')
+    const procId = event.dataTransfer.getData('procId')
     broker.post({
       sub: 'enstack',
       body: {
@@ -70,7 +70,7 @@ export default class Stack extends React.Component {
               color={p.color}
               width={p.priority}
             >
-              {p.priotiy}
+              {p.priority}
             </Bar>
           ))
           .toArray()

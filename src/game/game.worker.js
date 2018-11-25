@@ -9,7 +9,7 @@ import {
   ProtoGenerator,
   ProtoPort
 } from './pieces/prototypes'
-import { ProtoBuildQueue, ProtoStack, ProtoBuffer, ProtoDeviceMod } from  './components/prototypes'
+import { ProtoQueue, ProtoStack, ProtoBuffer, ProtoDeviceMod } from  './components/prototypes'
 import { ProtoOrder } from './objectives/prototypes'
 import procs from './components/procedures'
 
@@ -47,7 +47,7 @@ const data = {
   procedures: allProcedures,
   allProcedures: allProcedures,
 
-  buildQueues: {},
+  queues: {},
   stacks: {},
 
   buffers: {},
@@ -115,14 +115,14 @@ onmessage = e => {
 let tick = 0
 const update = () => {
   updateResources()
-  updateBuildQueues()
+  updateQueues()
   updateStacks
   updateBuffers()
   postMessage({
     sub: 'update',
     body: {
       resources: data.resources,
-      buildQueues: data.buildQueues,
+      queues: data.queues,
       stacks: data.stacks,
       buffers: data.buffers,
     }
@@ -188,13 +188,13 @@ const buy = want => {
   }
 }
 
-const updateBuildQueues = () => {
-  Lazy(data.buildQueues)
-    .each(bq => {
-      const item = bq.items[bq.currItem]
+const updateQueues = () => {
+  Lazy(data.queues)
+    .each(q => {
+      const item = q.procedures[q.currProc]
       if (item) {
-        bq.progress += bq.buildRate * item.buildRate + 10
-        if (bq.progress >= 100) {
+        q.progress += q.buildRate * item.buildRate + 10
+        if (q.progress >= 100) {
           if (item.isUnit) {
             const unit = { ...item }
             unit.id = uuidv4()
@@ -205,9 +205,9 @@ const updateBuildQueues = () => {
           } else {
             Lazy(item.output).each((amt, name) => data.resources[name] += amt)
           }
-          bq.currItem++
-          bq.currItem >= bq.items.length && (bq.currItem = 0)
-          bq.progress = 0
+          q.currProc++
+          q.currProc >= q.procedures.length && (q.currProc = 0)
+          q.progress = 0
         }
       }
     })
@@ -332,16 +332,16 @@ const updateMod = body => {
 const buildAssembler = () => {
   const assembler = new ProtoAssembler()
   const buffer = makeBuffer(assembler.id, true)
-  const stack = makeStack(assembler.id)
+  const queue = makeQueue(assembler.id)
   assembler.bufferId = buffer.id
-  assembler.stackId = stack.id
+  assembler.queueId = queue.id
   buildApparatus(assembler)
 }
 
 const buildCrucible = () => {
   const crucible = new ProtoCrucible()
-  const buildQueue = makeBuildQueue(crucible.id)
-  crucible.buildQueueId = buildQueue.id
+  const stack = makeStack(crucible.id)
+  crucible.stack = stack.id
   buildApparatus(crucible)
 }
 
@@ -368,10 +368,10 @@ const makeBuffer = (ownerId, isSource) => {
   return buffer
 }
 
-const makeBuildQueue = ownerId => {
-  const buildQueue = new ProtoBuildQueue(ownerId)
-  data.buildQueues[buildQueue.id] = buildQueue
-  return buildQueue
+const makeQueue = ownerId => {
+  const queue = new ProtoQueue(ownerId)
+  data.queues[queue.id] = queue
+  return queue
 }
 
 const makeStack = ownerId => {
@@ -403,16 +403,19 @@ const cancelOrder = orderId => {
   postMessage({ sub: 'orders', body: data.orders })
 }
 
-const enqueue = ({ buildQueueId, item }) => {
-  const buildQueue = data.buildQueues[buildQueueId]
-  if (buildQueue.items.length >= buildQueue.maxLength) {
+const enqueue = ({ queueId, procId }) => {
+  const queue = data.queues[queueId]
+  if (queue.procedures.length >= queue.maxLength) {
     //respond with error
     return
   }
-  if (item.cost) {
-    spend(item.cost)
+  const procedure = Lazy(data.procedures[procId])
+    .map((v, k) => [k, v])
+    .toObject()
+  if (procedure.cost) {
+    spend(procedure.cost)
   }
-  buildQueue.items.push(item)
+  queue.procedures.push(procedure)
 }
 
 const enstack = ({ stackId, procId }) => {
@@ -431,7 +434,7 @@ const enstack = ({ stackId, procId }) => {
   stack.procedures[procId] = procedure
 }
 
-const toggleLoop = ({ id }) => { data.buildQueues[id].loop = !data.buildQueues[id].loop }
+const toggleLoop = ({ id }) => { data.queues[id].loop = !data.queues[id].loop }
 
 const togglePower = ({ apparatusId }) => {
   const assembler = data.assemblers[apparatusId]
