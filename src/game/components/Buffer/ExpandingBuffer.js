@@ -53,11 +53,11 @@ export default class ExpandingBuffer extends React.Component {
     this.id = props.id
     broker.addListener(
       'update',
-      { id: this.id, onmessage: this.onmessage }
+      { id: this.id, onmessage: this.handleMessage }
     )
   }
 
-  onmessage = body => {
+  handleMessage = body => {
     body.buffers[this.id] && this.setState(body.buffers[this.id])
   }
   

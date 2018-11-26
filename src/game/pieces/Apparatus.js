@@ -41,6 +41,9 @@ const Face = styled.div`
   border: solid #ee855e 2px;
   background-color: rgba(238, 133, 93, .025);
   padding: 2px;
+  :hover {
+    border: solid rgba(238, 133, 94, .25) 2px;
+  }
 `
 
 const Front = styled(Face)`
@@ -81,16 +84,14 @@ export default class Apparatus extends React.Component {
   flip = () => this.setState((prevState, _) => ({ flipped: !prevState.flipped }))
 
   handleMouseUp = e => {
-    e.button === 1 && this.flip()
+    this.props.flippable && e.button === 1 && this.flip()
   }
 
   render() {
     const head = (
       <Header>
-        <Button onClick={this.flip}>Flip</Button>
-        {this.props.showDrawer &&
-          <Button onClick={this.props.showSider}>Procedures</Button>
-        }
+        {this.props.flippable && <Button onClick={this.flip}>Flip</Button>}
+        {this.props.header}
       </Header>
     )
     return (

@@ -47,11 +47,11 @@ export default class Queue extends React.Component {
     this.queueItem = React.createRef()
     broker.addListener(
       'update',
-      { id: this.id, onmessage: this.onmessage }
+      { id: this.id, onmessage: this.handleMessage }
     )
   }
 
-  onmessage = body => this.setState(body.queues[this.id])
+  handleMessage = body => this.setState(body.queues[this.id])
 
   handleDragOver = event => {
     event.preventDefault()
@@ -73,7 +73,6 @@ export default class Queue extends React.Component {
     let height
     if (this.queueItem.current)
       height = this.queueItem.current.offsetHeight
-    console.log(height)
     return (
       <Box
         onDragOver={this.handleDragOver}

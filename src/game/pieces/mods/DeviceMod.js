@@ -17,11 +17,11 @@ export default class DeviceModControl extends React.Component {
     this.id = props.id
     broker.addListener(
       this.id,
-      { id: this.id, onmessage: this.onmessage }
+      { id: this.id, onmessage: this.handleMessage }
     )
   }
 
-  onmessage = body => this.setState(body)
+  handleMessage = body => this.setState(body)
 
   handleClick = () => this.setState({ status: !this.state.status })
 

@@ -12,7 +12,7 @@ import broker from '../broker'
 import { ProcedureSider } from '../components/procedures'
 import { BOARDANGLE } from '../constants'
 
-const HOVERDIST = 20;
+const HOVERDIST = 20
 const Box = styled.div`
   grid-row: 3;
   transform-origin: bottom;
@@ -61,6 +61,7 @@ export default class Assembler extends React.Component {
     return (
       <Box>
         <Apparatus
+          flippable
           width={ProtoAssembler.width}
           height={ProtoAssembler.height}
           showSider={this.toggleSider}

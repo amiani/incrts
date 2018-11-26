@@ -8,6 +8,8 @@ import Assembler from './pieces/Assembler'
 import Crucible from './pieces/Crucible'
 import Generator from './pieces/Generator'
 import { BOARDANGLE } from './constants'
+import Market from './pieces/Market'
+import TransferList from './pieces/TransferList'
 
 const Box = styled.div`
   padding: 10px;
@@ -32,7 +34,7 @@ const Board = styled.div`
     ${ProtoGenerator.height}vh
     ${ProtoCrucible.height}vh
     ${ProtoAssembler.height}vh /
-    ${p => '${appWidth}px  '.repeat(p.cols)}
+    ${p => (appWidth+'px ').repeat(p.cols)};
 `
 
 export default class Base extends React.Component {
@@ -68,7 +70,7 @@ export default class Base extends React.Component {
   handleTranslationChange = event => this.setState({ translation: event.target.value })
 
   render() {
-    const cols = Math.max(
+    const cols = 1 + Math.max(
       Object.keys(this.state.assemblers).length,
       Object.keys(this.state.crucibles).length,
       Object.keys(this.state.generators).length,
@@ -90,12 +92,14 @@ export default class Base extends React.Component {
               grid-area='crucibles'
             />
           )).toArray()}
+          <Market />
           {Lazy(this.state.assemblers).map(a => (
             <Assembler
               key={a.id}
               assembler={a}
             />
           )).toArray()}
+          <TransferList />
         </Board>
       </Box>
     )

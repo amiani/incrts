@@ -23,12 +23,11 @@ export default class Main extends React.Component {
   initialize = () => {
     broker.post({ sub: 'buildassembler' })
     broker.post({ sub: 'buildcrucible' })
-    broker.post({ sub: 'buildport' })
     broker.post({ sub: 'buildgenerator' })
     broker.post({ sub: 'addprocedure', })  //testing
 
     for (let i = 0; i <= 6; i++)
-      broker.post({ sub: 'makeorder' })
+      broker.post({ sub: 'makecontract' })
   }
 
   render() {

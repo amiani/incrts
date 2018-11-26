@@ -9,7 +9,7 @@ import { BOARDANGLE } from '../constants'
 
 const translationDist = 2*ProtoCrucible.height*Math.cos(Math.PI/2 - BOARDANGLE/4)
 const translationAngle = Math.PI/2 - 3*BOARDANGLE/4
-const HOVERDIST = 80
+const HOVERDIST = 200
 const Box = styled.div`
   grid-row: 1;
   transform-origin: bottom;
@@ -46,6 +46,7 @@ const BoxFront = styled.div`
 export default props => (
   <Box>
     <Apparatus
+      flippable
       width={ProtoGenerator.width}
       height={ProtoGenerator.height}
       front={

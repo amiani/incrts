@@ -1,12 +1,13 @@
 import uuidv4 from 'uuid/v4'
 
-export function ProtoOrder(orderNumber, want, deadline) {
+export function ProtoTransfer(transferNumber, period, maxRate, rates, reward) {
   this.id = uuidv4()
-  this.want = want
-  this.units = {}
-  this.deadline = deadline
+  this.transferNumber = transferNumber
   this.customer = 'Zagreb Corp.'
-  this.orderNumber = orderNumber
+  this.period = period
+  this.maxRate = maxRate
+  this.rates = rates
+  this.reward = reward
 }
 
 export function ProtoBattlefield(bufferId) {

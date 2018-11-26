@@ -4,14 +4,15 @@ import styled from 'styled-components'
 import Apparatus from './Apparatus'
 import Stack from '../components/Stack'
 import { ModPanelFront, ModPanelBack } from './mods/ModPanel'
-import { ProtoCrucible } from './prototypes'
+import { ProtoCrucible, ProtoAssembler } from './prototypes'
 import { ProcedureSider } from '../components/procedures'
 import Button from '../components/Button'
 import { ProtoDeviceMod } from './mods/prototypes'
 import broker from '../broker'
 import { BOARDANGLE } from '../constants'
 
-const HOVERDIST = 40;
+const HOVERDIST = -ProtoAssembler.height/2*Math.cos(Math.PI-BOARDANGLE)
+
 const Box = styled.div`
   grid-row: 2;
   transform-origin: bottom;
@@ -24,8 +25,8 @@ const Box = styled.div`
       rotate3d(1, 0, 0, ${-3*BOARDANGLE/4}rad)
       translate3d(
         0,
-        ${HOVERDIST*Math.cos(BOARDANGLE)}px, 
-        ${HOVERDIST*Math.sin(BOARDANGLE)}px
+        ${HOVERDIST*Math.cos(BOARDANGLE)}vh, 
+        ${HOVERDIST*Math.sin(BOARDANGLE)}vh
       )
   }
 `
@@ -66,10 +67,10 @@ export default class Crucible extends React.Component {
     return (
       <Box>
         <Apparatus 
+          flippable
           width={ProtoCrucible.width}
           height={ProtoCrucible.height}
           message={this.state.message}
-          showSider={this.toggleSider}
           front={
             <React.Fragment>
               <Stack id={this.props.crucible.stackId} />

@@ -10,7 +10,7 @@ import {
   ProtoPort
 } from './pieces/prototypes'
 import { ProtoQueue, ProtoStack, ProtoBuffer, ProtoDeviceMod } from  './components/prototypes'
-import { ProtoOrder } from './objectives/prototypes'
+import { ProtoTransfer } from './objectives/prototypes'
 import procs from './components/procedures'
 import { units } from './pieces/units'
 
@@ -54,7 +54,8 @@ const data = {
   buffers: {},
   unitQueues: { tanks: [], },
 
-  orders: {},
+  contracts: {},
+  transfers: {},
 }
 
 onmessage = e => {
@@ -86,11 +87,14 @@ onmessage = e => {
     case 'dispatch':
       dispatch(e.data.body)
       break
-    case 'makeorder':
-      makeOrder(e.data.body)
+    case 'makecontract':
+      makeContract(e.data.body)
       break
-    case 'cancelorder':
-      cancelOrder(e.data.body)
+    case 'acceptcontract':
+      acceptContract(e.data.body)
+      break
+    case 'canceltransfer':
+      cancelTransfer(e.data.body)
       break
     case 'setdemand':
       setDemand(e.data.body)
@@ -128,7 +132,7 @@ const update = () => {
       buffers: data.buffers,
     }
   })
-  tick % 10 == 0 && updateOrders()
+  tick % 10 == 0 && updateTransfers()
   tick++
 }
 
@@ -192,22 +196,18 @@ const buy = want => {
 const updateQueues = () => {
   Lazy(data.queues)
     .each(q => {
-      const item = q.procedures[q.currProc]
-      if (item) {
-        q.progress += q.buildRate * item.buildRate + 10
+      const proc = q.procedures[q.currProc]
+      if (proc) {
+        q.progress += q.buildRate * proc.buildRate + 10
         if (q.progress >= 100) {
-          if (item.isUnit) {
-            const unit = { ...item }
-            unit.id = uuidv4()
-            const bufferId = data.assemblers[q.ownerId].bufferId
-            const buffer = data.buffers[bufferId]
-            !buffer.units[unit.type] && (buffer.units[unit.type] = [])
-            buffer.units[unit.type].push(unit)
-          } else {
-            Lazy(item.output).each((amt, name) => data.resources[name] += amt)
-          }
-          q.currProc++
-          q.currProc >= q.procedures.length && (q.currProc = 0)
+          const unit = { ...proc }
+          unit.id = uuidv4()
+          const bufferId = data.assemblers[q.ownerId].bufferId
+          const buffer = data.buffers[bufferId]
+          !buffer.units[unit.type] && (buffer.units[unit.type] = [])
+          buffer.units[unit.type].push(unit)
+
+          q.currProc = (q.currProc + 1) % q.procedures.length
           q.progress = 0
         }
       }
@@ -218,6 +218,7 @@ const updateStacks = () => {
   //TODO; implement this
 }
 
+  /*
 const dispatch = ({ bufferId, orderId }) => {
   const buffer = data.buffers[bufferId]
   const order = data.orders[orderId]
@@ -252,6 +253,7 @@ const setDemand = ({ bufferId, unitType, amt }) => {
     data.unitQueues[unitType] = queue
   }
 }
+*/
 
 const updateBuffers = () => {
   Lazy(data.buffers)
@@ -276,29 +278,20 @@ const updateBuffers = () => {
     )
 }
 
-const updateOrders = () => {
-  const now = Date.now()
-  Lazy(data.orders)
-    .each(o => {
-      if (o.want) {
-        const totalUnitsLeft = Lazy(o.want)
-          .reduce((acc, curr, currType) => {
-            let unitsLeft = curr - (o.units[currType] ? o.units[currType].length : 0)
-            unitsLeft = unitsLeft >= 0 ? unitsLeft : 0
-            return acc + unitsLeft
-          }, 0)
-        if (o.deadline.valueOf() - now <= 0) {
-          o.want = null
-        } else if (totalUnitsLeft <= 0) {
-          data.credits += 100
-          o.deadline = null
-        }
-        postMessage({
-          sub: 'orders',
-          body: data.orders
-        })
+const updateTransfers = () => {
+  Lazy(data.transfers)
+    .each(t => {
+      t.period--
+      if (t.period <= 0) {
+        delete data.transfers[t.id]
+        return
       }
+      data.resources.credits += t.reward
     })
+  postMessage({
+    sub: 'transfers',
+    body: data.transfers
+  })
 }
 
 const addMod = ({ apparatusId, type, mod }) => {
@@ -342,7 +335,7 @@ const buildAssembler = () => {
 const buildCrucible = () => {
   const crucible = new ProtoCrucible()
   const stack = makeStack(crucible.id)
-  crucible.stack = stack.id
+  crucible.stackId = stack.id
   buildApparatus(crucible)
 }
 
@@ -385,18 +378,24 @@ const addProcedure = procId => {
   postMessage({ sub: 'procedures', body: data.procedures })
 }
 
-let orderNumber = 1
-const makeOrder = () => {
-  const order = new ProtoOrder(
-    orderNumber,
-    { tanks: 10 },
-    new Date(Date.now() + 5000)
+let contractNumber = 1
+const makeContract = () => {
+  const contract = new ProtoTransfer(
+    contractNumber,
+    30,
+    2,
+    [{ unit: 'tanks', desiredRate: 1, currRate: 0 }]
   )
-  const buffer = makeBuffer(order.id)
-  order.bufferId = buffer.id
-  data.orders[order.id] = order
-  postMessage({ sub: 'orders', body: data.orders })
-  orderNumber++
+  data.contracts[contract.id] = contract
+  postMessage({ sub: 'contracts', body: data.contracts })
+  contractNumber++
+}
+
+const acceptContract = ({ contractId }) => {
+  const contract = data.contracts[contractId]
+  data.transfers[contractId] = contract
+  delete data.contracts[contractId]
+  postMessage({ sub: 'contracts', body: data.contracts })
 }
 
 const cancelOrder = orderId => {

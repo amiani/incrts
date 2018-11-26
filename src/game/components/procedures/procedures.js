@@ -4,7 +4,6 @@ export default {
   hardware: {
     name: 'Hardware',
     icon: 'hardware.png',
-    buildRate: 1,
     cost: { fabric: 2 },
     output: { hardware: 1 },
     color: 'black'
@@ -12,7 +11,6 @@ export default {
 
   electronics: {
     name: 'Electronics',
-    buildRate: 1,
     cost: { fabric: 2 },
     output: { electronics: 1 },
     color: 'yellow',
@@ -21,7 +19,6 @@ export default {
   device: {
     name: 'Device',
     icon: 'device.png',
-    buildRate: 1,
     cost: { hardware: 1, fabric: 1 },
     output: { devices: 1 },
     color: 'blue',
