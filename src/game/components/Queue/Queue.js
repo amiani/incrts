@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import broker from '../../broker'
 import ProgressBar from './ProgressBar'
+import { ProtoAssembler } from '../../pieces/prototypes'
 
 const Box = styled.div`
   display: flex;
@@ -27,8 +28,8 @@ const QueueBox = styled.div`
 `
 
 const QueueItem = styled.div`
-  height: 30px;
-  width: 90%;
+  height: 100%;
+  width: ${p=>p.height}px;
   background-image: url(images/${p => p.icon});
   background-size: 100% 100%;
   ${p => p.curr ? 'border: solid purple 2px' : null}
@@ -43,6 +44,7 @@ export default class Queue extends React.Component {
   constructor(props) {
     super()
     this.id = props.id
+    this.queueItem = React.createRef()
     broker.addListener(
       'update',
       { id: this.id, onmessage: this.onmessage }
@@ -68,6 +70,10 @@ export default class Queue extends React.Component {
   }
 
   render() {
+    let height
+    if (this.queueItem.current)
+      height = this.queueItem.current.offsetHeight
+    console.log(height)
     return (
       <Box
         onDragOver={this.handleDragOver}
@@ -76,9 +82,11 @@ export default class Queue extends React.Component {
         <QueueBox>
           {this.state.procedures.map((proc, i) => (
             <QueueItem
+              ref={this.queueItem}
               key={proc.id+i}
               icon={proc.icon}
               curr={this.state.currProc===i}
+              height={height}
             />
           ))}
         </QueueBox>

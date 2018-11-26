@@ -29,18 +29,20 @@ export default class ProcedureMenu extends React.Component {
   }
 
   handleDragStart = (event, procId) => {
-    event.dataTransfer.setData('id', procId)
+    event.dataTransfer.setData('procId', procId)
   }
 
   render() {
+    const procedures = Lazy(this.props.procedures)
+      .filter(p => !p.isUnit != (this.state.tab === 0))
     return (
       <Box>
         <Header>
-          <Button>Assembler</Button>
-          <Button>Crucible</Button>
+          <Button onClick={()=>this.setState({ tab: 0 })}>Bots</Button>
+          <Button onClick={()=>this.setState({ tab: 1 })}>Parts</Button>
         </Header>
         <ProcedureList>
-          {Lazy(this.props.procedures)
+          {Lazy(procedures)
             .map(p => (
               <Procedure
                 key={p.id}

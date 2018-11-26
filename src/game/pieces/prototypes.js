@@ -1,7 +1,5 @@
 import uuidv4 from 'uuid/v4'
 import { ProtoDeviceMod } from './mods/prototypes.js'
-import procedures from '../components/procedures'
-import { ProtoTank } from './units'
 import { ASSMODS, CRUCIBLEMODS, GENMODS, MODHEIGHT } from '../constants'
 
 export function ProtoAssembler() {
@@ -9,18 +7,15 @@ export function ProtoAssembler() {
   this.type = 'assemblers'
   this.name = 'assembler'
   this.cost = { credits: 50, fabric: 50 }
-  this.baseProcedures = [new ProtoTank(this.id)]
-  this.procedures = [new ProtoTank(this.id)]
   this.mods = []
   this.status = true
   this.baseDrain = 1
   this.drain = 1
 }
 ProtoAssembler.mods = ASSMODS
-ProtoAssembler.height = 4*MODHEIGHT
+ProtoAssembler.height = 4.25*MODHEIGHT
 export const appWidth = 420
 ProtoAssembler.width = appWidth
-console.log('protoa height: ', ProtoAssembler.height)
 
 export function ProtoCrucible() {
   this.id = uuidv4()
@@ -28,13 +23,11 @@ export function ProtoCrucible() {
   this.name = 'crucible'
   this.cost = { credits: 50, fabric: 50 }
   this.mods = []
-  this.baseProcedures = [procedures.hardware, procedures.device]
-  this.procedures = [procedures.hardware, procedures.device]
   this.baseDrain = 1
   this.drain = 1
 }
 ProtoCrucible.mods = CRUCIBLEMODS
-ProtoCrucible.height = 3*MODHEIGHT
+ProtoCrucible.height = 3.25*MODHEIGHT
 ProtoCrucible.width = appWidth
 
 export function ProtoGenerator() {
@@ -47,7 +40,7 @@ export function ProtoGenerator() {
 }
 ProtoGenerator.width = appWidth
 ProtoGenerator.mods = GENMODS
-ProtoGenerator.height = 2*MODHEIGHT
+ProtoGenerator.height = 2.25*MODHEIGHT
 
 export function ProtoPort() {
   this.id = uuidv4()

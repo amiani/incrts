@@ -4,17 +4,19 @@ export const colorDict = {
   tanks: 'blue',
 }
 
-export function ProtoTank(ownerId) {
-  this.id = uuidv4()
-  this.ownerId = ownerId
-  this.name = 'Light Tank'
-  this.type = 'tanks'
-  this.isUnit = true
-  this.icon = 'tank.png'
-  this.health = 10
-  this.damage = 1
-  this.speed = 1
-  this.shields = 0
-  this.buildRate = 1
-  this.cost = { hardware: 10, }
+export const tank = {
+  name: 'Light Tank',
+  type: 'tanks',
+  isUnit: true,
+  icon: 'tank.png',
+  health: 10,
+  damage: 1,
+  speed: 1,
+  shields: 0,
+  buildRate: 1,
+  cost: { hardware: 10, },
+}
+
+export const units = {
+  tank
 }

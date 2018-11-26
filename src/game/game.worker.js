@@ -12,9 +12,10 @@ import {
 import { ProtoQueue, ProtoStack, ProtoBuffer, ProtoDeviceMod } from  './components/prototypes'
 import { ProtoOrder } from './objectives/prototypes'
 import procs from './components/procedures'
-
+import { units } from './pieces/units'
 
 const allProcedures = Lazy(procs)
+  .assign(units)
   .map(p => {
     p.id = uuidv4()
     return [p.id, p]
@@ -198,7 +199,7 @@ const updateQueues = () => {
           if (item.isUnit) {
             const unit = { ...item }
             unit.id = uuidv4()
-            const bufferId = data.assemblers[unit.ownerId].bufferId
+            const bufferId = data.assemblers[q.ownerId].bufferId
             const buffer = data.buffers[bufferId]
             !buffer.units[unit.type] && (buffer.units[unit.type] = [])
             buffer.units[unit.type].push(unit)
@@ -409,9 +410,7 @@ const enqueue = ({ queueId, procId }) => {
     //respond with error
     return
   }
-  const procedure = Lazy(data.procedures[procId])
-    .map((v, k) => [k, v])
-    .toObject()
+  const procedure = { ...data.procedures[procId] }
   if (procedure.cost) {
     spend(procedure.cost)
   }
@@ -424,9 +423,7 @@ const enstack = ({ stackId, procId }) => {
     //respond with error
     return
   }
-  const procedure = Lazy(data.procedures[procId])
-    .map((v, k) => [k, v])
-    .toObject()
+  const procedure = { ...data.procedures[procId] }
   const lazyProcedures = Lazy(stack.procedures)
   const sumPriorities = lazyProcedures.sum('priority') + 10
   lazyProcedures.each(p => p.priority = 100*p.priority/sumPriorities)
