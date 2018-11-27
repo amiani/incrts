@@ -9,10 +9,3 @@ export function ProtoTransfer(transferNumber, period, maxRate, rates, reward) {
   this.rates = rates
   this.reward = reward
 }
-
-export function ProtoBattlefield(bufferId) {
-  this.id = uuidv4()
-  this.component = 'Battlefield'
-  this.bufferId = bufferId
-  this.enroute = []
-}

@@ -17,11 +17,10 @@ export function ProtoStack(ownerId) {
   this.progress = 0
 }
 
-export function ProtoBuffer(ownerId, isSource) {
+export function ProtoBuffer(ownerId) {
   this.id = uuidv4()
   this.ownerId = ownerId
   this.capacity = 10
-  this.isSource = isSource
-  this.demand = { tanks: 0 }
   this.units = { tanks: [], }
+  this.transferRate = 5
 }

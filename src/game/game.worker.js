@@ -1,5 +1,7 @@
 import Lazy from 'lazy.js'
 import uuidv4 from 'uuid/v4'
+import SimpleSimplex from 'simple-simplex'
+import solver from 'javascript-lp-solver'
 
 import { clamp } from './helpers'
 import { TICKRATE } from './constants'
@@ -132,7 +134,8 @@ const update = () => {
       buffers: data.buffers,
     }
   })
-  tick % 10 == 0 && updateTransfers()
+  //detect empty transfers better
+  tick % 10 == 0 && Object.keys(data.transfers).length > 0 && updateTransfers()
   tick++
 }
 
@@ -218,67 +221,14 @@ const updateStacks = () => {
   //TODO; implement this
 }
 
-  /*
-const dispatch = ({ bufferId, orderId }) => {
-  const buffer = data.buffers[bufferId]
-  const order = data.orders[orderId]
-  Lazy(order.want)
-    .each((numWanted, unitType) => {
-      !order.units[unitType] && (order.units[unitType] = [])
-      const orderUnits = order.units[unitType]
-      const bufferUnits = buffer.units[unitType] || []
-      const numNeeded = numWanted - (orderUnits ? orderUnits.length : 0)
-      const numTaking = numNeeded > bufferUnits ? bufferUnits : numNeeded
-      order.units[unitType] = orderUnits.concat(bufferUnits.splice(0, numTaking))
-    })
-  postMessage({
-    sub: 'order',
-    body: order
-  })
-}
-
-const setDemand = ({ bufferId, unitType, amt }) => {
-  const buffer = data.buffers[bufferId]
-  const nextAmt = amt < 0 ? 0 : amt
-  const prevAmt = buffer.demand[unitType]
-  buffer.demand[unitType] = nextAmt
-  if (buffer.units[unitType].length < nextAmt) {
-    if (!data.unitQueues[unitType].includes(bufferId))
-      data.unitQueues[unitType].push(bufferId)
-  }
-  if (prevAmt > 0 && nextAmt <= 0) {
-    const queue = Lazy(data.unitQueues[unitType])
-      .reject(h => h === bufferId)
-      .toArray()
-    data.unitQueues[unitType] = queue
-  }
-}
-*/
-
 const updateBuffers = () => {
-  Lazy(data.buffers)
-    .where({ isSource: true })
-    .pluck('units')
-    .each(units => Lazy(units)
-      .each((unitArr, unitType) => {
-        if (Lazy(unitArr).isEmpty())
-          return
-        const actualQueue = data.unitQueues[unitType]
-        if (actualQueue.length > 0) {
-          const unit = unitArr.shift()
-          const firstBuffer = data.buffers[actualQueue.shift()]
-          unit.ownerId = firstBuffer.ownerId
-          !firstBuffer.units[unitType] && (firstBuffer.units[unitType] = [])
-          firstBuffer.units[unitType].push(unit)
-          if (firstBuffer.units[unitType].length < firstBuffer.demand[unitType]) {
-            actualQueue.push(firstBuffer.id)
-          }
-        }
-      })
-    )
 }
 
+//temporary
+let totalTransferRate = 0
 const updateTransfers = () => {
+  let transferIndex = 0
+  const transferQueue = []
   Lazy(data.transfers)
     .each(t => {
       t.period--
@@ -286,8 +236,116 @@ const updateTransfers = () => {
         delete data.transfers[t.id]
         return
       }
+      transferQueue.push(t)
       data.resources.credits += t.reward
     })
+
+    /*
+  console.log(Lazy(data.transfers)
+    .map(t => Lazy(t.rates).map((r, unit) => [t.id+unit, 1]))
+    //.flatten()
+    .toObject())
+    */
+
+  function Constraint(constraint, constant) {
+    this.namedVector = {}
+    this.constraint = constraint
+    this.constant = constant
+  }
+
+  const variables = {}
+  const networkConstraint = new Constraint('<=', 10)  //constant to be varied later by the player
+  const unitConstraints = {}
+  let constraints = [networkConstraint]
+  for (const transferId in data.transfers) {
+    const transfer = data.transfers[transferId]
+    const transferConstraint = new Constraint('<=', transfer.maxRate)
+    constraints.push(transferConstraint)
+    for (const unit in transfer.rates) {
+      const transferUnit = transfer.id+unit
+      console.log('transfer: ', transferUnit)
+      variables[transferUnit] = 0
+      objective[transferUnit] = 1
+
+      const nonZeroConstraint = new Constraint('>=', 0)
+      nonZeroConstraint.namedVector[transferUnit] = 1
+      constraints.push(nonZeroConstraint)
+
+      transferConstraint.namedVector[transferUnit] = 1
+
+      !unitConstraints[unit] && (unitConstraints[unit] = new Constraint('<=', 0))
+      unitConstraints[unit].namedVector[transferUnit] = 1
+    }
+  }
+  for (const bufferId in data.buffers) {
+    const buffer = data.buffers[bufferId]
+    const bufferConstraint = new Constraint('<=', buffer.transferRate)
+    if (Object.keys(buffer.units).length > 0) {
+      for (const unit in buffer.units) {
+        const bufferUnit = buffer.id+unit
+        console.log('buffer: ', bufferUnit)
+        variables[bufferUnit] = 0
+        objective[bufferUnit] = 0
+
+        const nonZeroConstraint = new Constraint('>=', 0)
+        nonZeroConstraint.namedVector[bufferUnit] = 1
+        constraints.push(nonZeroConstraint)
+
+        networkConstraint.namedVector[bufferUnit] = 1
+        bufferConstraint.namedVector[bufferUnit] = 1
+        if (unitConstraints[unit])
+          unitConstraints[unit].namedVector[bufferUnit] = -1
+      }
+      constraints.push(bufferConstraint)
+    }
+  }
+  for (const unitType in unitConstraints) {
+    constraints.push(unitConstraints[unitType])
+  }
+  constraints = constraints.map(constraint => ({
+    ...constraint,
+    namedVector: Lazy(constraint.namedVector)
+      .defaults(variables)
+      .toObject()
+  }))
+  model = {
+    optimize: 'reward',
+    opType: 'max',
+    constraints,
+    variables,
+  }
+    /*
+  const lazyBuffers = Lazy(data.buffers).values()
+  const buffersLength = lazyBuffers.size()
+  let bufIndex = 0
+  Lazy(data.transfers)
+    .map(t => Lazy(t.rates).map(r => {
+      const packets = []
+      for (let i = 0, n = r.desiredRate; i <= n; i++) {
+        packets.push({ transfer: t, unit: r.unit })
+      }
+      return packets
+    }).toArray())
+    .flatten()
+    .each(p => {
+      while (bufIndex < buffersLength) {
+        const buffer = lazyBuffers.get(bufIndex)
+        const unitBuffer = buffer.units[p.unit]
+        if (
+          buffer.usedRate < buffer.transferRate
+          && unitBuffer && unitBuffer.length > 0
+        ) {
+          unitBuffer.pop()
+          console.log(p.transfer.rates)
+          p.transfer.rates[p.unit].currRate++
+          break
+        }
+        bufIndex++
+      }
+    })
+  lazyBuffers.each(b => { b.usedRate = 0 })
+  */
+
   postMessage({
     sub: 'transfers',
     body: data.transfers
@@ -325,7 +383,7 @@ const updateMod = body => {
 
 const buildAssembler = () => {
   const assembler = new ProtoAssembler()
-  const buffer = makeBuffer(assembler.id, true)
+  const buffer = makeBuffer(assembler.id)
   const queue = makeQueue(assembler.id)
   assembler.bufferId = buffer.id
   assembler.queueId = queue.id
@@ -345,7 +403,7 @@ const buildGenerator = () => {
 
 const buildPort = () => {
   const port = new ProtoPort()
-  const buffer = makeBuffer(port.id, false)
+  const buffer = makeBuffer(port.id)
   port.bufferId = buffer.id
   buildApparatus(port)
 }
@@ -356,8 +414,8 @@ const buildApparatus = apparatus => {
   postMessage({ sub: 'apparati', body: { [apparatus.type]: data[apparatus.type] } })
 }
 
-const makeBuffer = (ownerId, isSource) => {
-  const buffer = new ProtoBuffer(ownerId, isSource)
+const makeBuffer = ownerId => {
+  const buffer = new ProtoBuffer(ownerId)
   data.buffers[buffer.id] = buffer
   return buffer
 }
@@ -384,7 +442,7 @@ const makeContract = () => {
     contractNumber,
     30,
     2,
-    [{ unit: 'tanks', desiredRate: 1, currRate: 0 }]
+    { tanks: { desiredRate: 1, currRate: 0 } }
   )
   data.contracts[contract.id] = contract
   postMessage({ sub: 'contracts', body: data.contracts })
