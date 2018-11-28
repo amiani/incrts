@@ -7,7 +7,6 @@ import broker from '../../broker'
 const Box = styled.div`
   height: 25%;
   display: flex;
-  border: solid 2px black;
 `
 
 export default class Buffer extends React.Component {

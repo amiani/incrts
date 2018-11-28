@@ -135,6 +135,7 @@ const update = () => {
   })
   //detect empty transfers better
   tick % 10 == 0 && Object.keys(data.transfers).length > 0 && updateTransfers()
+  tick % 100 == 0 && makeContract()
   tick++
 }
 
@@ -200,7 +201,7 @@ const updateQueues = () => {
     .each(q => {
       const proc = q.procedures[q.currProc]
       if (proc) {
-        q.progress += q.buildRate * proc.buildRate + 10
+        q.progress += q.buildRate * proc.buildRate + 40
         if (q.progress >= 100) {
           const unit = { ...proc }
           unit.id = uuidv4()
@@ -221,12 +222,13 @@ const updateStacks = () => {
 }
 
 const updateBuffers = tick => {
-  if (tick % 10 === 0) {
+  const ticksBetweenUpdates = 5
+  if (tick % ticksBetweenUpdates === 0) {
     Lazy(data.buffers)
       .each(b => {
         Lazy(b.units).each((arr, unitType) => {
           !b.unitCounts[unitType] && (b.unitCounts[unitType] = [])
-          b.unitCounts[unitType][tick/10] = arr.length
+          b.unitCounts[unitType][tick/ticksBetweenUpdates] = arr.length
         })
       })
   }
@@ -269,7 +271,9 @@ const updateTransfers = () => {
     if (Object.keys(buffer.units).length > 0) {
       for (const unit in buffer.units) {
         const bufferUnit = buffer.id + ',buffers,' + unit
+        constraints[bufferUnit] = { max: buffer.units[unit].length }
         variables[bufferUnit] = {
+          [bufferUnit]: 1,
           [bufferId]: 1,
           [unit]: -1,
           network: 1,

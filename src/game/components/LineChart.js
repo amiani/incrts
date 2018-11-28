@@ -23,9 +23,9 @@ export default class UnitChart extends React.Component {
 
   draw() {
     const ctx = this.canvas.current.getContext('2d')
-    const period = 10
+    const period = 30
     ctx.clearRect(0, 0, this.props.width, this.props.height)
-    const { min, max } = Lazy(this.props.data)
+    let { min, max } = Lazy(this.props.data)
       .reduce((dataAcc, series) => series
         .slice(-period-1)
         .reduce((seriesAcc, point) => {
@@ -35,16 +35,39 @@ export default class UnitChart extends React.Component {
         }, dataAcc),
         { min: 1000, max: 0 }
       )
+    if (max - min < 10)
+      max += 10 - max - min
     const range = max - min
-    //console.log(max, min)
-    //const vertScale = (10 * (max - min)) / this.props.height
     const horiScale = this.props.width / period
+    const vertScale = this.props.height / 10
 
+    ctx.lineWidth = 1
+    ctx.globalAlpha = .3
+    for (let i = 1; i < (period / 5); i++) {
+      ctx.beginPath()
+      const x = i * horiScale * 5
+      ctx.moveTo(x, 0)
+      ctx.lineTo(x, this.props.height)
+      ctx.strokeStyle = 'white'
+      ctx.stroke()
+    }
+
+    for (let i = 1; i < 10; i++) {
+      ctx.beginPath()
+      const y = i * vertScale
+      ctx.moveTo(0, y)
+      ctx.lineTo(this.props.width, y)
+      ctx.strokeStyle = 'white'
+      ctx.stroke()
+    }
+
+
+    ctx.lineWidth = 2
+    ctx.globalAlpha = 1
     const coords = []
     Lazy(this.props.data)
       .each(series => {
         ctx.beginPath()
-        //console.log(series.slice(-10))
         series
           .slice(-period-1)
           .forEach((count, t) => {
@@ -53,25 +76,16 @@ export default class UnitChart extends React.Component {
             coords[t] = { x, y }
             ctx.lineTo(x, y)
           })
-        ctx.strokeStyle = 'blue'
+        ctx.strokeStyle = '#ee855e'
         ctx.stroke()
       })
-    //console.log(this.props.height)
-    //console.log(coords)
-  }
 
-  renders = 0
-  shouldComponentUpdate() {
-    this.renders++
-    if (this.renders >= 200)
-      return false
-    else
-      return true
+    ctx.font = '20px sans-serif'
+    ctx.fillStyle = 'yellow'
+    ctx.fillText('(' + min + ', ' + max +')', 0, 20)
   }
 
   render() {
-    console.log(this.props.data)
-    this.props.data.tanks && console.log(this.props.data.tanks.slice(-11))
     return (
       <canvas
         ref={this.canvas}

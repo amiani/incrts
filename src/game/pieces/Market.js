@@ -93,7 +93,7 @@ export default class Market extends React.Component {
           header={
             <React.Fragment>
               <Button onClick={()=>this.setState({tab: 0})}>Contracts</Button>
-              <Button onClick={()=>this.setState({tab: 1})}>Patents</Button>
+              {/*<Button onClick={()=>this.setState({tab: 1})}>Patents</Button>*/}
             </React.Fragment>
           }
           front={
