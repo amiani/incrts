@@ -3,7 +3,6 @@ import Lazy from 'lazy.js'
 import styled from 'styled-components'
 
 import LeftSider from './LeftSider'
-import RightSider from './RightSider'
 import Base from './Base'
 import broker from './broker'
 
@@ -35,7 +34,6 @@ export default class Main extends React.Component {
       <Box>
         <LeftSider />
         <Base />
-        <RightSider />
       </Box>
     )
   }

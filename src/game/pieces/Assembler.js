@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Apparatus from './Apparatus'
 import Button from '../components/Button'
 import Queue from '../components/Queue'
-import ExpandingBuffer from '../components/Buffer/ExpandingBuffer'
+import Buffer from '../components/Buffer'
 import { ModPanelFront } from './mods/ModPanel'
 import Switch from '../components/Switch'
 import { ProtoAssembler } from './prototypes'
@@ -68,6 +68,7 @@ export default class Assembler extends React.Component {
           front={
             <React.Fragment>
               <Queue id={queueId} />
+              <Buffer id={bufferId} />
               <ModPanelFront mods={mods} />
             </React.Fragment>
           }

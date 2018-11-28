@@ -1,6 +1,2 @@
-import ExpandingBuffer from './ExpandingBuffer'
-
-export {
-  ExpandingBuffer,
-}
-
+import Buffer from './Buffer'
+export default Buffer

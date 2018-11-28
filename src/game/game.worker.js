@@ -123,7 +123,7 @@ const update = () => {
   updateResources()
   updateQueues()
   updateStacks
-  updateBuffers()
+  updateBuffers(tick)
   postMessage({
     sub: 'update',
     body: {
@@ -220,7 +220,16 @@ const updateStacks = () => {
   //TODO; implement this
 }
 
-const updateBuffers = () => {
+const updateBuffers = tick => {
+  if (tick % 10 === 0) {
+    Lazy(data.buffers)
+      .each(b => {
+        Lazy(b.units).each((arr, unitType) => {
+          !b.unitCounts[unitType] && (b.unitCounts[unitType] = [])
+          b.unitCounts[unitType][tick/10] = arr.length
+        })
+      })
+  }
 }
 
 const updateTransfers = () => {
@@ -279,7 +288,8 @@ const updateTransfers = () => {
     if (result[clientUnit]) {
       const [clientId, clientType, unit] = clientUnit.split(',')
       if (clientType === 'buffers') {
-        data.buffers[clientId].units[unit] -= result[clientUnit]
+        data.buffers[clientId].units[unit] = data.buffers[clientId].units[unit]
+          .slice(result[clientUnit])
       } else {
         data.transfers[clientId].rates[unit].currRate = result[clientUnit]
       }
@@ -382,7 +392,8 @@ const makeContract = () => {
     contractNumber,
     30,
     2,
-    { tanks: { desiredRate: 1, currRate: 0 } }
+    { tanks: { desiredRate: 1, currRate: 0 } },
+    1
   )
   data.contracts[contract.id] = contract
   postMessage({ sub: 'contracts', body: data.contracts })

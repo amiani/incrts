@@ -23,4 +23,5 @@ export function ProtoBuffer(ownerId) {
   this.capacity = 10
   this.units = { tanks: [], }
   this.maxRate = 5
+  this.unitCounts = {}
 }
