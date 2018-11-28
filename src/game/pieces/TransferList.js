@@ -50,7 +50,7 @@ class Transfer extends React.Component {
     return (
       <TransferBox>
         <Rates>
-          {Lazy(this.props.rates).map(r => <Rate key={r.unit} {...r} />).toArray()}
+          {Lazy(this.props.rates).map((r, unit) => <Rate key={unit} {...r} />).toArray()}
         </Rates>
         <TimeLeft>{this.props.period}</TimeLeft>
       </TransferBox>

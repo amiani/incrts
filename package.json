@@ -4,6 +4,7 @@
   "homepage": "https://amiani.github.io/incrts",
   "private": true,
   "dependencies": {
+    "javascript-lp-solver": "^0.4.5",
     "lazy.js": "^0.5.1",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
