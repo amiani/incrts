@@ -36,7 +36,7 @@ export default class UnitChart extends React.Component {
         { min: 1000, max: 0 }
       )
     if (max - min < 10)
-      max += 10 - max - min
+      max += 10 - max + min
     const range = max - min
     const horiScale = this.props.width / period
     const vertScale = this.props.height / 10
@@ -64,7 +64,6 @@ export default class UnitChart extends React.Component {
 
     ctx.lineWidth = 2
     ctx.globalAlpha = 1
-    const coords = []
     Lazy(this.props.data)
       .each(series => {
         ctx.beginPath()
@@ -73,7 +72,6 @@ export default class UnitChart extends React.Component {
           .forEach((count, t) => {
             const x = t * horiScale
             const y = this.props.height * ((max - count) / range)
-            coords[t] = { x, y }
             ctx.lineTo(x, y)
           })
         ctx.strokeStyle = '#ee855e'

@@ -14,7 +14,7 @@ export default class Knob extends React.Component {
     const { size, value, max, min } = this.props
     const center = size/2
     const radius = .4*size
-    const lineWidth = .15*radius
+    const lineWidth = .2*radius
     ctx.clearRect(0, 0, size, size)
     
     ctx.beginPath()
@@ -27,7 +27,7 @@ export default class Knob extends React.Component {
     const angle = 3*Math.PI/2*( value/(max - min) + 1/2 )
     ctx.arc(center, center, radius, 3/4*Math.PI, angle)
     ctx.lineWidth = lineWidth
-    ctx.strokeStyle = 'yellow'
+    ctx.strokeStyle = '#d7c844'
     ctx.stroke()
 
     ctx.beginPath()
@@ -37,8 +37,8 @@ export default class Knob extends React.Component {
     ctx.fillStyle = 'white'
     ctx.fill()
 
-    ctx.font = `${size/5}px sans-serif`
-    ctx.fillStyle = 'yellow'
+    ctx.font = `${size/4}px Rubik`
+    ctx.fillStyle = '#d7c844'
     ctx.textAlign = 'center'
     ctx.textBaseLine = 'middle'
     ctx.fillText(Math.round(value), center, center)

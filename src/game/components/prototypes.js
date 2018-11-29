@@ -20,8 +20,8 @@ export function ProtoStack(ownerId) {
 export function ProtoBuffer(ownerId) {
   this.id = uuidv4()
   this.ownerId = ownerId
-  this.capacity = 10
+  this.capacity = 50
   this.units = { tanks: [], }
-  this.maxRate = 5
+  this.maxRate = 100
   this.unitCounts = {}
 }

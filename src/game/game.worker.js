@@ -118,12 +118,16 @@ onmessage = e => {
   }
 }
 
+const ticksPerTransfersUpdate = 10
+const ticksPerNewContract = 100
 let tick = 0
 const update = () => {
   updateResources()
   updateQueues()
   updateStacks
   updateBuffers(tick)
+  tick % ticksPerTransfersUpdate == 0 && Object.keys(data.transfers).length > 0 && updateTransfers(tick)
+  tick % ticksPerNewContract == 0 && Object.keys(data.contracts).length < 15 && makeContract()
   postMessage({
     sub: 'update',
     body: {
@@ -133,9 +137,6 @@ const update = () => {
       buffers: data.buffers,
     }
   })
-  //detect empty transfers better
-  tick % 10 == 0 && Object.keys(data.transfers).length > 0 && updateTransfers()
-  tick % 100 == 0 && makeContract()
   tick++
 }
 
@@ -200,8 +201,11 @@ const updateQueues = () => {
   Lazy(data.queues)
     .each(q => {
       const proc = q.procedures[q.currProc]
-      if (proc) {
-        q.progress += q.buildRate * proc.buildRate + 40
+      const buffer = data.buffers[data.assemblers[q.ownerId].bufferId]
+      const totalUnits = Lazy(buffer.units)
+        .reduce((acc, u) => acc + u.length, 0)
+      if (totalUnits < buffer.capacity && proc) {
+        q.progress += q.buildRate * proc.buildRate + 400
         if (q.progress >= 100) {
           const unit = { ...proc }
           unit.id = uuidv4()
@@ -234,9 +238,7 @@ const updateBuffers = tick => {
   }
 }
 
-const updateTransfers = () => {
-  let transferIndex = 0
-  const transferQueue = []
+const updateTransfers = tick => {
   Lazy(data.transfers)
     .each(t => {
       t.period--
@@ -244,13 +246,12 @@ const updateTransfers = () => {
         delete data.transfers[t.id]
         return
       }
-      transferQueue.push(t)
       data.resources.credits += t.reward
     })
 
   const variables = {}
   const constraints = {
-    network: { max: 10 },
+    network: { max: 100 },
     tanks: { equal: 0 }
   }
   for (const transferId in data.transfers) {

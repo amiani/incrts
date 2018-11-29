@@ -40,24 +40,22 @@ const Box = styled.div`
   }
 `
 
-const BoxFront = styled.div`
-`
-
-export default props => (
-  <Box>
-    <Apparatus
-      flippable
-      width={ProtoGenerator.width}
-      height={ProtoGenerator.height}
-      front={
-        <BoxFront>
-          <Button onClick={()=>props.store.addEnergy(10)}>Generate 10</Button>
-          <ModPanelFront mods={props.generator.mods} />
-        </BoxFront>
-      }
-      back={
-        <p>This is the back of the Generator</p>
-      }
-    />
-  </Box>
-)
+export default class Generator extends React.Component {
+  render() {
+    return (
+      <Box>
+        <Apparatus
+          flippable
+          width={ProtoGenerator.width}
+          height={ProtoGenerator.height}
+          front={
+            <ModPanelFront mods={this.props.generator.mods} />
+          }
+          back={
+            <p>This is the back of the Generator</p>
+          }
+        />
+      </Box>
+    )
+  }
+}

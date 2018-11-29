@@ -31,7 +31,6 @@ const Box = styled.div`
 `
 
 export default class Assembler extends React.Component {
-  state = { showSider: true }
   constructor(props) {
     super()
     this.id = props.assembler.id
@@ -53,8 +52,6 @@ export default class Assembler extends React.Component {
       body: { apparatusId: this.id }
     })
   }
-
-  toggleSider = () => this.setState({ showSider: !this.state.showSider })
 
   render() {
     const { queueId, bufferId, status, mods } = this.props.assembler
