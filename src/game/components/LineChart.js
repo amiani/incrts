@@ -23,7 +23,7 @@ export default class UnitChart extends React.Component {
 
   draw() {
     const ctx = this.canvas.current.getContext('2d')
-    const period = 30
+    const period = 300
     ctx.clearRect(0, 0, this.props.width, this.props.height)
     let { min, max } = Lazy(this.props.data)
       .reduce((dataAcc, series) => series
@@ -43,9 +43,9 @@ export default class UnitChart extends React.Component {
 
     ctx.lineWidth = 1
     ctx.globalAlpha = .3
-    for (let i = 1; i < (period / 5); i++) {
+    for (let i = 1; i < (period / 25); i++) {
       ctx.beginPath()
-      const x = i * horiScale * 5
+      const x = i * horiScale * 25
       ctx.moveTo(x, 0)
       ctx.lineTo(x, this.props.height)
       ctx.strokeStyle = 'white'

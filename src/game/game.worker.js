@@ -222,7 +222,7 @@ const updateStacks = () => {
 }
 
 const updateBuffers = tick => {
-  const ticksBetweenUpdates = 5
+  const ticksBetweenUpdates = 1
   if (tick % ticksBetweenUpdates === 0) {
     Lazy(data.buffers)
       .each(b => {
@@ -409,6 +409,7 @@ const acceptContract = ({ contractId }) => {
   data.transfers[contractId] = contract
   delete data.contracts[contractId]
   postMessage({ sub: 'contracts', body: data.contracts })
+  postMessage({ sub: 'transfers', body: data.transfers })
 }
 
 const cancelOrder = orderId => {

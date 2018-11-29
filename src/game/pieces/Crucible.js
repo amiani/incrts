@@ -31,10 +31,9 @@ const Box = styled.div`
   }
 `
 
-const BoxFront = styled.div`
-`
-
-const BoxBack = styled.div`
+const Drain = styled.div`
+  font-size: 15px;
+  text-align: bottom;
 `
 
 export default class Crucible extends React.Component {
@@ -71,6 +70,11 @@ export default class Crucible extends React.Component {
           width={ProtoCrucible.width}
           height={ProtoCrucible.height}
           message={this.state.message}
+          header={
+            <React.Fragment>
+              <Drain>Drain: {this.props.crucible.drain}</Drain>
+            </React.Fragment>
+          }
           front={
             <React.Fragment>
               <Stack id={this.props.crucible.stackId} />
@@ -79,9 +83,7 @@ export default class Crucible extends React.Component {
             </React.Fragment>
           }
           back={
-            <BoxBack>
-              <ModPanelBack mods={this.props.crucible.mods} />
-            </BoxBack>
+            <ModPanelBack mods={this.props.crucible.mods} />
           }
         />
       </Box>
