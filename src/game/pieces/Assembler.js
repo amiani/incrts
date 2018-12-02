@@ -11,6 +11,7 @@ import { ProtoAssembler } from './prototypes'
 import broker from '../broker'
 import { ProcedureSider } from '../components/procedures'
 import { BOARDANGLE } from '../constants'
+import Oscillator from '../components/Oscillator'
 
 const HOVERDIST = 20
 const Box = styled.div`
@@ -28,6 +29,11 @@ const Box = styled.div`
       )
     ;
   }
+`
+
+const BuildBox = styled.div`
+  display: flex;
+  height: 25%;
 `
 
 export default class Assembler extends React.Component {
@@ -64,7 +70,12 @@ export default class Assembler extends React.Component {
           showSider={this.toggleSider}
           front={
             <React.Fragment>
-              <Queue id={queueId} />
+              <BuildBox>
+                <Queue id={queueId} />
+                <Oscillator
+                  size={154}
+                />
+              </BuildBox>
               <Buffer id={bufferId} />
               <ModPanelFront mods={mods} />
             </React.Fragment>

@@ -9,7 +9,8 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 25%;
+  //height: 25%;
+  width: 63%;
   margin-bottom: 5px;
   /*
   border: 3px dashed ${p => p.loop ? 'blue' : 'transparent'};
