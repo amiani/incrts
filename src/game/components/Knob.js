@@ -31,8 +31,8 @@ export default class Knob extends React.Component {
     ctx.stroke()
 
     ctx.beginPath()
-    const x = (radius-5)*Math.cos(angle) + this.props.size/2
-    const y = (radius-5)*Math.sin(angle) + this.props.size/2
+    const x = (radius-5)*Math.cos(angle) + size/2
+    const y = (radius-5)*Math.sin(angle) + size/2
     ctx.arc(x, y, 2, 0, 2*Math.PI)
     ctx.fillStyle = 'white'
     ctx.fill()
@@ -41,7 +41,7 @@ export default class Knob extends React.Component {
     ctx.fillStyle = '#d7c844'
     ctx.textAlign = 'center'
     ctx.textBaseLine = 'middle'
-    ctx.fillText(Math.round(value), center, center)
+    ctx.fillText(Math.round(value), center, center + size/20)
   }
 
   componentDidMount() {

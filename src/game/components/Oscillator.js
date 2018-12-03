@@ -36,7 +36,7 @@ export default class Oscillator extends React.Component {
     ctx.stroke()
 
     const k = .01
-    const g = .005
+    const g = this.props.harm * .005
     const aX = -k*this.prevPX
     const aY = -k*this.prevPY
     const dampX = -g*this.prevVX
@@ -45,23 +45,33 @@ export default class Oscillator extends React.Component {
     const vY = this.prevVY + (aY + dampY) * timeDelta
     let pX = this.prevPX + vX * timeDelta
     let pY = this.prevPY + vY * timeDelta
-    const magnitude = this.cartesianToMagnitude(pX, pY)
+    const posMag = this.cartesianToMagnitude(pX, pY)
     const maxMag = halfSize - 2*massR
-    if (magnitude > maxMag) {
-      pX *= maxMag/magnitude
-      pY *= maxMag/magnitude
-    } else if (magnitude < 0.0000001) {
-      pX = 0
-      pY = 0
+    const minMag = 0.000001
+    if (posMag > maxMag) {
+      pX *= maxMag/posMag
+      pY *= maxMag/posMag
     }
+    if (posMag < minMag) {
+      this.prevPX = 0
+      this.prevPY = 0
+    } else {
+      this.prevPX = pX
+      this.prevPY = pY
+    }
+
+    if (this.cartesianToMagnitude(vX, vY) < minMag) {
+      this.prevVX = 0
+      this.prevVY = 0
+    } else {
+      this.prevVX = vX
+      this.prevVY = vY
+    }
+
     ctx.beginPath()
     ctx.arc(pX + halfSize, -pY + halfSize, massR, 0, 2*Math.PI, true)
     ctx.fillStyle = 'red'
     ctx.fill()
-    this.prevVX = vX
-    this.prevVY = vY
-    this.prevPX = pX
-    this.prevPY = pY
 
     requestAnimationFrame(this.draw)
   }

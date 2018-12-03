@@ -14,10 +14,10 @@ export default class DeviceModControl extends React.Component {
   state = { testknobvalue: 50, status: true }
   constructor(props) {
     super()
-    this.id = props.id
+    props.id = props.id
     broker.addListener(
-      this.id,
-      { id: this.id, onmessage: this.handleMessage }
+      props.id,
+      { id: props.id, onmessage: this.handleMessage }
     )
   }
 
@@ -27,9 +27,9 @@ export default class DeviceModControl extends React.Component {
 
   handleChange = amt => {
     broker.post({
-      sub: 'updatemod',
+      sub: 'tunemod',
       body: {
-        modId: this.id,
+        modId: this.props.id,
         testknobvalue: this.state.testknobvalue + amt
       }
     })

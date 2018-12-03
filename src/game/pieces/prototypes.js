@@ -11,6 +11,8 @@ export function ProtoAssembler() {
   this.status = true
   this.baseDrain = 1
   this.drain = 1
+  this.speed = 1
+  this.harm = 1
 }
 ProtoAssembler.mods = ASSMODS
 ProtoAssembler.height = 4.25*MODHEIGHT

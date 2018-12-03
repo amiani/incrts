@@ -100,11 +100,14 @@ onmessage = e => {
     case 'setdemand':
       setDemand(e.data.body)
       break
+    case 'tuneassembler':
+      tuneAssembler(e.data.body)
+      break
     case 'addmod':
       addMod(e.data.body)
       break
-    case 'updatemod':
-      updateMod(e.data.body)
+    case 'tunemod':
+      tuneMod(e.data.body)
       break
     case 'setfabricrate':
       setFabricRate(e.data.body)
@@ -172,9 +175,6 @@ const updateApparatus = apparatus => {
   apparatus.drain = apparatus.baseDrain + apparatus.mods.reduce((acc, m) => (
     acc + (m.drain ? m.drain : 0)
   ), 0)
-  apparatus.procedures = apparatus.baseProcedures.concat(
-    apparatus.mods.reduce((acc, id) => acc.concat(data.mods[id].procedures), [])
-  )
   postMessage({
     sub: 'apparatus',
     body: apparatus
@@ -182,8 +182,8 @@ const updateApparatus = apparatus => {
 }
 
 const buy = want => {
-  const wantSeq = Lazy(want)
-  const cost = wantSeq
+  const lazyWant = Lazy(want)
+  const cost = lazyWant
     .reduce((acc, amt, name) => {
       Lazy(data.resources[`${name}Price`])
         .each((price, priceName) => {
@@ -193,24 +193,23 @@ const buy = want => {
       return acc
     }, {})
   if (spend(cost)) {
-    wantSeq.each((amt, name) => { data.resources[name] += amt })
+    lazyWant.each((amt, name) => { data.resources[name] += amt })
   }
 }
 
 const updateQueues = () => {
   Lazy(data.queues)
     .each(q => {
+      const assembler = data.assemblers[q.ownerId]
+      const buffer = data.buffers[assembler.bufferId]
       const proc = q.procedures[q.currProc]
-      const buffer = data.buffers[data.assemblers[q.ownerId].bufferId]
       const totalUnits = Lazy(buffer.units)
         .reduce((acc, u) => acc + u.length, 0)
       if (totalUnits < buffer.capacity && proc) {
-        q.progress += q.buildRate * proc.buildRate + 400
+        q.progress += assembler.speed * proc.buildRate
         if (q.progress >= 100) {
           const unit = { ...proc }
           unit.id = uuidv4()
-          const bufferId = data.assemblers[q.ownerId].bufferId
-          const buffer = data.buffers[bufferId]
           !buffer.units[unit.type] && (buffer.units[unit.type] = [])
           buffer.units[unit.type].push(unit)
 
@@ -307,6 +306,17 @@ const updateTransfers = tick => {
   })
 }
 
+const tuneAssembler = ({ assemblerId, ...controlSettings }) => {
+  const ass = data.assemblers[assemblerId]
+  for (const control in controlSettings) {
+    ass[control] = controlSettings[control]
+  }
+  postMessage({
+    sub: 'apparatus',
+    body: ass
+  })
+}
+
 const addMod = ({ apparatusId, type, mod }) => {
   data.mods[mod.id] = mod
   const apparatus = data[type][apparatusId]
@@ -325,7 +335,7 @@ const addMod = ({ apparatusId, type, mod }) => {
   })
 }
 
-const updateMod = body => {
+const tuneMod = body => {
   const mod = data.mods[body.modId]
   mod.testknobvalue = body.testknobvalue
   if (mod.testknobvalue > 100) mod.testknobvalue = 100

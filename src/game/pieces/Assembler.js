@@ -12,6 +12,7 @@ import broker from '../broker'
 import { ProcedureSider } from '../components/procedures'
 import { BOARDANGLE } from '../constants'
 import Oscillator from '../components/Oscillator'
+import Clock from './mods/Clock'
 
 const HOVERDIST = 20
 const Box = styled.div`
@@ -37,11 +38,6 @@ const BuildBox = styled.div`
 `
 
 export default class Assembler extends React.Component {
-  constructor(props) {
-    super()
-    this.id = props.assembler.id
-  }
-  
   enqueue = item => {
     broker.post({
       sub: 'enqueue',
@@ -52,28 +48,41 @@ export default class Assembler extends React.Component {
     })
   }
 
-  handlePowerChange = e => {
+  handleSpeedChange = amt => {
     broker.post({
-      sub: 'togglepower',
-      body: { apparatusId: this.id }
+      sub: 'tuneassembler',
+      body: {
+        assemblerId: this.props.assembler.id,
+        speed: this.props.assembler.speed + amt
+      }
+    })
+  }
+
+  handleHarmChange = amt => {
+    broker.post({
+      sub: 'tuneassembler',
+      body: {
+        assemblerId: this.props.assembler.id,
+        harm: this.props.assembler.harm + amt
+      }
     })
   }
 
   render() {
-    const { queueId, bufferId, status, mods } = this.props.assembler
+    const { queueId, bufferId, speed, harm, mods } = this.props.assembler
     return (
       <Box>
         <Apparatus
           flippable
           width={ProtoAssembler.width}
           height={ProtoAssembler.height}
-          showSider={this.toggleSider}
           front={
             <React.Fragment>
               <BuildBox>
                 <Queue id={queueId} />
                 <Oscillator
                   size={154}
+                  harm={harm}
                 />
               </BuildBox>
               <Buffer id={bufferId} />
@@ -81,7 +90,14 @@ export default class Assembler extends React.Component {
             </React.Fragment>
           }
           back={
-            <Switch on={status} handleChange={this.handlePowerChange} />
+            <React.Fragment>
+              <Clock
+                handleSpeedChange={this.handleSpeedChange}
+                handleHarmChange={this.handleHarmChange}
+                speed={speed}
+                harm={harm}
+              />
+            </React.Fragment>
           }
         />
       </Box>
