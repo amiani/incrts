@@ -206,7 +206,7 @@ const updateQueues = () => {
       const totalUnits = Lazy(buffer.units)
         .reduce((acc, u) => acc + u.length, 0)
       if (totalUnits < buffer.capacity && proc) {
-        q.progress += assembler.speed * proc.buildRate
+        q.progress += assembler.speed.value * proc.buildRate
         if (q.progress >= 100) {
           const unit = { ...proc }
           unit.id = uuidv4()
@@ -308,8 +308,13 @@ const updateTransfers = tick => {
 
 const tuneAssembler = ({ assemblerId, ...controlSettings }) => {
   const ass = data.assemblers[assemblerId]
+  let newValue
+  let assControl
   for (const control in controlSettings) {
-    ass[control] = controlSettings[control]
+    newValue = controlSettings[control]
+    assControl = ass[control]
+    if (newValue <= assControl.max && newValue >= assControl.min)
+      assControl.value = newValue
   }
   postMessage({
     sub: 'apparatus',

@@ -55,15 +55,18 @@ export default class Knob extends React.Component {
   handleWheel = event => this.props.handleChange(event.deltaY < 0 ? this.props.step : -this.props.step)
 
   handleMouseDown = event => {
-    this.startPosition = event.screenY;
-    document.body.style['pointer-events'] = 'none'
-    document.addEventListener('mousemove', this.handleMouseMove)
-    document.addEventListener('mouseup', this.handleMouseUp)
+    if (event.button === 0) {
+      this.startPosition = event.screenY;
+      document.body.style['pointer-events'] = 'none'
+      document.addEventListener('mousemove', this.handleMouseMove)
+      document.addEventListener('mouseup', this.handleMouseUp)
+    }
   }
   handleMouseUp = () => {
     document.body.style['pointer-events'] = 'auto'
     document.removeEventListener('mousemove', this.handleMouseMove)
     document.removeEventListener('mouseup', this.handleMouseUp)
+    this.props.toggleTuning && this.props.toggleTuning()
   }
   handleMouseMove = event => {
     const amt = Math.round(this.props.step*(this.startPosition - event.screenY) / 3)

@@ -20,7 +20,7 @@ const Box = styled.div`
   transform-origin: bottom;
   transition: transform ease 200ms;
   transform-style: preserve-3d;
-  :hover {
+  :active, :hover {
     transform:
       rotate3d(1, 0, 0, -5deg)
       translate3d(
@@ -53,7 +53,7 @@ export default class Assembler extends React.Component {
       sub: 'tuneassembler',
       body: {
         assemblerId: this.props.assembler.id,
-        speed: this.props.assembler.speed + amt
+        speed: this.props.assembler.speed.value + amt
       }
     })
   }
@@ -63,7 +63,7 @@ export default class Assembler extends React.Component {
       sub: 'tuneassembler',
       body: {
         assemblerId: this.props.assembler.id,
-        harm: this.props.assembler.harm + amt
+        harm: this.props.assembler.harm.value + amt
       }
     })
   }
@@ -82,7 +82,7 @@ export default class Assembler extends React.Component {
                 <Queue id={queueId} />
                 <Oscillator
                   size={154}
-                  harm={harm}
+                  harm={harm.value}
                 />
               </BuildBox>
               <Buffer id={bufferId} />
@@ -94,8 +94,8 @@ export default class Assembler extends React.Component {
               <Clock
                 handleSpeedChange={this.handleSpeedChange}
                 handleHarmChange={this.handleHarmChange}
-                speed={speed}
-                harm={harm}
+                speed={speed.value}
+                harm={harm.value}
               />
             </React.Fragment>
           }

@@ -26,16 +26,20 @@ const UnitName = styled.div`
 `
 
 const CurrRate = styled.div`
+  color: ${p => p.color};
 `
 
 const DesiredRate = styled.div`
 `
 
 const Rate = props => {
+  const color = props.currRate < props.desiredRate
+    ? 'red'
+    : props.currRate > props.desiredRate ? 'green' : 'white'
   return (
     <RateBox>
       <UnitName>{props.unit}</UnitName>
-      <CurrRate>current rate: {props.currRate}/s</CurrRate>
+      <CurrRate color={color}>current rate: {props.currRate}/s</CurrRate>
       <DesiredRate>desired rate: {props.desiredRate}/s</DesiredRate>
     </RateBox>
   )

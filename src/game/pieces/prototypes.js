@@ -11,8 +11,9 @@ export function ProtoAssembler() {
   this.status = true
   this.baseDrain = 1
   this.drain = 1
-  this.speed = 1
-  this.harm = 1
+  this.speed = { value: 1, min: 0, max: 50 }
+  this.harm = { value: 1, min: 0, max: 10 }
+  this.sync = 0
 }
 ProtoAssembler.mods = ASSMODS
 ProtoAssembler.height = 4.25*MODHEIGHT
@@ -27,6 +28,7 @@ export function ProtoCrucible() {
   this.mods = []
   this.baseDrain = 1
   this.drain = 1
+  this.speed = 1
 }
 ProtoCrucible.mods = CRUCIBLEMODS
 ProtoCrucible.height = 3.25*MODHEIGHT
