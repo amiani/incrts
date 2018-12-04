@@ -15,7 +15,8 @@ export function ProtoAssembler() {
   this.harm = { value: 1, min: 0, max: 10 }
   this.oscillator = {
     position: { x: 20, y: 30 },
-    velocity: { x: 0, y: 0 } 
+    velocity: { x: 0, y: 0 },
+    sync: 50
   }
 }
 ProtoAssembler.mods = ASSMODS

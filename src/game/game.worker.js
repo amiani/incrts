@@ -250,7 +250,7 @@ const updateQueues = () => {
       const totalUnits = Lazy(buffer.units)
         .reduce((acc, u) => acc + u.length, 0)
       if (totalUnits < buffer.capacity && proc) {
-        q.progress += assembler.speed.value * assembler.sync / 50
+        q.progress += assembler.speed.value * assembler.oscillator.sync / 50
         if (q.progress >= 100) {
           const unit = { ...proc }
           unit.id = uuidv4()

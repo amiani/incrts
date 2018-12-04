@@ -44,15 +44,14 @@ export default class Queue extends React.Component {
   
   constructor(props) {
     super()
-    this.id = props.id
     this.queueItem = React.createRef()
     broker.addListener(
       'update',
-      { id: this.id, onmessage: this.handleMessage }
+      { id: props.id, onmessage: this.handleMessage }
     )
   }
 
-  handleMessage = body => this.setState(body.queues[this.id])
+  handleMessage = body => this.setState(body.queues[this.props.id])
 
   handleDragOver = event => {
     event.preventDefault()
@@ -64,7 +63,7 @@ export default class Queue extends React.Component {
     broker.post({
       sub: 'enqueue',
       body: {
-        queueId: this.id,
+        queueId: this.props.id,
         procId
       }
     })
