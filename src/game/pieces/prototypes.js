@@ -13,7 +13,7 @@ export function ProtoAssembler() {
   this.drain = 1
   this.speed = { value: 1, min: 0, max: 50 }
   this.harm = { value: 1, min: 0, max: 10 }
-  this.sync = 0
+  this.sync = 50
 }
 ProtoAssembler.mods = ASSMODS
 ProtoAssembler.height = 4.25*MODHEIGHT
@@ -45,13 +45,3 @@ export function ProtoGenerator() {
 ProtoGenerator.width = appWidth
 ProtoGenerator.mods = GENMODS
 ProtoGenerator.height = 2.25*MODHEIGHT
-
-export function ProtoPort() {
-  this.id = uuidv4()
-  this.type = 'ports'
-  this.name = 'port'
-  this.cost = { credits: 100, fabric: 50 }
-  this.destination = null
-}
-ProtoPort.width = 350
-ProtoPort.height = 150

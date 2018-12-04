@@ -126,6 +126,7 @@ const ticksPerNewContract = 100
 let tick = 0
 const update = () => {
   updateResources()
+  updateAssemblers()
   updateQueues()
   updateStacks
   updateBuffers(tick)
@@ -181,6 +182,10 @@ const updateApparatus = apparatus => {
   })
 }
 
+const updateAssemblers = () => {
+
+}
+
 const buy = want => {
   const lazyWant = Lazy(want)
   const cost = lazyWant
@@ -206,7 +211,7 @@ const updateQueues = () => {
       const totalUnits = Lazy(buffer.units)
         .reduce((acc, u) => acc + u.length, 0)
       if (totalUnits < buffer.capacity && proc) {
-        q.progress += assembler.speed.value * proc.buildRate
+        q.progress += assembler.speed.value * assembler.sync / 50
         if (q.progress >= 100) {
           const unit = { ...proc }
           unit.id = uuidv4()
