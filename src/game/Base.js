@@ -96,7 +96,7 @@ export default class Base extends React.Component {
           {Lazy(this.state.assemblers).map(a => (
             <Assembler
               key={a.id}
-              assembler={a}
+              id={a.id}
             />
           )).toArray()}
           <TransferList />

@@ -38,11 +38,30 @@ const BuildBox = styled.div`
 `
 
 export default class Assembler extends React.Component {
+  state = {
+    queueId: null,
+    bufferId: null,
+    speed: {},
+    harm: {},
+    oscillator: { position: { x: 0, y: 0 } },
+    mods: [],
+  }
+
+  constructor(props) {
+    super()
+    broker.addListener(
+      'update',
+      { id: props.id, onmessage: this.handleUpdate }
+    )
+  }
+
+  handleUpdate = ({ assemblers }) => this.setState(assemblers[this.props.id])
+
   enqueue = item => {
     broker.post({
       sub: 'enqueue',
       body: { 
-        queueId: this.props.assembler.queueId, 
+        queueId: this.state.queueId, 
         item,
       }
     })
@@ -52,8 +71,8 @@ export default class Assembler extends React.Component {
     broker.post({
       sub: 'tuneassembler',
       body: {
-        assemblerId: this.props.assembler.id,
-        speed: this.props.assembler.speed.value + amt
+        assemblerId: this.state.id,
+        speed: this.state.speed.value + amt
       }
     })
   }
@@ -62,14 +81,13 @@ export default class Assembler extends React.Component {
     broker.post({
       sub: 'tuneassembler',
       body: {
-        assemblerId: this.props.assembler.id,
-        harm: this.props.assembler.harm.value + amt
+        assemblerId: this.state.id,
+        harm: this.state.harm.value + amt
       }
     })
   }
 
   render() {
-    const { queueId, bufferId, speed, harm, mods } = this.props.assembler
     return (
       <Box>
         <Apparatus
@@ -79,14 +97,16 @@ export default class Assembler extends React.Component {
           front={
             <React.Fragment>
               <BuildBox>
-                <Queue id={queueId} />
+                <Queue id={this.state.queueId} />
                 <Oscillator
                   size={154}
-                  harm={harm.value}
+                  harm={this.state.harm.value}
+                  position={this.state.oscillator.position}
+                  velocty={this.state.oscillator.velocity}
                 />
               </BuildBox>
-              <Buffer id={bufferId} />
-              <ModPanelFront mods={mods} />
+              <Buffer id={this.state.bufferId} />
+              <ModPanelFront mods={this.state.mods} />
             </React.Fragment>
           }
           back={
@@ -94,8 +114,8 @@ export default class Assembler extends React.Component {
               <Clock
                 handleSpeedChange={this.handleSpeedChange}
                 handleHarmChange={this.handleHarmChange}
-                speed={speed.value}
-                harm={harm.value}
+                speed={this.state.speed.value}
+                harm={this.state.harm.value}
               />
             </React.Fragment>
           }

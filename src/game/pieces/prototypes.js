@@ -13,7 +13,10 @@ export function ProtoAssembler() {
   this.drain = 1
   this.speed = { value: 1, min: 0, max: 50 }
   this.harm = { value: 1, min: 0, max: 10 }
-  this.sync = 50
+  this.oscillator = {
+    position: { x: 20, y: 30 },
+    velocity: { x: 0, y: 0 } 
+  }
 }
 ProtoAssembler.mods = ASSMODS
 ProtoAssembler.height = 4.25*MODHEIGHT

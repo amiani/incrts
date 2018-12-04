@@ -139,6 +139,7 @@ const update = () => {
       queues: data.queues,
       stacks: data.stacks,
       buffers: data.buffers,
+      assemblers: data.assemblers
     }
   })
   tick++
@@ -182,8 +183,46 @@ const updateApparatus = apparatus => {
   })
 }
 
-const updateAssemblers = () => {
+let assembler
+const k = 1
+const maxMag = 50
+const minMag = 0.000001
+const cartesianToMagnitude = (x, y) => Math.sqrt(x*x + y*y)
 
+const updateAssemblers = tick => {
+  for (const assId in data.assemblers) {
+    assembler = data.assemblers[assId]
+    const { position: p, velocity: v } = assembler.oscillator
+    const g = assembler.harm.value * .05
+    const aX = -k*p.x
+    const aY = -k*p.y
+    const dampX = -g*v.x
+    const dampY = -g*v.y
+    const nextVX = v.x + (aX + dampX) * 1
+    const nextVY = v.y + (aY + dampY) * 1
+    let nextPX = p.x + nextVX * 1
+    let nextPY = p.y + nextVY * 1
+    const posMag = cartesianToMagnitude(nextPX, nextPY)
+    if (posMag > maxMag) {
+      nextPX *= maxMag/posMag
+      nextPY *= maxMag/posMag
+    }
+    if (posMag < minMag) {
+      p.x = 0
+      p.y = 0
+    } else {
+      p.x = nextPX
+      p.y = nextPY
+    }
+
+    if (cartesianToMagnitude(nextVX, nextVY) < minMag) {
+      v.x = 0
+      v.y = 0
+    } else {
+      v.x = nextVX
+      v.y = nextVY
+    }
+  }
 }
 
 const buy = want => {
