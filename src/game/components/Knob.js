@@ -69,7 +69,7 @@ export default class Knob extends React.Component {
     this.props.toggleTuning && this.props.toggleTuning()
   }
   handleMouseMove = event => {
-    const amt = Math.round(this.props.step*(this.startPosition - event.screenY) / 3)
+    const amt = Math.ceil(this.props.step*(this.startPosition - event.screenY) / 3)
     this.props.handleChange(amt)
     this.startPosition = event.screenY
   }

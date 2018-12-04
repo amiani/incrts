@@ -12,18 +12,18 @@ const Box = styled.div`
 export default props => (
   <Box>
     <Knob
-      value={props.speed}
-      min={0}
-      max={50}
+      value={props.speed.value}
+      min={props.speed.min}
+      max={props.speed.max}
       step={2}
       size={154}
       handleChange={props.handleSpeedChange}
       label='Speed'
     />
     <Knob
-      value={props.harm}
-      min={0}
-      max={50}
+      value={props.harm.value}
+      min={props.harm.min}
+      max={props.harm.max}
       step={2}
       size={77}
       handleChange={props.handleHarmChange}

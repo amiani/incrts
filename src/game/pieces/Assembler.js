@@ -114,8 +114,8 @@ export default class Assembler extends React.Component {
               <Clock
                 handleSpeedChange={this.handleSpeedChange}
                 handleHarmChange={this.handleHarmChange}
-                speed={this.state.speed.value}
-                harm={this.state.harm.value}
+                speed={this.state.speed}
+                harm={this.state.harm}
               />
             </React.Fragment>
           }
