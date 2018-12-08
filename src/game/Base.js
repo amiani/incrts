@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import Lazy from 'lazy.js'
 
 import broker from './broker'
-import { ProtoCrucible, ProtoAssembler, ProtoGenerator, appWidth } from './pieces/prototypes'
+import { ProtoCrucible, ProtoAssembler, ProtoPreaccelerator, appWidth } from './pieces/prototypes'
 import Assembler from './pieces/Assembler'
 import Crucible from './pieces/Crucible'
-import Generator from './pieces/Generator'
+import Preaccelerator from './pieces/Preaccelerator'
 import { BOARDANGLE } from './constants'
 import Market from './pieces/Market'
 import TransferList from './pieces/TransferList'
@@ -31,7 +31,7 @@ const Board = styled.div`
   transform: rotate3d(1, 0, 0, ${BOARDANGLE}rad);
   transform-style: preserve-3d;
   grid:
-    ${ProtoGenerator.height}vh
+    ${ProtoPreaccelerator.height}vh
     ${ProtoCrucible.height}vh
     ${ProtoAssembler.height}vh /
     ${p => (appWidth+'px ').repeat(p.cols)};
@@ -41,7 +41,7 @@ export default class Base extends React.Component {
   state = {
     assemblers: {},
     crucibles: {},
-    generators: {},
+    preaccelerators: {},
     orders: {},
 
     value: 0,
@@ -73,23 +73,16 @@ export default class Base extends React.Component {
     const cols = 1 + Math.max(
       Object.keys(this.state.assemblers).length,
       Object.keys(this.state.crucibles).length,
-      Object.keys(this.state.generators).length,
+      Object.keys(this.state.preaccelerators).length,
     )
     return (
       <Box>
         <Board cols={cols} angle={BOARDANGLE}>
-          {Lazy(this.state.generators).map(g => (
-            <Generator
+          {Lazy(this.state.preaccelerators).map(g => (
+            <Preaccelerator
               key={g.id}
-              generator={g}
-              grid-area='generators'
-            />
-          )).toArray()}
-          {Lazy(this.state.crucibles).map(c => (
-            <Crucible
-              key={c.id}
-              crucible={c}
-              grid-area='crucibles'
+              preaccelerator={g}
+              grid-area='preaccelerators'
             />
           )).toArray()}
           <Market />

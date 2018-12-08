@@ -106,17 +106,17 @@ export default class Assembler extends React.Component {
                 />
               </BuildBox>
               <Buffer id={this.state.bufferId} />
-              <ModPanelFront mods={this.state.mods} />
-            </React.Fragment>
-          }
-          back={
-            <React.Fragment>
               <Clock
                 handleSpeedChange={this.handleSpeedChange}
                 handleHarmChange={this.handleHarmChange}
                 speed={this.state.speed}
                 harm={this.state.harm}
               />
+              <ModPanelFront mods={this.state.mods} />
+            </React.Fragment>
+          }
+          back={
+            <React.Fragment>
             </React.Fragment>
           }
         />

@@ -7,7 +7,7 @@ import { TICKRATE } from './constants'
 import {
   ProtoAssembler,
   ProtoCrucible,
-  ProtoGenerator,
+  ProtoPreaccelerator,
   ProtoPort
 } from './pieces/prototypes'
 import { ProtoQueue, ProtoStack, ProtoBuffer, ProtoDeviceMod } from  './components/prototypes'
@@ -43,7 +43,7 @@ const data = {
 
   assemblers: {},
   crucibles: {},
-  generators: {},
+  preaccelerators: {},
   mods: {},
 
   procedures: allProcedures,
@@ -67,8 +67,8 @@ onmessage = e => {
     case 'buildcrucible':
       buildCrucible()
       break
-    case 'buildgenerator':
-      buildGenerator()
+    case 'buildpreaccelerator':
+      buildPreaccelerator()
       break
     case 'enqueue':
       enqueue(e.data.body)
@@ -155,7 +155,7 @@ const updateResources = () => {
   } else {
     res.fabric += res.fabricRate/TICKRATE
   }
-  res.energyIncome = Lazy(data.generators)
+  res.energyIncome = Lazy(data.preaccelerators)
     .pluck('output')
     .sum()
   res.drain = Lazy(data.assemblers)
@@ -411,8 +411,8 @@ const buildCrucible = () => {
   buildApparatus(crucible)
 }
 
-const buildGenerator = () => {
-  buildApparatus(new ProtoGenerator())
+const buildPreaccelerator = () => {
+  buildApparatus(new ProtoPreaccelerator())
 }
 
 const buildPort = () => {

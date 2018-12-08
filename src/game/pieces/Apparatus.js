@@ -91,7 +91,7 @@ export default class Apparatus extends React.Component {
   render() {
     const head = (
       <Header>
-        {this.props.flippable && <Button onClick={this.flip}>Flip</Button>}
+        {this.props.flippable && <Button onClick={this.flip}>{this.state.flipped ? 'Controls' : 'Upgrades'}</Button>}
         {this.props.header}
       </Header>
     )

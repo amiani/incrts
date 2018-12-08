@@ -2,9 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Apparatus from './Apparatus'
+import Prering from '../components/Prering'
 import { ModPanelFront } from './mods/ModPanel'
 import Button from '../components/Button'
-import { ProtoGenerator, ProtoCrucible } from './prototypes'
+import { ProtoPreaccelerator, ProtoCrucible } from './prototypes'
 import { BOARDANGLE } from '../constants'
 
 const translationDist = 2*ProtoCrucible.height*Math.cos(Math.PI/2 - BOARDANGLE/4)
@@ -40,19 +41,22 @@ const Box = styled.div`
   }
 `
 
-export default class Generator extends React.Component {
+export default class Preaccelerator extends React.Component {
   render() {
     return (
       <Box>
         <Apparatus
           flippable
-          width={ProtoGenerator.width}
-          height={ProtoGenerator.height}
+          width={ProtoPreaccelerator.width}
+          height={ProtoPreaccelerator.height}
           front={
-            <ModPanelFront mods={this.props.generator.mods} />
+            <React.Fragment>
+              <Prering size={ProtoPreaccelerator.width} numParticles={20} />
+              <ModPanelFront mods={this.props.preaccelerator.mods} />
+            </React.Fragment>
           }
           back={
-            <p>This is the back of the Generator</p>
+            <p>This is the back of the Preaccelerator</p>
           }
         />
       </Box>

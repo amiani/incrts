@@ -1,6 +1,6 @@
 import uuidv4 from 'uuid/v4'
 import { ProtoDeviceMod } from './mods/prototypes.js'
-import { ASSMODS, CRUCIBLEMODS, GENMODS, MODHEIGHT } from '../constants'
+import { ASSMODS, CRUCIBLEMODS, ACCMODS, MODHEIGHT } from '../constants'
 
 export function ProtoAssembler() {
   this.id = uuidv4()
@@ -38,14 +38,14 @@ ProtoCrucible.mods = CRUCIBLEMODS
 ProtoCrucible.height = 3.25*MODHEIGHT
 ProtoCrucible.width = appWidth
 
-export function ProtoGenerator() {
+export function ProtoPreaccelerator() {
   this.id = uuidv4()
-  this.type = 'generators'
-  this.name = 'generator'
+  this.type = 'preaccelerators'
+  this.name = 'preaccelerator'
   this.cost = { credits: 50, fabric: 50 }
   this.baseOutput = 1
   this.output = 1
 }
-ProtoGenerator.width = appWidth
-ProtoGenerator.mods = GENMODS
-ProtoGenerator.height = 2.25*MODHEIGHT
+ProtoPreaccelerator.width = appWidth
+ProtoPreaccelerator.mods = ACCMODS
+ProtoPreaccelerator.height = 2.25*MODHEIGHT
