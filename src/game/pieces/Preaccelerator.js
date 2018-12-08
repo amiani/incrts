@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Apparatus from './Apparatus'
-import Prering from '../components/Prering'
+import PreaccDisplay from '../components/PreaccDisplay'
 import { ModPanelFront } from './mods/ModPanel'
 import Button from '../components/Button'
 import { ProtoPreaccelerator, ProtoCrucible } from './prototypes'
@@ -42,6 +42,9 @@ const Box = styled.div`
 `
 
 export default class Preaccelerator extends React.Component {
+  smash = () => {
+  }
+
   render() {
     return (
       <Box>
@@ -49,9 +52,14 @@ export default class Preaccelerator extends React.Component {
           flippable
           width={ProtoPreaccelerator.width}
           height={ProtoPreaccelerator.height}
+          header={
+            <React.Fragment>
+              <Button onClick={this.smash}>Smash</Button>
+            </React.Fragment>
+          }
           front={
             <React.Fragment>
-              <Prering size={ProtoPreaccelerator.width} numParticles={20} />
+              <PreaccDisplay numParticles={200} />
               <ModPanelFront mods={this.props.preaccelerator.mods} />
             </React.Fragment>
           }

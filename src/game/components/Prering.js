@@ -47,6 +47,7 @@ export default class Prering extends React.Component {
         ref={this.canvas}
         width={this.props.size}
         height={this.props.size}
+        className={this.props.className}
       />
     )
   }
