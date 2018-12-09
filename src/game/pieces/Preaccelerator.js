@@ -54,12 +54,11 @@ export default class Preaccelerator extends React.Component {
           height={ProtoPreaccelerator.height}
           header={
             <React.Fragment>
-              <Button onClick={this.smash}>Smash</Button>
             </React.Fragment>
           }
           front={
             <React.Fragment>
-              <PreaccDisplay numParticles={200} />
+              <PreaccDisplay onSmash={this.smash} numParticles={200} />
               <ModPanelFront mods={this.props.preaccelerator.mods} />
             </React.Fragment>
           }

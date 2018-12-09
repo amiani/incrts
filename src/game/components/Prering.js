@@ -15,7 +15,7 @@ export default class Prering extends React.Component {
     const timeDelta = now - this.start
     const ctx = this.canvas.current.getContext('2d')
     const { size }  = this.props
-    const lineWidth = 25
+    const lineWidth = 35
     const radius = (size/2) - lineWidth/2
     ctx.clearRect(0, 0, size, size)
 
@@ -25,7 +25,7 @@ export default class Prering extends React.Component {
     ctx.lineWidth = lineWidth
     ctx.stroke()
 
-    const bunchHead = Math.PI/3000 * timeDelta
+    const bunchHead = Math.PI/100 * timeDelta
     for (let i = 0, n = this.props.numParticles; i < n; i++) {
       const headOffset = i * Math.PI/16
       let radiusOffset = Math.floor((Math.random() - 0.5) * (lineWidth - 10))
@@ -33,7 +33,7 @@ export default class Prering extends React.Component {
       const x = (radius+radiusOffset)*Math.cos(bunchHead + headOffset)
       const y = (radius+radiusOffset)*Math.sin(bunchHead + headOffset)
       ctx.beginPath()
-      ctx.arc(size/2 + x, size/2 - y, 3, 0, 2*Math.PI)
+      ctx.arc(size/2 + x, size/2 - y, 2, 0, 2*Math.PI)
       ctx.fillStyle = 'black'
       ctx.fill()
     }
