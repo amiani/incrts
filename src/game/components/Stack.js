@@ -30,7 +30,7 @@ export default class Stack extends React.Component {
     broker.addListener(props.id, props.id, this.onDirect)
   }
 
-  onUpdate = body => this.setState(body.stacks[props.id])
+  onUpdate = body => this.setState(body.stacks[this.props.id])
   onDirect = () => {}
 
   handleDragOver = event => {
@@ -43,7 +43,7 @@ export default class Stack extends React.Component {
     broker.post({
       sub: 'enstack',
       body: {
-        stackId: props.id,
+        stackId: this.props.id,
         procId
       }
     })

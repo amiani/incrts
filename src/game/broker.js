@@ -4,12 +4,14 @@ import gameWorker from 'worker-loader!./game.worker'
 const worker = new gameWorker()
 const listeners = {}
 
-worker.onmessage = e => {
-  const listenerList = listeners[e.data.sub]
+const deliver = (sub, body) => {
+  const listenerList = listeners[sub]
   for (let i = 0, n = listenerList.length; i !== n; i++) {
-    listenerList[i].onmessage(e.data.body)
+    listenerList[i].onmessage(body)
   }
 }
+
+worker.onmessage = e => deliver(e.data.sub, e.data.body)
 
 const broker = {
   addListener: (sub, id, onmessage) => {
@@ -23,6 +25,7 @@ const broker = {
   },
 
   post: message => worker.postMessage(message),
+  postLocal: (sub, body) => deliver(sub, body)
 }
 
 export default broker

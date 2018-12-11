@@ -2,6 +2,7 @@ import React from 'react'
 import Lazy from 'lazy.js'
 import styled from 'styled-components'
 
+import broker from '../../broker'
 import Button from '../Button'
 
 const Box = styled.div`
@@ -30,6 +31,13 @@ export default class ProcedureMenu extends React.Component {
 
   handleDragStart = (event, procId) => {
     event.dataTransfer.setData('procId', procId)
+    broker.postLocal('procdragstart', procId)
+    document.addEventListener('dragend', e => this.handleDragEnd(e, procId))
+  }
+
+  handleDragEnd = (event, procId) => {
+    broker.postLocal('procdragend', procId)
+    document.removeEventListener('dragend', this.handleDragEnd)
   }
 
   render() {

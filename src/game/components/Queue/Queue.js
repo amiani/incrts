@@ -12,6 +12,7 @@ const Box = styled.div`
   //height: 25%;
   width: 63%;
   margin-bottom: 5px;
+  border: 2px solid ${p => p.highlight ? 'white' : 'transparent'};
   /*
   border: 3px dashed ${p => p.loop ? 'blue' : 'transparent'};
 
@@ -39,17 +40,22 @@ const QueueItem = styled.div`
 export default class Queue extends React.Component {
   state = {
     procedures: [],
-    progress: 0
+    progress: 0,
+    highlight: false,
   }
   
   constructor(props) {
     super()
     this.queueItem = React.createRef()
     broker.addListener('update', props.id, this.handleUpdate)
-    broker.addListener('procDrag', props.id, this.handleProcDrag)
+    broker.addListener('procdragstart', props.id, this.handleProcDragStart)
+    broker.addListener('procdragend', props.id, this.handleProcDragEnd)
   }
 
   handleUpdate = body => this.setState(body.queues[this.props.id])
+
+  handleProcDragStart = body => this.setState({ highlight: true })
+  handleProcDragEnd = body => this.setState({ highlight: false })
 
   handleDragOver = event => {
     event.preventDefault()
@@ -75,6 +81,7 @@ export default class Queue extends React.Component {
       <Box
         onDragOver={this.handleDragOver}
         onDrop={this.handleDrop}
+        highlight={this.state.highlight}
       >
         <QueueBox>
           {this.state.procedures.map((proc, i) => (
