@@ -92,10 +92,7 @@ export default class TransferList extends React.Component {
 
   constructor(props) {
     super()
-    broker.addListener(
-      'transfers',
-      { id: 'transferlist', onmessage: this.handleTransfers }
-    )
+    broker.addListener('transfers', 'transferlist', this.handleTransfers)
   }
 
   handleTransfers = transfers => this.setState({ transfers })

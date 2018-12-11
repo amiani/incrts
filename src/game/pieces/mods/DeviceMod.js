@@ -15,10 +15,7 @@ export default class DeviceModControl extends React.Component {
   constructor(props) {
     super()
     props.id = props.id
-    broker.addListener(
-      props.id,
-      { id: props.id, onmessage: this.handleMessage }
-    )
+    broker.addListener(props.id, props.id, this.handleMessage)
   }
 
   handleMessage = body => this.setState(body)

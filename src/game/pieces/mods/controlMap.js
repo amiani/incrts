@@ -7,14 +7,8 @@ const stringToCompMap = {
 
 const controlMap = {}
 
-broker.addListener(
-  'controlMap',
-  {
-    id: 'controlMap',
-    onmessage: body => {
-      controlMap[body.id] = stringToCompMap[body.controlName]
-    }
-  }
-)
+broker.addListener('controlMap', 'controlMap', body => {
+  controlMap[body.id] = stringToCompMap[body.controlName]
+})
 
 export default controlMap

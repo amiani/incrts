@@ -49,19 +49,7 @@ export default class Base extends React.Component {
 
   constructor() {
     super()
-    broker.addListener(
-      'apparati',
-      { id: 'Base', onmessage: body => this.setState(body) }
-    )
-    broker.addListener(
-      'apparatus',
-      {
-        id: 'Base',
-        onmessage: b => this.setState((prev, _) => ({
-          [b.type]: { ...prev[b.type], [b.id]: b }
-        }))
-      }
-    )
+    broker.addListener('apparati', 'Base', body => this.setState(body))
   }
 
 

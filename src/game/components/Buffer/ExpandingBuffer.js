@@ -50,22 +50,19 @@ export default class ExpandingBuffer extends React.Component {
 
   constructor(props) {
     super()
-    this.id = props.id
-    broker.addListener(
-      'update',
-      { id: this.id, onmessage: this.handleMessage }
-    )
+    props.id = props.id
+    broker.addListener('update', props.id, this.handleMessage)
   }
 
   handleMessage = body => {
-    body.buffers[this.id] && this.setState(body.buffers[this.id])
+    body.buffers[props.id] && this.setState(body.buffers[props.id])
   }
   
   setDemand = (unitType, amt) => {
     broker.post({
       sub: 'setdemand',
       body: {
-        bufferId: this.id,
+        bufferId: props.id,
         unitType,
         amt
       }

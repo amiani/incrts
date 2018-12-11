@@ -43,14 +43,8 @@ export default class LeftSider extends React.Component {
 
   constructor() {
     super()
-    broker.addListener(
-      'update',
-      { id: 'sidebar', onmessage: this.onUpdate }
-    )
-    broker.addListener(
-      'procedures',
-      { id: 'sidebar', onmessage: this.onProcedures }
-    )
+    broker.addListener('update', 'sidebar', this.onUpdate)
+    broker.addListener('procedures', 'sidebar', this.onProcedures)
   }
 
   onUpdate = ({ resources }) => this.setState(resources)

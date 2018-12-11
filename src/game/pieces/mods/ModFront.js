@@ -25,11 +25,7 @@ export default class ModFront extends React.Component {
   state = {}
   constructor(props) {
     super()
-    this.id = props.id
-    broker.addListener(
-      this.id,
-      { id: this.id, onmessage: this.handleMessage }
-    )
+    broker.addListener(props.id, this.id, this.handleMessage)
   }
 
   handleMessage = body => this.setState(body)

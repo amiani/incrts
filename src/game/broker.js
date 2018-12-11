@@ -12,9 +12,9 @@ worker.onmessage = e => {
 }
 
 const broker = {
-  addListener: (sub, listener) => {
+  addListener: (sub, id, onmessage) => {
     !listeners[sub] && (listeners[sub] = [])
-    listeners[sub].push(listener)
+    listeners[sub].push({ id, onmessage })
   },
   
   removeListener: (sub, id) => {

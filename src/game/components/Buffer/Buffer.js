@@ -22,10 +22,7 @@ export default class Buffer extends React.Component {
   constructor(props) {
     super()
     this.box = React.createRef()
-    broker.addListener(
-      'update',
-      { id: props.id, onmessage: this.handleUpdate }
-    )
+    broker.addListener('update', props.id, this.handleUpdate)
   }
 
   handleUpdate = body => this.setState({ ...body.buffers[this.props.id] })

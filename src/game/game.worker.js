@@ -177,10 +177,6 @@ const updateApparatus = apparatus => {
   apparatus.drain = apparatus.baseDrain + apparatus.mods.reduce((acc, m) => (
     acc + (m.drain ? m.drain : 0)
   ), 0)
-  postMessage({
-    sub: 'apparatus',
-    body: apparatus
-  })
 }
 
 let assembler
@@ -507,15 +503,6 @@ const enstack = ({ stackId, procId }) => {
 }
 
 const toggleLoop = ({ id }) => { data.queues[id].loop = !data.queues[id].loop }
-
-const togglePower = ({ apparatusId }) => {
-  const assembler = data.assemblers[apparatusId]
-  assembler.status = !assembler.status
-  postMessage({
-    sub: 'apparatus',
-    body: assembler
-  })
-}
 
 const spend = cost => {
   const costSeq = Lazy(cost)

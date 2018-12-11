@@ -45,13 +45,11 @@ export default class Queue extends React.Component {
   constructor(props) {
     super()
     this.queueItem = React.createRef()
-    broker.addListener(
-      'update',
-      { id: props.id, onmessage: this.handleMessage }
-    )
+    broker.addListener('update', props.id, this.handleUpdate)
+    broker.addListener('procDrag', props.id, this.handleProcDrag)
   }
 
-  handleMessage = body => this.setState(body.queues[this.props.id])
+  handleUpdate = body => this.setState(body.queues[this.props.id])
 
   handleDragOver = event => {
     event.preventDefault()

@@ -49,10 +49,7 @@ export default class Assembler extends React.Component {
 
   constructor(props) {
     super()
-    broker.addListener(
-      'update',
-      { id: props.id, onmessage: this.handleUpdate }
-    )
+    broker.addListener('update', props.id, this.handleUpdate)
   }
 
   handleUpdate = ({ assemblers }) => this.setState(assemblers[this.props.id])

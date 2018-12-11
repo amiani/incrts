@@ -47,6 +47,13 @@ const Period = styled.div`
 const DesiredRate = styled.div`
 `
 
+const AcceptButton = styled(Button)`
+  visibility: hidden;
+  ${ContractBox}:hover & {
+    visibility: visible;
+  }
+`
+
 const Contract = props => {
   return (
     <ContractBox odd={props.odd}>
@@ -55,7 +62,7 @@ const Contract = props => {
       {Lazy(props.desiredRates)
         .map((r, unit) => <DesiredRate key={unit}>{unit}: {r}u/s</DesiredRate>)
         .toArray()}
-      <Button onClick={()=>props.onAccept(props.id)}>Accept</Button>
+      <AcceptButton onClick={()=>props.onAccept(props.id)}>Accept</AcceptButton>
     </ContractBox>
   )
 }
@@ -68,10 +75,7 @@ export default class Market extends React.Component {
 
   constructor(props) {
     super()
-    broker.addListener(
-      'contracts',
-      { id: 'market', onmessage: this.handleContracts }
-    )
+    broker.addListener('contracts', 'market', this.handleContracts)
   }
 
   handleContracts = contracts => this.setState({ contracts })
