@@ -5,6 +5,7 @@ const Box = styled.div`
 `
 
 export default class Oscillator extends React.Component {
+  state = { padding: 1 }
   constructor(props) {
     super(props)
     this.canvas = React.createRef()
@@ -27,12 +28,12 @@ export default class Oscillator extends React.Component {
     const timeDelta = (now - this.tminusone)/100
     const ctx = this.canvas.current.getContext('2d')
     const { size } = this.props
-    const halfSize = size/2
+    const center = size/2
     const massR = size/20
     ctx.clearRect(0, 0, size, size)
 
     ctx.beginPath()
-    ctx.arc(halfSize, halfSize, halfSize, 0, 2*Math.PI, true)
+    ctx.arc(center, center, size/2-1, 0, 2*Math.PI, true)
     ctx.strokeStyle = '#ee855e'
     ctx.lineWidth = 2
     ctx.stroke()
@@ -41,7 +42,7 @@ export default class Oscillator extends React.Component {
     const x = timeDelta * (this.props.position.x - this.prevPX) + this.prevPX
     const y = timeDelta * (this.props.position.y - this.prevPY) + this.prevPY
     ctx.beginPath()
-    ctx.arc(x + halfSize, -y + halfSize, massR, 0, 2*Math.PI, true)
+    ctx.arc(x + center, -y + center, massR, 0, 2*Math.PI, true)
     ctx.fillStyle = 'red'
     ctx.fill()
 

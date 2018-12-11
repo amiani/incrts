@@ -8,6 +8,7 @@ const Box = styled.div`
 `
 
 export default class UnitChart extends React.Component {
+  state = { padding: 1 }
   constructor(props) {
     super()
     this.canvas = React.createRef()
@@ -24,6 +25,8 @@ export default class UnitChart extends React.Component {
   draw() {
     const ctx = this.canvas.current.getContext('2d')
     const period = 300
+    const chartWidth = this.props.width - 2*this.state.padding
+    const chartHeight = this.props.height - 2*this.state.padding
     ctx.clearRect(0, 0, this.props.width, this.props.height)
     let { min, max } = Lazy(this.props.data)
       .reduce((dataAcc, series) => series
@@ -38,8 +41,8 @@ export default class UnitChart extends React.Component {
     if (max - min < 10)
       max += 10 - max + min
     const range = max - min
-    const horiScale = this.props.width / period
-    const vertScale = this.props.height / 10
+    const horiScale = chartWidth / period
+    const vertScale = chartHeight / 10
 
     ctx.lineWidth = 1
     ctx.globalAlpha = .3
@@ -70,8 +73,8 @@ export default class UnitChart extends React.Component {
         series
           .slice(-period-1)
           .forEach((count, t) => {
-            const x = t * horiScale
-            const y = this.props.height * ((max - count) / range)
+            const x = t * horiScale + this.state.padding
+            const y = chartHeight * ((max - count) / range) + this.state.padding
             ctx.lineTo(x, y)
           })
         ctx.strokeStyle = '#ee855e'
