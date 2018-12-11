@@ -3,7 +3,7 @@ import React from 'react'
 import broker from '../broker'
 
 export default class Knob extends React.Component {
-  state = { isDown: false }
+  state = { active: false }
   constructor(props) {
     super()
     this.canvas = React.createRef()
@@ -27,7 +27,7 @@ export default class Knob extends React.Component {
     const angle = 3*Math.PI/2*( value/(max - min) + 1/2 )
     ctx.arc(center, center, radius, 3/4*Math.PI, angle)
     ctx.lineWidth = lineWidth
-    ctx.strokeStyle = '#d7c844'
+    ctx.strokeStyle = this.state.active ? 'white' : '#d7c844'
     ctx.stroke()
 
     ctx.beginPath()
@@ -56,22 +56,24 @@ export default class Knob extends React.Component {
 
   handleMouseDown = event => {
     if (event.button === 0) {
-      this.startPosition = event.screenY;
+      this.setState({ active: true })
+      this.startPosition = event.clientY;
       document.body.style['pointer-events'] = 'none'
       document.addEventListener('mousemove', this.handleMouseMove)
       document.addEventListener('mouseup', this.handleMouseUp)
     }
   }
   handleMouseUp = () => {
+    this.setState({ active: false })
     document.body.style['pointer-events'] = 'auto'
     document.removeEventListener('mousemove', this.handleMouseMove)
     document.removeEventListener('mouseup', this.handleMouseUp)
     this.props.toggleTuning && this.props.toggleTuning()
   }
   handleMouseMove = event => {
-    const amt = Math.ceil(this.props.step*(this.startPosition - event.screenY) / 3)
+    const amt = Math.round((15*(this.startPosition - event.clientY)/window.innerHeight)*(this.props.max-this.props.min))
     this.props.handleChange(amt)
-    this.startPosition = event.screenY
+    this.startPosition = event.clientY
   }
 
   render() {

@@ -360,10 +360,12 @@ const tuneAssembler = ({ assemblerId, ...controlSettings }) => {
     if (newValue <= assControl.max && newValue >= assControl.min)
       assControl.value = newValue
   }
+    /*
   postMessage({
     sub: 'apparatus',
     body: ass
   })
+  */
 }
 
 const addMod = ({ apparatusId, type, mod }) => {
