@@ -63,7 +63,7 @@ export default class Assembler extends React.Component {
 
   handleSpeedChange = amt => {
     broker.post({
-      sub: 'tuneassembler',
+      sub: 'tuneAssembler',
       body: {
         assemblerId: this.state.id,
         speed: this.state.speed.value + amt
@@ -73,7 +73,7 @@ export default class Assembler extends React.Component {
 
   handleHarmChange = amt => {
     broker.post({
-      sub: 'tuneassembler',
+      sub: 'tuneAssembler',
       body: {
         assemblerId: this.state.id,
         harm: this.state.harm.value + amt

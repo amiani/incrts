@@ -20,13 +20,12 @@ export default class Main extends React.Component {
   }
 
   initialize = () => {
-    broker.post({ sub: 'buildassembler' })
-    broker.post({ sub: 'buildcrucible' })
-    broker.post({ sub: 'buildpreaccelerator' })
-    broker.post({ sub: 'addprocedure', })  //testing
+    broker.post({ sub: 'buildAssembler' })
+    broker.post({ sub: 'buildPreaccelerator' })
+    broker.post({ sub: 'addProcedure', })  //testing
 
     for (let i = 0; i <= 6; i++)
-      broker.post({ sub: 'makecontract' })
+      broker.post({ sub: 'makeContract' })
   }
 
   render() {

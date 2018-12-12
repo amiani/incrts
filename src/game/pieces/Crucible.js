@@ -52,7 +52,7 @@ export default class Crucible extends React.Component {
   })
 
   addMod = () => broker.post({
-    sub: 'addmod',
+    sub: 'addMod',
     body: {
       apparatusId: this.id,
       type: 'crucibles',

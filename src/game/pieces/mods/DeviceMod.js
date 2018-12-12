@@ -24,7 +24,7 @@ export default class DeviceModControl extends React.Component {
 
   handleChange = amt => {
     broker.post({
-      sub: 'tunemod',
+      sub: 'tuneMod',
       body: {
         modId: this.props.id,
         testknobvalue: this.state.testknobvalue + amt

@@ -60,7 +60,7 @@ export default class ExpandingBuffer extends React.Component {
   
   setDemand = (unitType, amt) => {
     broker.post({
-      sub: 'setdemand',
+      sub: 'setDemand',
       body: {
         bufferId: props.id,
         unitType,

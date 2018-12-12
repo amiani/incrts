@@ -83,7 +83,7 @@ export default class Market extends React.Component {
   handleContracts = contracts => this.setState({ contracts })
   acceptContract = contractId => {
     broker.post({
-      sub: 'acceptcontract',
+      sub: 'acceptContract',
       body: { contractId }
     })
   }
