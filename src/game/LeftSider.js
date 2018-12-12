@@ -58,7 +58,7 @@ export default class LeftSider extends React.Component {
 
   fabricRateChange = amt => {
     broker.post({
-      sub: 'setfabricrate',
+      sub: 'setFabricRate',
       body: { rate: this.state.fabricRate + amt }
     })
   }
@@ -84,9 +84,8 @@ export default class LeftSider extends React.Component {
           <ResourceInfo>Drain: {this.state.drain}</ResourceInfo>
           <ResourceInfo>Productivity: {(this.state.productivity * 100).toFixed(0)}%</ResourceInfo>
         </div>
-        <Button onClick={()=>broker.post({ sub: 'buildassembler' })}>Build Assembler</Button>
-        <Button onClick={()=>broker.post({ sub: 'buildcrucible' })}>Build Crucible</Button>
-        <Button onClick={()=>broker.post({ sub: 'buildpreaccelerator' })}>Build Preaccelerator</Button>
+        <Button onClick={()=>broker.post({ sub: 'buildAssembler' })}>Build Assembler</Button>
+        <Button onClick={()=>broker.post({ sub: 'buildPreaccelerator' })}>Build Preaccelerator</Button>
         <ProcedureMenu procedures={this.state.procedures} />
       </Box>
     )
