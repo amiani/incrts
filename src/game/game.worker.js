@@ -126,10 +126,8 @@ const ticksPerNewContract = 100
 let tick = 0
 const update = () => {
   updateResources()
-  updateAssemblers()
-  updateQueues()
+  updateAssemblers(tick)
   updateStacks
-  updateBuffers(tick)
   tick % ticksPerTransfersUpdate == 0 && Object.keys(data.transfers).length > 0 && updateTransfers(tick)
   tick % ticksPerNewContract == 0 && Object.keys(data.contracts).length < 15 && makeContract()
   postMessage({
@@ -186,6 +184,8 @@ const minMag = 0.000001
 const cartesianToMagnitude = (x, y) => Math.sqrt(x*x + y*y)
 
 const updateAssemblers = tick => {
+  updateQueues(tick)
+  updateBuffers(tick)
   for (const assId in data.assemblers) {
     assembler = data.assemblers[assId]
     const { position: p, velocity: v } = assembler.oscillator
@@ -260,10 +260,6 @@ const updateQueues = () => {
     })
 }
 
-const updateStacks = () => {
-  //TODO; implement this
-}
-
 const updateBuffers = tick => {
   const ticksBetweenUpdates = 1
   if (tick % ticksBetweenUpdates === 0) {
@@ -275,6 +271,10 @@ const updateBuffers = tick => {
         })
       })
   }
+}
+
+const updateStacks = () => {
+  //TODO; implement this
 }
 
 const updateTransfers = tick => {
