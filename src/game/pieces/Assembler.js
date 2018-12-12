@@ -61,16 +61,6 @@ export default class Assembler extends React.Component {
     setTimeout(()=>this.setState({ flipped: false }), 500)
   }
 
-  enqueue = item => {
-    broker.post({
-      sub: 'enqueue',
-      body: { 
-        queueId: this.state.queueId, 
-        item,
-      }
-    })
-  }
-
   handleSpeedChange = amt => {
     broker.post({
       sub: 'tuneassembler',
