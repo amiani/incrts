@@ -297,12 +297,6 @@ handlers.tuneAssembler = ({ assemblerId, ...controlSettings }) => {
     if (newValue <= assControl.max && newValue >= assControl.min)
       assControl.value = newValue
   }
-    /*
-  postMessage({
-    sub: 'apparatus',
-    body: ass
-  })
-  */
 }
 
 handlers.addMod = ({ apparatusId, type, mod }) => {

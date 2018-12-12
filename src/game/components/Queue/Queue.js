@@ -24,7 +24,7 @@ const Box = styled.div`
 const QueueBox = styled.div`
   display: flex;
   height: 75%;
-  border: 2px red;
+  border: 2px #ee855e;
   border-style: none none groove groove;
 `
 
@@ -32,8 +32,8 @@ const QueueItem = styled.div`
   height: 100%;
   width: ${p=>p.height}px;
   background-image: url(images/${p => p.icon});
+  ${p => p.curr ? 'background-color: rgba(255, 255, 255, .3);' : ''}
   background-size: 100% 100%;
-  ${p => p.curr ? 'border: solid purple 2px' : null}
 `
 
 export default class Queue extends React.Component {

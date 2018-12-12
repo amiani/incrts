@@ -3,12 +3,12 @@ import styled from 'styled-components'
 
 const Box = styled.div`
   height: 25%;
-  border: 2px blue;
+  border: 2px #ee855e;
   border-style: none none groove groove;
 `
 
 const Progress = styled.div`
-  background-color: blue;
+  background-color: #ee855e;
   transform-origin: left;
   transform: scaleX(${p => p.progress > 100 ? 1 : p.progress/100});
   transition: transform ease 150ms;
