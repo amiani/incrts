@@ -45,14 +45,21 @@ export default class Assembler extends React.Component {
     harm: {},
     oscillator: { position: { x: 0, y: 0 } },
     mods: [],
+    flipped: false,
   }
 
   constructor(props) {
     super()
     broker.addListener('update', props.id, this.handleUpdate)
+    broker.addListener('procdragstart', props.id, this.handleProcDragStart)
+    broker.addListener('procdragend', props.id, this.handleProcDragEnd)
   }
 
   handleUpdate = ({ assemblers }) => this.setState(assemblers[this.props.id])
+  handleProcDragStart = body => this.setState({ flipped: true })
+  handleProcDragEnd = body => {
+    setTimeout(()=>this.setState({ flipped: false }), 500)
+  }
 
   enqueue = item => {
     broker.post({
@@ -89,12 +96,13 @@ export default class Assembler extends React.Component {
       <Box>
         <Apparatus
           flippable
+          flip={()=>this.setState((prev, _) => ({ flipped: !prev.flipped }))}
+          flipped={this.state.flipped}
           width={ProtoAssembler.width}
           height={ProtoAssembler.height}
           front={
             <React.Fragment>
               <BuildBox>
-                <Queue id={this.state.queueId} />
                 <Oscillator
                   size={154}
                   harm={this.state.harm.value}
@@ -114,6 +122,7 @@ export default class Assembler extends React.Component {
           }
           back={
             <React.Fragment>
+              <Queue id={this.state.queueId} />
             </React.Fragment>
           }
         />

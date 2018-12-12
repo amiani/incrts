@@ -85,24 +85,24 @@ export default class Apparatus extends React.Component {
   flip = () => this.setState((prevState, _) => ({ flipped: !prevState.flipped }))
 
   handleMouseUp = e => {
-    this.props.flippable && e.button === 1 && this.flip()
+    this.props.flippable && e.button === 1 && this.props.flip()
   }
 
   render() {
     const head = (
       <Header>
-        {this.props.flippable && <Button onClick={this.flip}>{this.state.flipped ? 'Controls' : 'Upgrades'}</Button>}
+        {this.props.flippable && <Button onClick={this.props.flip}>{this.props.flipped ? 'Controls' : 'Upgrades'}</Button>}
         {this.props.header}
       </Header>
     )
     return (
       <Box {...this.props} onMouseUp={this.handleMouseUp}>
         <Flipper>
-          <Front flipped={this.state.flipped}>
+          <Front flipped={this.props.flipped}>
             {head}
             {this.props.front}
           </Front>
-          <Back flipped={this.state.flipped}>
+          <Back flipped={this.props.flipped}>
             {head}
             {this.props.back}
           </Back>

@@ -42,6 +42,10 @@ const Box = styled.div`
 `
 
 export default class Preaccelerator extends React.Component {
+  state = {
+    flipped: false,
+  }
+
   smash = () => {
   }
 
@@ -50,6 +54,7 @@ export default class Preaccelerator extends React.Component {
       <Box>
         <Apparatus
           flippable
+          flip={()=>this.setState((prev, _) => ({ flipped: !prev.flipped }))}
           width={ProtoPreaccelerator.width}
           height={ProtoPreaccelerator.height}
           header={

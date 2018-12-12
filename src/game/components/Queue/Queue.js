@@ -9,8 +9,7 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  //height: 25%;
-  width: 63%;
+  height: 25%;
   margin-bottom: 5px;
   border: 2px solid ${p => p.highlight ? 'white' : 'transparent'};
   /*
