@@ -14,7 +14,7 @@ export function ProtoAssembler() {
   this.speed = { value: 1, min: 0, max: 50 }
   this.harm = { value: 1, min: 0, max: 10 }
   this.oscillator = {
-    position: { x: 20, y: 30 },
+    position: { x: 20, y: 80 },
     velocity: { x: 0, y: 0 },
     sync: 50
   }

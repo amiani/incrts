@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 import { BOARDANGLE } from '../constants'
 import Button from '../components/Button.js'
-import MessageBox from '../components/MessageBox'
 
 const Box = styled.div`
   width: ${p=>p.width}px;
@@ -107,7 +106,6 @@ export default class Apparatus extends React.Component {
             {this.props.back}
           </Back>
         </Flipper>
-        <MessageBox message={this.props.message} />
       </Box>
     )
   }

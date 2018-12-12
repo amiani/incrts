@@ -5,7 +5,6 @@ import ProcedureMenu from './components/procedures/ProcedureMenu'
 import Knob from './components/Knob'
 import broker from './broker'
 import Button from './components/Button'
-import MessageBox from './components/MessageBox'
 
 const Box = styled.div`
   position: relative;

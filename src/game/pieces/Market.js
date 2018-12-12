@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import Lazy from 'lazy.js'
+import 'react-perfect-scrollbar/dist/css/styles.css'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import Button from '../components/Button'
 import broker from '../broker'
@@ -101,21 +103,23 @@ export default class Market extends React.Component {
             </React.Fragment>
           }
           front={
-            <React.Fragment>{this.state.tab === 0 ? (
-              Lazy(this.state.contracts)
-                .map(c => {
-                  i++
-                  return <Contract
-                    {...c}
-                    key={c.id}
-                    odd={!!(i%2)}
-                    onAccept={this.acceptContract}
-                  />
-                })
-                .toArray()
-            ) : (
-              <p>Patents!</p>
-            )}</React.Fragment>
+            <PerfectScrollbar>
+              {this.state.tab === 0 ? (
+                Lazy(this.state.contracts)
+                  .map(c => {
+                    i++
+                    return <Contract
+                      {...c}
+                      key={c.id}
+                      odd={!!(i%2)}
+                      onAccept={this.acceptContract}
+                    />
+                  })
+                  .toArray()
+              ) : (
+                <p>Patents!</p>
+              )}
+            </PerfectScrollbar>
           }
         />
       </Box>
