@@ -59,67 +59,8 @@ const data = {
   transfers: {},
 }
 
-onmessage = e => {
-  switch(e.data.sub) {
-    case 'buildassembler':
-      buildAssembler()
-      break
-    case 'buildcrucible':
-      buildCrucible()
-      break
-    case 'buildpreaccelerator':
-      buildPreaccelerator()
-      break
-    case 'enqueue':
-      enqueue(e.data.body)
-      break
-    case 'enstack':
-      enstack(e.data.body)
-      break
-    case 'buy':
-      buy(e.data.body)
-      break
-    case 'toggleloop':
-      toggleLoop(e.data.body)
-      break
-    case 'togglepower':
-      togglePower(e.data.body)
-      break
-    case 'dispatch':
-      dispatch(e.data.body)
-      break
-    case 'makecontract':
-      makeContract(e.data.body)
-      break
-    case 'acceptcontract':
-      acceptContract(e.data.body)
-      break
-    case 'canceltransfer':
-      cancelTransfer(e.data.body)
-      break
-    case 'setdemand':
-      setDemand(e.data.body)
-      break
-    case 'tuneassembler':
-      tuneAssembler(e.data.body)
-      break
-    case 'addmod':
-      addMod(e.data.body)
-      break
-    case 'tunemod':
-      tuneMod(e.data.body)
-      break
-    case 'setfabricrate':
-      setFabricRate(e.data.body)
-      break
-    case 'addprocedure':
-      addProcedure(e.data.body)
-      break
-    default:
-      console.log(`Received message with no listener: ${e.data.sub}`)
-      break
-  }
-}
+const handlers = {}
+onmessage = e => handlers[e.data.sub](e.data.body)
 
 const ticksPerTransfersUpdate = 10
 const ticksPerNewContract = 100
@@ -127,7 +68,7 @@ let tick = 0
 const update = () => {
   updateResources()
   updateAssemblers(tick)
-  updateStacks
+  updateStacks()
   tick % ticksPerTransfersUpdate == 0 && Object.keys(data.transfers).length > 0 && updateTransfers(tick)
   tick % ticksPerNewContract == 0 && Object.keys(data.contracts).length < 15 && makeContract()
   postMessage({
@@ -167,7 +108,7 @@ const updateResources = () => {
     : res.energyIncome / res.drain
 }
 
-const setFabricRate = ({ rate }) => {
+handlers.setFabricRate = ({ rate }) => {
   data.resources.fabricRate = clamp(rate, 0, data.resources.maxFabricRate)
 }
 
@@ -221,7 +162,7 @@ const updateAssemblers = tick => {
   }
 }
 
-const buy = want => {
+handlers.buy = want => {
   const lazyWant = Lazy(want)
   const cost = lazyWant
     .reduce((acc, amt, name) => {
@@ -346,7 +287,7 @@ const updateTransfers = tick => {
   })
 }
 
-const tuneAssembler = ({ assemblerId, ...controlSettings }) => {
+handlers.tuneAssembler = ({ assemblerId, ...controlSettings }) => {
   const ass = data.assemblers[assemblerId]
   let newValue
   let assControl
@@ -364,7 +305,7 @@ const tuneAssembler = ({ assemblerId, ...controlSettings }) => {
   */
 }
 
-const addMod = ({ apparatusId, type, mod }) => {
+handlers.addMod = ({ apparatusId, type, mod }) => {
   data.mods[mod.id] = mod
   const apparatus = data[type][apparatusId]
   apparatus.mods.push(mod.id)
@@ -382,7 +323,7 @@ const addMod = ({ apparatusId, type, mod }) => {
   })
 }
 
-const tuneMod = body => {
+handlers.tuneMod = body => {
   const mod = data.mods[body.modId]
   mod.testknobvalue = body.testknobvalue
   if (mod.testknobvalue > 100) mod.testknobvalue = 100
@@ -393,7 +334,7 @@ const tuneMod = body => {
   })
 }
 
-const buildAssembler = () => {
+handlers.buildAssembler = () => {
   const assembler = new ProtoAssembler()
   const buffer = makeBuffer(assembler.id)
   const queue = makeQueue(assembler.id)
@@ -402,22 +343,15 @@ const buildAssembler = () => {
   buildApparatus(assembler)
 }
 
-const buildCrucible = () => {
+handlers.buildCrucible = () => {
   const crucible = new ProtoCrucible()
   const stack = makeStack(crucible.id)
   crucible.stackId = stack.id
   buildApparatus(crucible)
 }
 
-const buildPreaccelerator = () => {
+handlers.buildPreaccelerator = () => {
   buildApparatus(new ProtoPreaccelerator())
-}
-
-const buildPort = () => {
-  const port = new ProtoPort()
-  const buffer = makeBuffer(port.id)
-  port.bufferId = buffer.id
-  buildApparatus(port)
 }
 
 const buildApparatus = apparatus => {
@@ -444,7 +378,7 @@ const makeStack = ownerId => {
   return stack
 }
 
-const addProcedure = procId => {
+handlers.addProcedure = procId => {
   postMessage({ sub: 'procedures', body: data.procedures })
 }
 
@@ -461,8 +395,9 @@ const makeContract = () => {
   postMessage({ sub: 'contracts', body: data.contracts })
   contractNumber++
 }
+handlers.makeContract = makeContract
 
-const acceptContract = ({ contractId }) => {
+handlers.acceptContract = ({ contractId }) => {
   const contract = data.contracts[contractId]
   data.transfers[contractId] = contract
   delete data.contracts[contractId]
@@ -470,12 +405,12 @@ const acceptContract = ({ contractId }) => {
   postMessage({ sub: 'transfers', body: data.transfers })
 }
 
-const cancelOrder = orderId => {
+handlers.cancelOrder = orderId => {
   delete data.orders[orderId]
   postMessage({ sub: 'orders', body: data.orders })
 }
 
-const enqueue = ({ queueId, procId }) => {
+handlers.enqueue = ({ queueId, procId }) => {
   const queue = data.queues[queueId]
   if (queue.procedures.length >= queue.maxLength) {
     //respond with error
@@ -488,7 +423,7 @@ const enqueue = ({ queueId, procId }) => {
   queue.procedures.push(procedure)
 }
 
-const enstack = ({ stackId, procId }) => {
+handlers.enstack = ({ stackId, procId }) => {
   const stack = data.stacks[stackId]
   if (stack.procedures.length >= stack.maxLength) {
     //respond with error
@@ -501,8 +436,6 @@ const enstack = ({ stackId, procId }) => {
   procedure.priority = 1000/sumPriorities
   stack.procedures[procId] = procedure
 }
-
-const toggleLoop = ({ id }) => { data.queues[id].loop = !data.queues[id].loop }
 
 const spend = cost => {
   const costSeq = Lazy(cost)
