@@ -6,7 +6,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import Button from '../components/Button'
 import broker from '../broker'
-import { BOARDANGLE } from '../constants'
+import { BOARDANGLE, BOARDDIST, MODHEIGHT, TOPROWDIST } from '../constants'
 import Apparatus from './Apparatus'
 import { ProtoCrucible, ProtoAssembler } from './prototypes'
 
@@ -14,11 +14,12 @@ const HOVERDIST = -ProtoAssembler.height/2*Math.cos(Math.PI-BOARDANGLE)
 const Box = styled.div`
   grid-row: 2;
   grid-column: -2;
-  transform-origin: bottom;
+  transform-origin: top;
   transition: transform ease 200ms;
   transform-style: preserve-3d;
-  transform: rotate3d(1, 0, 0, ${-BOARDANGLE/2}rad);
+  //transform: rotate3d(1, 0, 0, ${BOARDANGLE/3}rad);
 
+  /*
   :hover {
     transform:
       rotate3d(1, 0, 0, ${-3*BOARDANGLE/4}rad)
@@ -28,10 +29,11 @@ const Box = styled.div`
         ${HOVERDIST*Math.sin(BOARDANGLE)}vh
       )
   }
+  */
 `
 
 const ContractBox = styled.div`
-  height: 9%;
+  height: 15%;
   color: white;
   background-color: rgba(238, 133, 93, ${p=>p.odd ? 0 : .05});
   display: flex;
@@ -94,8 +96,8 @@ export default class Market extends React.Component {
       <Box>
         {/*using Apparatus until sure it won't flip*/}
         <Apparatus  
-          width={ProtoCrucible.width}
-          height={ProtoCrucible.height}
+          width={ProtoAssembler.width}
+          height={22.222222}
           header={
             <React.Fragment>
               <Button onClick={()=>this.setState({tab: 0})}>Contracts</Button>
@@ -103,7 +105,7 @@ export default class Market extends React.Component {
             </React.Fragment>
           }
           front={
-            <PerfectScrollbar>
+            <PerfectScrollbar style={{ height: '90%' }}>
               {this.state.tab === 0 ? (
                 Lazy(this.state.contracts)
                   .map(c => {

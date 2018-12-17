@@ -4,26 +4,25 @@ import styled from 'styled-components'
 import Apparatus from './Apparatus'
 import PreaccDisplay from '../components/PreaccDisplay'
 import { ModPanelFront } from './mods/ModPanel'
-import Button from '../components/Button'
-import { ProtoPreaccelerator, ProtoCrucible } from './prototypes'
-import { BOARDANGLE } from '../constants'
+import { ProtoPreaccelerator } from './prototypes'
+import { BOARDANGLE, MODHEIGHT, BOARDDIST } from '../constants'
 
-const translationDist = 2*ProtoCrucible.height*Math.cos(Math.PI/2 - BOARDANGLE/4)
+const translationDist = 2*MODHEIGHT*Math.sin(BOARDANGLE/3)+MODHEIGHT*Math.sin(2*BOARDANGLE/3)
 const translationAngle = Math.PI/2 - 3*BOARDANGLE/4
 const HOVERDIST = 200
 const Box = styled.div`
-  grid-row: 1;
+  grid-row: 4;
+  //height: 150%
   transform-origin: bottom;
   transform-style: preserve-3d;
   transition: transform ease 200ms;
+  /*
   transform:
-    rotate3d(1, 0, 0, ${-BOARDANGLE}rad)
-    translate3d(
-      0,
-      ${-translationDist*Math.cos(translationAngle)}vh,
-      ${translationDist*Math.sin(translationAngle)}vh
-    );
+    rotate3d(1, 0, 0, ${BOARDANGLE}rad)
+    translate3d(0, 0, ${BOARDDIST}vh);
+    */
 
+  /*
   :hover {
     transform:
       rotate3d(1, 0, 0, ${-Math.PI/16}rad)
@@ -39,6 +38,7 @@ const Box = styled.div`
         ${translationDist*Math.sin(translationAngle)}vh
       );
   }
+  */
 `
 
 export default class Preaccelerator extends React.Component {
@@ -55,8 +55,9 @@ export default class Preaccelerator extends React.Component {
         <Apparatus
           flippable
           flip={()=>this.setState((prev, _) => ({ flipped: !prev.flipped }))}
+          flipped={this.state.flipped}
           width={ProtoPreaccelerator.width}
-          height={ProtoPreaccelerator.height}
+          height={3/9}
           header={
             <React.Fragment>
             </React.Fragment>

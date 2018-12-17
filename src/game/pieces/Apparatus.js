@@ -6,7 +6,7 @@ import Button from '../components/Button.js'
 
 const Box = styled.div`
   width: ${p=>p.width}px;
-  height: ${p=>p.height}vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -73,7 +73,7 @@ const Front = styled(Face)`
 const Back = styled(Face)`
   z-index: ${p => p.flipped ? 2 : 3};
   transform: rotateY(${p => p.flipped ? 0 : -180}deg);
-  opacity: ${p => p.flipped ? 1 : 0};
+  pacity: ${p => p.flipped ? 1 : 0};
 `
 
 export default class Apparatus extends React.Component {

@@ -10,16 +10,19 @@ import Switch from '../components/Switch'
 import { ProtoAssembler } from './prototypes'
 import broker from '../broker'
 import { ProcedureSider } from '../components/procedures'
-import { BOARDANGLE } from '../constants'
+import { BOARDANGLE, BOARDDIST, PERSPECTIVE } from '../constants'
 import Oscillator from '../components/Oscillator'
 import Clock from './mods/Clock'
 
 const HOVERDIST = 20
+const transy = (-90/6)*(1+BOARDDIST/PERSPECTIVE)
 const Box = styled.div`
-  grid-row: 3;
+  grid-row: 1;
   transform-origin: bottom;
   transition: transform ease 200ms;
   transform-style: preserve-3d;
+  //transform: translate3d(0, ${transy}vh, ${-BOARDDIST}vh);
+  /*
   :active, :hover {
     transform:
       rotate3d(1, 0, 0, -5deg)
@@ -30,6 +33,7 @@ const Box = styled.div`
       )
     ;
   }
+  */
 `
 
 const BuildBox = styled.div`
@@ -89,7 +93,7 @@ export default class Assembler extends React.Component {
           flip={()=>this.setState((prev, _) => ({ flipped: !prev.flipped }))}
           flipped={this.state.flipped}
           width={ProtoAssembler.width}
-          height={ProtoAssembler.height}
+          height={3/9}
           front={
             <React.Fragment>
               <BuildBox>

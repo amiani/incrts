@@ -5,7 +5,7 @@ import LineChart from '../LineChart'
 import broker from '../../broker'
 
 const Box = styled.div`
-  height: 25%;
+  height: 33.33%;
   display: flex;
 `
 

@@ -7,16 +7,16 @@ import { ProtoCrucible, ProtoAssembler, ProtoPreaccelerator, appWidth } from './
 import Assembler from './pieces/Assembler'
 import Crucible from './pieces/Crucible'
 import Preaccelerator from './pieces/Preaccelerator'
-import { BOARDANGLE } from './constants'
+import { BOARDANGLE, BOARDDIST, MODHEIGHT, PERSPECTIVE } from './constants'
 import Market from './pieces/Market'
 import TransferList from './pieces/TransferList'
+import Smasher from './pieces/Smasher'
 
 const Box = styled.div`
-  padding: 10px;
   width: 100%;
   background-color: #1e3145;
   color: white;
-  perspective: 1000px;
+  perspective: ${PERSPECTIVE}vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -25,16 +25,35 @@ const Box = styled.div`
 `
 
 const Board = styled.div`
-  display: grid;
-  justify-content: center;
-  transform-origin: bottom;
-  transform: rotate3d(1, 0, 0, ${BOARDANGLE}rad);
+  height: 132vh;
+  position: relative;
+  top: 17.5vh;
+  flex-shrink: 0;
+  transform: translate3d(0, 0, ${-BOARDDIST}vh);
   transform-style: preserve-3d;
-  grid:
-    ${ProtoPreaccelerator.height}vh
-    ${ProtoCrucible.height}vh
-    ${ProtoAssembler.height}vh /
-    ${p => (appWidth+'px ').repeat(p.cols)};
+`
+
+const Row = styled.div`
+  display: flex;
+  height: ${p => p.height}%;
+  * {
+    flex-shrink: 0;
+  }
+`
+
+const Rotator = styled.div`
+  transform-origin: top;
+  transform-style: preserve-3d;
+  transform: rotate3d(1, 0, 0, ${Math.PI/12}rad);
+  height: ${p=>p.height}%;
+`
+
+const PreacceleratorMod = styled.div`
+  grid-row: 3;
+  border: solid #ee855e 2px;
+  rotate3d(1, 0, 0, ${-BOARDANGLE/3}rad);
+  height: 100%;
+  width: 420px;
 `
 
 export default class Base extends React.Component {
@@ -60,28 +79,43 @@ export default class Base extends React.Component {
   render() {
     const cols = 1 + Math.max(
       Object.keys(this.state.assemblers).length,
-      Object.keys(this.state.crucibles).length,
       Object.keys(this.state.preaccelerators).length,
     )
     return (
       <Box>
-        <Board cols={cols} angle={BOARDANGLE}>
-          {Lazy(this.state.preaccelerators).map(g => (
-            <Preaccelerator
-              key={g.id}
-              preaccelerator={g}
-              grid-area='preaccelerators'
-            />
-          )).toArray()}
-          <Market />
-          {Lazy(this.state.assemblers).map(a => (
-            <Assembler
-              key={a.id}
-              id={a.id}
-            />
-          )).toArray()}
-          <TransferList />
+        <Board>
+          <Row height={100/3}>
+            {Lazy(this.state.assemblers).map(a => (
+              <Assembler
+                key={a.id}
+                id={a.id}
+              />
+            )).toArray()}
+            <TransferList />
+          </Row>
+          <Rotator height={200/3}>
+            <Row height={100/3}>
+              <Market />
+            </Row>
+            <Rotator height={200/3}>
+              <Row height={25}>
+                <PreacceleratorMod />
+              </Row>
+              <Rotator height={75}>
+                <Row height={100}>
+                  {Lazy(this.state.preaccelerators).map(g => (
+                    <Preaccelerator
+                      key={g.id}
+                      preaccelerator={g}
+                      grid-area='preaccelerators'
+                    />
+                  )).toArray()}
+                </Row>
+              </Rotator>
+            </Rotator>
+          </Rotator>
         </Board>
+        <Smasher />
       </Box>
     )
   }

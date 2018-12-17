@@ -32,7 +32,7 @@ const PreringOverlay = styled(Prering)`
 export default props => {
   return (
     <Box>
-      <PreringOverlay size={ProtoPreaccelerator.width} numParticles={20} />
+      <PreringOverlay size={300} numParticles={20} />
       <InfoBox>
         <SmashButton onClick={props.onSmash}>Smash!</SmashButton>
         Particles In: 100
