@@ -7,9 +7,11 @@ import { ProtoPreaccelerator } from '../pieces/prototypes'
 
 const Box = styled.div`
   display: flex;
+  flex: 1 1 auto;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 90%;
+  position: relative;
 `
 
 const InfoBox = styled.div`
@@ -24,19 +26,29 @@ const SmashButton = styled(Button)`
 
 const PreringOverlay = styled(Prering)`
   position: absolute;
-  top: 25px;
-  left: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: -1;
 `
 
-export default props => {
-  return (
-    <Box>
-      <PreringOverlay size={300} numParticles={20} />
-      <InfoBox>
-        <SmashButton onClick={props.onSmash}>Smash!</SmashButton>
-        Particles In: 100
-      </InfoBox>
-    </Box>
-  )
+export default class PreaccDisplay extends React.Component {
+  constructor(props) {
+    super()
+    this.box = React.createRef()
+  }
+
+  render() {
+    return (
+      <Box ref={this.box}>
+        {this.box.current && <React.Fragment>
+          <PreringOverlay size={this.box.current.clientHeight} numParticles={20} />
+          <InfoBox>
+            <SmashButton onClick={this.props.onSmash}>Smash!</SmashButton>
+            Particles In: 100
+          </InfoBox>
+        </React.Fragment>}
+      </Box>
+    )
+  }
 }

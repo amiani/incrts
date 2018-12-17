@@ -36,7 +36,7 @@ const Board = styled.div`
 const Row = styled.div`
   display: flex;
   height: ${p => p.height}%;
-  * {
+  & > * {
     flex-shrink: 0;
   }
 `

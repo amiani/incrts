@@ -5,29 +5,40 @@ import Knob from '../../components/Knob'
 
 const Box = styled.div`
   display: flex;
-  height: 25%;
+  height: 33.33%;
   align-items: center;
 `
 
-export default props => (
-  <Box>
-    <Knob
-      value={props.speed.value}
-      min={props.speed.min}
-      max={props.speed.max}
-      step={2}
-      size={154}
-      handleChange={props.handleSpeedChange}
-      label='Speed'
-    />
-    <Knob
-      value={props.harm.value}
-      min={props.harm.min}
-      max={props.harm.max}
-      step={2}
-      size={77}
-      handleChange={props.handleHarmChange}
-      label='Harmonizer'
-    />
-  </Box>
-)
+export default class Clock extends React.Component {
+  constructor(props) {
+    super()
+    this.box = React.createRef()
+  }
+
+  render() {
+    return (
+      <Box ref={this.box}>
+        {this.box.current && <React.Fragment>
+          <Knob
+            value={this.props.speed.value}
+            min={this.props.speed.min}
+            max={this.props.speed.max}
+            step={2}
+            size={this.box.current.clientHeight}
+            handleChange={this.props.handleSpeedChange}
+            label='Speed'
+          />
+          <Knob
+            value={this.props.harm.value}
+            min={this.props.harm.min}
+            max={this.props.harm.max}
+            step={2}
+            size={this.box.current.clientHeight}
+            handleChange={this.props.handleHarmChange}
+            label='Harmonizer'
+          />
+        </React.Fragment>}
+      </Box>
+    )
+  }
+}

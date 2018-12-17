@@ -38,7 +38,7 @@ const Box = styled.div`
 
 const BuildBox = styled.div`
   display: flex;
-  height: 25%;
+  height: 33.33%;
 `
 
 export default class Assembler extends React.Component {
@@ -54,6 +54,7 @@ export default class Assembler extends React.Component {
 
   constructor(props) {
     super()
+    this.buildBox = React.createRef()
     broker.addListener('update', props.id, this.handleUpdate)
     broker.addListener('procdragstart', props.id, this.handleProcDragStart)
     broker.addListener('procdragend', props.id, this.handleProcDragEnd)
@@ -96,9 +97,9 @@ export default class Assembler extends React.Component {
           height={3/9}
           front={
             <React.Fragment>
-              <BuildBox>
+              <BuildBox ref={this.buildBox}>
                 <Oscillator
-                  size={154}
+                  size={this.buildBox.current ? this.buildBox.current.clientHeight : 100}
                   harm={this.state.harm.value}
                   position={this.state.oscillator.position}
                   velocty={this.state.oscillator.velocity}
@@ -111,7 +112,6 @@ export default class Assembler extends React.Component {
                 speed={this.state.speed}
                 harm={this.state.harm}
               />
-              <ModPanelFront mods={this.state.mods} />
             </React.Fragment>
           }
           back={

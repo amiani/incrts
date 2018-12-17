@@ -63,10 +63,7 @@ export default class Preaccelerator extends React.Component {
             </React.Fragment>
           }
           front={
-            <React.Fragment>
-              <PreaccDisplay onSmash={this.smash} numParticles={200} />
-              <ModPanelFront mods={this.props.preaccelerator.mods} />
-            </React.Fragment>
+            <PreaccDisplay onSmash={this.smash} numParticles={200} />
           }
           back={
             <p>This is the back of the Preaccelerator</p>
